@@ -22,7 +22,7 @@ class HttpClient {
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
 	 */
-    public static function remote_put(string $uri, $data, $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false) {
+    public static function remote_put(string $uri, mixed $data, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $data_size = strlen($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
@@ -36,7 +36,7 @@ class HttpClient {
         $output = curl_exec($ch);
         if (!$output) { 
             throw new HttpClientException;
-            return; 
+            return false; 
         }
         curl_close($ch);
         return $output;
@@ -53,7 +53,7 @@ class HttpClient {
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
 	 */
-    public static function remote_post(string $uri, $data, $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false) {
+    public static function remote_post(string $uri, mixed $data, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_URL, $uri);
@@ -66,7 +66,7 @@ class HttpClient {
         $output = curl_exec($ch);
         if (!$output) { 
             throw new HttpClientException;
-            return; 
+            return false; 
         }
         curl_close($ch);
         return $output;
@@ -82,7 +82,7 @@ class HttpClient {
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
 	 */
-    public static function remote_get(string $uri, $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false) {
+    public static function remote_get(string $uri, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
         if (false !== $headers) { curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
@@ -93,7 +93,7 @@ class HttpClient {
         $output = curl_exec($ch);
         if (!$output) { 
             throw new HttpClientException;
-            return; 
+            return false; 
         }
         curl_close($ch);
         return $output;

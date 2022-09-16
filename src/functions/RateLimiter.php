@@ -89,7 +89,7 @@ class RateLimiter {
 	 * Vector\Functions\RateLimiter->get_session_key()
 	 * @param {string} $key
 	 */
-	private function get_session_key(string $key) {
+	private function get_session_key(string $key): bool {
 		return isset($_SESSION['cache'][$key]) ? $_SESSION['cache'][$key] : false;
 	}
 

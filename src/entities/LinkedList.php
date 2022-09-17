@@ -8,7 +8,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class LinkList {
+class LinkedList {
 
     private $first_node;
     private $last_node;

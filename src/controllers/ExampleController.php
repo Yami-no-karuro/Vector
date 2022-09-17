@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class BaseController {
+class ExampleController {
 
     private $router;
 
@@ -39,3 +39,5 @@ class BaseController {
     }
     
 }
+
+new ExampleController();

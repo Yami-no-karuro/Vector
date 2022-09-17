@@ -1,6 +1,6 @@
 <?php
 namespace Vector\Entities;
-use Vector\Entities\LinkedListNode;
+use Vector\Entities\ListNode;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');

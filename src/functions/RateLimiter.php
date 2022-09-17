@@ -15,7 +15,7 @@ class RateLimiter {
 	
 	/**
      * @package Vector
-     * Vector\Functions\RateLimiter->construct()
+     * __construct()
 	 * @param {string} $token
 	 * @param {string} $prefix = 'rate'
      */

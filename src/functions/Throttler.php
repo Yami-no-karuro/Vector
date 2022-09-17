@@ -15,7 +15,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->construct()
+     * __construct()
      */
     public function __construct(int $frequency, int $duration) {
         $this->frequency = $frequency;
@@ -37,7 +37,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->purge
+     * Vector\Functions\Throttler->purge()
      */
     private function purge(): array {
         $cutoff = microtime(true) - $this->duration;
@@ -48,7 +48,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->is_free
+     * Vector\Functions\Throttler->is_free()
      */
     private function is_free(): bool {
         return count($this->instances) < $this->frequency;
@@ -56,7 +56,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->duration_until_free
+     * Vector\Functions\Throttler->duration_until_free()
      */
     private function duration_until_free(): string {
         $oldest = $this->instances[0];

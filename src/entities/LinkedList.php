@@ -30,7 +30,7 @@ class LinkList {
      * @param {mixed} $data
      */
     public function insert_first(mixed $data): void {
-        $link = new LinkedListNode($data);
+        $link = new ListNode($data);
         $link->next = $this->first_node;
         $this->first_node = &$link;
         if ($this->last_node == NULL) { $this->last_node = &$link; }

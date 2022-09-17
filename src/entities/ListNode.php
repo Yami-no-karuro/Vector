@@ -7,7 +7,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class LinkedListNode {
+class ListNode {
 
     public $data;
     public $next;
@@ -23,7 +23,7 @@ class LinkedListNode {
 
     /**
      * @package Vector
-     * Vector\Entities\LinkedListNode->read_node()
+     * Vector\Entities\ListNode->read_node()
      */
     function read_node(): mixed {
         return $this->data;

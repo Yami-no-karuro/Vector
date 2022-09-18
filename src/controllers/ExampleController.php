@@ -36,6 +36,39 @@ class ExampleController {
             ]);
         });
 
+        /* List Posts */
+        $this->router->register_route(['GET'], '^/posts/?$', function() {
+            $postlist = json_encode([
+                [
+                    'ID' => 1,
+                    'Title' => 'Lorem Ipsum',
+                    'Content' => 'Lorem Ipsum Dolor Sit'
+                ],
+                [
+                    'ID' => 2,
+                    'Title' => 'Lorem Ipsum',
+                    'Content' => 'Lorem Ipsum Dolor Sit'
+                ]
+            ]);
+            return new Response($postlist, [
+                'HTTP/1.1 200 OK',
+                'Content-Type: application/json'
+            ]);
+        });
+
+        /* Find Post */
+        $this->router->register_route(['GET'], '^/posts/(?<id>\d+)?$', function($params) {
+            $post = json_encode([
+                'ID' => $params['id'],
+                'Title' => 'Lorem Ipsum',
+                'Content' => 'Lorem Ipsum Dolor Sit'
+            ]); 
+            return new Response($post, [
+                'HTTP/1.1 200 OK',
+                'Content-Type: application/json'
+            ]);
+        });
+
     }
     
 }

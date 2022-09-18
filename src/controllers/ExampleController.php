@@ -3,8 +3,6 @@ namespace Vector\Controllers;
 use Vector\Router;
 use Vector\Objects\Response;
 
-use Vector\Functions\HttpClient;
-
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');
     echo '403 Forbidden';

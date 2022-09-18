@@ -3,15 +3,13 @@ namespace Vector\Controllers;
 use Vector\Router;
 use Vector\Objects\Response;
 
-use Vector\Functions\HttpClient;
-
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');
     echo '403 Forbidden';
     die(); 
 }
 
-class ExampleController {
+class PostController {
 
     private $router;
 
@@ -30,11 +28,12 @@ class ExampleController {
      */
     private function init() {
         
-        /* Hello, World! */
-        $this->router->register_route(['GET'], '^/?$', function() {
-            return new Response('<h2> Hello, World! </h2>', [
+        /* TEST */
+        $this->router->register_route(['GET', 'POST'], '^/test/?$', function() {            
+            $request_body = json_decode(file_get_contents('php://input'), true);
+            return new Response(json_encode($request_body), [
                 'HTTP/1.1 200 OK',
-                'Content-Type: text/html'
+                'Content-Type: application/json'
             ]);
         });
 
@@ -42,4 +41,4 @@ class ExampleController {
     
 }
 
-new ExampleController();
+new PostController();

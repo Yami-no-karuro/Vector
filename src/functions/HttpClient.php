@@ -22,13 +22,13 @@ class HttpClient {
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
 	 */
-    public static function remote_put(string $uri, mixed $data, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
+    public static function remote_put(string $uri, mixed $data = false, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $data_size = strlen($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
         if (false !== $headers) { curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if (false !== $data) { curl_setopt($ch, CURLOPT_POSTFIELDS, $data); }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, $return_transfer);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $follow_location);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $verify_host);
@@ -53,12 +53,12 @@ class HttpClient {
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
 	 */
-    public static function remote_post(string $uri, mixed $data, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
+    public static function remote_post(string $uri, mixed $data = false, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_URL, $uri);
         if (false !== $headers) { curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if (false !== $data) { curl_setopt($ch, CURLOPT_POSTFIELDS, $data); }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, $return_transfer);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $follow_location);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $verify_host);

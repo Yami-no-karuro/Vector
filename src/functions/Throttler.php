@@ -39,7 +39,7 @@ class Throttler {
      * @package Vector
      * Vector\Functions\Throttler->purge()
      */
-    private function purge(): array {
+    private function purge(): void {
         $cutoff = microtime(true) - $this->duration;
         $this->instances = array_filter($this->instances, function ($a) use ($cutoff) {
             return $a >= $cutoff;

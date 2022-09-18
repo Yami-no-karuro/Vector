@@ -30,7 +30,6 @@ class Router {
      * @param {function} $callback
      * @param {int} $rpm
      * @param {bool} $die
-     * @return void
      */
     public function register_route(array $http_methods, string $route, callable $callback, int $rpm = 60, bool $die = true): void {
         $rate_limiter = new RateLimiter($_SERVER['REMOTE_ADDR']);

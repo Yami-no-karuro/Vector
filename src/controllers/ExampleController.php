@@ -69,6 +69,15 @@ class ExampleController {
             ]);
         });
 
+        /* Create Post */
+        $this->router->register_route(['POST'], '^/posts/?$', function() {
+            $req_body = file_get_contents('php://input');
+            return new Response($req_body, [
+                'HTTP/1.1 200 OK',
+                'Content-Type: application/json'
+            ]);
+        });
+
     }
     
 }

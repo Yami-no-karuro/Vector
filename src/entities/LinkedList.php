@@ -44,7 +44,7 @@ class LinkedList {
     public function read_list(): array {
         $list_data = array();
         $current = $this->first_node;
-        while($current != NULL) {
+        while ($current != NULL) {
             array_push($list_data, $current->read_node());
             $current = $current->next;
         }
@@ -56,8 +56,8 @@ class LinkedList {
      * Vector\Entities\LinkedList->reverse_list();
      */
     public function reverse_list(): void {
-        if($this->first_node != NULL) {
-            if($this->first_node->next != NULL) {
+        if ($this->first_node != NULL) {
+            if ($this->first_node->next != NULL) {
                 $current = $this->first_node;
                 $new = NULL;
                 while ($current !== NULL) {

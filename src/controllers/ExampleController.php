@@ -57,7 +57,7 @@ class ExampleController {
         });
 
         /* Find Post */
-        $this->router->register_route(['GET'], '^/posts/(?<id>\d+)?$', function($params) {
+        $this->router->register_route(['GET'], '^/posts/(?<id>\d+)/?$', function($params) {
             $post = json_encode([
                 'ID' => $params['id'],
                 'Title' => 'Lorem Ipsum',

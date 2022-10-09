@@ -58,7 +58,7 @@ class Throttler {
      * @package Vector
      * Vector\Functions\Throttler->duration_until_free()
      */
-    private function duration_until_free(): string {
+    private function duration_until_free(): mixed {
         $oldest = $this->instances[0];
         $free_at = $oldest + $this->duration * 1000000;
         $now = microtime(true);

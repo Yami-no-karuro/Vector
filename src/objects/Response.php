@@ -21,4 +21,13 @@ class Response {
         $this->body = $body;
     }
 
+    /**
+     * @package Vector
+     * Vector\Objects\Response->send()
+     */
+    public function send(): void {
+        foreach ($this->headers as $header) { header($header); }
+        echo $this->body;
+    }
+
 }

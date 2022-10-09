@@ -1,5 +1,6 @@
 <?php
 namespace Vector;
+use Vector\Objects\Response;
 use Vector\Functions\RateLimiter;
 use Vector\Functions\RateExceededException;
 
@@ -37,9 +38,12 @@ class Router {
         try {
             $rate_limiter->limit_requests_in_minutes($rpm, 1);
         } catch (RateExceededException $e) {
-            header('HTTP/1.1 429 Too Many Requests');
-            header(sprintf("Retry-After: %d", $seconds));
-            echo '429 Rate Limit Exceeded';
+            $response = new Response(json_encode(['error' => '429 Rate Limit Exceeded']), [
+                'Content-Type: application/json',
+                'HTTP/1.1 429 Too Many Requests',
+                sprintf('Retry-After: %d', $seconds),
+            ]);
+            $response->send();
             die();
         }
         static $path = null;
@@ -56,16 +60,14 @@ class Router {
         if (!preg_match_all($regex, $path, $matches)) { return; }
         if (empty($matches)) {
             $response = $callback();
-            foreach ($response->headers as $header) { header($header); }
-            echo $response->body;
+            $response->send();
         } else {
             $params = array();
             foreach ($matches as $k => $v) {
                 if (!is_numeric($k) && !isset($v[1])) { $params[$k] = $v[0]; }
             }
             $response = $callback($params);
-            foreach ($response->headers as $header) { header($header); }
-            echo $response->body;
+            $response->send();
         }
         if ($die) { die(); }
     }

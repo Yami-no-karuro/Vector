@@ -26,8 +26,12 @@ foreach ($iterator as $file) {
     }
 }
 
-header('HTTP/1.1 404 Not Found');
-echo '404 Not Found';
+use Vector\Objects\Response;
+$response = new Response(NULL, [
+    'Content-Type: application/json',
+    'HTTP/1.1 404 Not Found'
+]);
+$response->send();
 
 
 

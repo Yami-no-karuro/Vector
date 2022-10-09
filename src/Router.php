@@ -6,7 +6,6 @@ use Vector\Functions\RateExceededException;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
-    echo '403 Forbidden';
     die(); 
 }
 
@@ -38,7 +37,7 @@ class Router {
         try {
             $rate_limiter->limit_requests_in_minutes($rpm, 1);
         } catch (RateExceededException $e) {
-            $response = new Response(json_encode(['error' => '429 Rate Limit Exceeded']), [
+            $response = new Response(NULL, [
                 'Content-Type: application/json',
                 'HTTP/1.1 429 Too Many Requests',
                 sprintf('Retry-After: %d', $seconds),

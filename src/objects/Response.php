@@ -3,7 +3,6 @@ namespace Vector\Objects;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
-    echo '403 Forbidden';
     die(); 
 }
 
@@ -16,7 +15,7 @@ class Response {
      * @package Vector
      * __construct();
      */
-    public function __construct(string $body, array $headers) {
+    public function __construct(mixed $body, array $headers) {
         $this->headers = $headers;
         $this->body = $body;
     }

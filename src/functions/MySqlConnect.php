@@ -1,5 +1,6 @@
 <?php
 namespace Vector\Functions;
+use Vector\Objects\Objects;
 use Exception;
 use mysqli;
 
@@ -21,9 +22,8 @@ class MySqlConnect {
         try {
             $this->mysqlitunnel = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
         } catch (Exception $e) { 
-            header('HTTP/1.1 500 Internal Server Error');
-            echo '500 Internal Server Error';
-            die();
+            $response = new Response(NULL, ['HTTP/1.1 500 Internal Server Error']);
+            $response->send(true);
         }
     }
 
@@ -90,10 +90,18 @@ class MySqlConnect {
             }
             $clean_sql->bind_param($types, ...$values);
         }
-        if (!$clean_sql->execute()) { return false; }
+        if (!$clean_sql->execute()) { 
+            return array(
+                'success' => false,
+                'data' => NULL
+            ); 
+        }
         $result = $clean_sql->get_result();
-        $results = array();
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)) { array_push($results, $row); }
+        $results = array(
+            'success' => true,
+            'data' => array()
+        );
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) { array_push($results['data'], $row); }
         return $results;
     }
 

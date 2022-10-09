@@ -21,17 +21,12 @@ $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
 $iterator = new RecursiveIteratorIterator($dir);
 foreach ($iterator as $file) {
     $fname = $file->getFilename();
-    if (preg_match('%\.php$%', $fname)) {
-        require_once ($file->getPathname());
-    }
+    if (preg_match('%\.php$%', $fname)) { require_once ($file->getPathname()); }
 }
 
 use Vector\Objects\Response;
-$response = new Response(NULL, [
-    'Content-Type: application/json',
-    'HTTP/1.1 404 Not Found'
-]);
-$response->send();
+$response = new Response(NULL, ['HTTP/1.1 404 Not Found']);
+$response->send(true);
 
 
 

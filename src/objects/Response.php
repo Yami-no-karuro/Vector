@@ -24,9 +24,10 @@ class Response {
      * @package Vector
      * Vector\Objects\Response->send()
      */
-    public function send(): void {
+    public function send(bool $die = false): void {
         foreach ($this->headers as $header) { header($header); }
         echo $this->body;
+        if ($die) { die(); }
     }
 
 }

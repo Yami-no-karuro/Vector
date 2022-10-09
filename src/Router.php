@@ -37,13 +37,8 @@ class Router {
         try {
             $rate_limiter->limit_requests_in_minutes($rpm, 1);
         } catch (RateExceededException $e) {
-            $response = new Response(NULL, [
-                'Content-Type: application/json',
-                'HTTP/1.1 429 Too Many Requests',
-                sprintf('Retry-After: %d', $seconds),
-            ]);
-            $response->send();
-            die();
+            $response = new Response(NULL, ['HTTP/1.1 429 Too Many Requests']);
+            $response->send(true);
         }
         static $path = null;
         if ($path === null) {

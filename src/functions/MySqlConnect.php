@@ -1,6 +1,6 @@
 <?php
 namespace Vector\Functions;
-use Vector\Objects\Objects;
+use Vector\Objects\Response;
 use Exception;
 use mysqli;
 

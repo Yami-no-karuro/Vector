@@ -8,7 +8,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Request {
 
-    public $remote_addr;
     public $request_method;
     public $request_uri;
 
@@ -17,7 +16,6 @@ class Request {
      * __construct()
      */
     public function __construct() {
-        $this->remote_addr = $_SERVER['REMOTE_ADDR'];
         $this->request_method = $_SERVER['REQUEST_METHOD'];
         $this->request_uri = $_SERVER['REQUEST_URI'];
     }

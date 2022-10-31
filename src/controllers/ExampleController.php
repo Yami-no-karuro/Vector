@@ -1,8 +1,8 @@
 <?php
 namespace Vector\Controllers;
 use Vector\Router;
-use Vector\Functions\Controller;
-use Vector\Functions\MySqlConnect;
+use Vector\Engine\Controller;
+use Vector\Engine\MySqlConnect;
 use Vector\Objects\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) { 

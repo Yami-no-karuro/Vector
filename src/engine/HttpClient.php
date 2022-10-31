@@ -1,5 +1,5 @@
 <?php 
-namespace Vector\Functions;
+namespace Vector\Engine;
 use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -12,7 +12,7 @@ class HttpClient {
 
     /**
 	 * @package Vector
-	 * Vector\Functions\HttpClient::remote_put()
+	 * Vector\Engine\HttpClient::remote_put()
 	 * @param {string} $uri
      * @param {json} $data
      * @param {array} $headers
@@ -43,7 +43,7 @@ class HttpClient {
 
     /**
 	 * @package Vector
-	 * Vector\Functions\HttpClient::remote_post()
+	 * Vector\Engine\HttpClient::remote_post()
 	 * @param {string} $uri
      * @param {json} $data
      * @param {array} $headers
@@ -73,7 +73,7 @@ class HttpClient {
 
     /**
 	 * @package Vector
-	 * Vector\Functions\HttpClient::remote_get()
+	 * Vector\Engine\HttpClient::remote_get()
 	 * @param {string} $uri
      * @param {array} $headers
 	 * @param {bool} $return_transfer

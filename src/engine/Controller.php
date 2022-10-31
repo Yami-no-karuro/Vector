@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Functions;
+namespace Vector\Engine;
 use Vector\Router;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -22,7 +22,7 @@ abstract class Controller {
     
     /**
      * @package Vector
-     * Vector\Functions\Controller->init
+     * Vector\Engine\Controller->init
      */
     abstract protected function init();
 

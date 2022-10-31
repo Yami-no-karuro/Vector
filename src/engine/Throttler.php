@@ -1,5 +1,5 @@
 <?php 
-namespace Vector\Functions;
+namespace Vector\Engine;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');
@@ -23,7 +23,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->await()
+     * Vector\Engine\Throttler->await()
      */
     public function await(): void {
         $this->purge();
@@ -36,7 +36,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->purge()
+     * Vector\Engine\Throttler->purge()
      */
     private function purge(): void {
         $cutoff = microtime(true) - $this->duration;
@@ -47,7 +47,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->is_free()
+     * Vector\Engine\Throttler->is_free()
      */
     private function is_free(): bool {
         return count($this->instances) < $this->frequency;
@@ -55,7 +55,7 @@ class Throttler {
 
     /**
      * @package Vector
-     * Vector\Functions\Throttler->duration_until_free()
+     * Vector\Engine\Throttler->duration_until_free()
      */
     private function duration_until_free(): mixed {
         $oldest = $this->instances[0];

@@ -1,8 +1,8 @@
 <?php
 namespace Vector;
 use Vector\Objects\Response;
-use Vector\Functions\RateLimiter;
-use Vector\Functions\RateExceededException;
+use Vector\Engine\RateLimiter;
+use Vector\Engine\RateExceededException;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');

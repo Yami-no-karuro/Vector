@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Functions;
+namespace Vector\Engine;
 use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -28,7 +28,7 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->limit_requests_in_minutes()
+	 * Vector\Engine\RateLimiter->limit_requests_in_minutes()
 	 * @param {int} $allowed_request
 	 * @param {int} $minutes
 	 */
@@ -47,7 +47,7 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->get_keys()
+	 * Vector\Engine\RateLimiter->get_keys()
 	 * @param {int} $minutes
 	 */
 	private function get_keys(int $minutes): array {
@@ -61,7 +61,7 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->increment()
+	 * Vector\Engine\RateLimiter->increment()
 	 * @param {string} $key
 	 * @param {int} $inc
 	 */
@@ -73,7 +73,7 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->set_session_key()
+	 * Vector\Engine\RateLimiter->set_session_key()
 	 * @param {string} $key
 	 * @param {int} $val
 	 * @param {int} $expiry
@@ -85,7 +85,7 @@ class RateLimiter {
 	
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->get_session_key()
+	 * Vector\Engine\RateLimiter->get_session_key()
 	 * @param {string} $key
 	 */
 	private function get_session_key(string $key): mixed {
@@ -94,7 +94,7 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Functions\RateLimiter->expire_session_keys()
+	 * Vector\Engine\RateLimiter->expire_session_keys()
 	 */
 	private function expire_session_keys(): void {
 		foreach ($_SESSION['expiries'] as $key => $value) {

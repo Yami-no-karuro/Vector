@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Functions;
+namespace Vector\Engine;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');
@@ -10,7 +10,7 @@ class Crypt {
 
     /**
      * @package Vector
-     * Vector\Functions\Crypt::get_decrypted_string()
+     * Vector\Engine\Crypt::get_decrypted_string()
 	 * @param {string} $string
      */
     public static function get_decrypted_string(string $string): string {
@@ -19,7 +19,7 @@ class Crypt {
 
     /**
      * @package Vector
-     * Vector\Functions\Crypt::get_encrypted_string()
+     * Vector\Engine\Crypt::get_encrypted_string()
 	 * @param {string} $string
      */
     public static function get_encrypted_string(string $string): string {

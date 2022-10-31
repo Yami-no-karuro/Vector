@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Functions;
+namespace Vector\Engine;
 use Vector\Objects\Response;
 use Exception;
 use mysqli;
@@ -37,7 +37,7 @@ class MySqlConnect {
 
     /**
      * @package Vector
-     * Vector\Functions\MySqlConnect::get_instance()
+     * Vector\Engine\MySqlConnect::get_instance()
      */
     public static function get_instance(): object {
         if (self::$instance == null) { self::$instance = new MySqlConnect();  }
@@ -46,7 +46,7 @@ class MySqlConnect {
 
     /**
      * @package Vector
-     * Vector\Functions\MySqlConnect->exec()
+     * Vector\Engine\MySqlConnect->exec()
      * @param {string} $sql
      * @param {array} $params
      * @return {bool}
@@ -74,7 +74,7 @@ class MySqlConnect {
 
     /**
      * @package Vector
-     * Vector\Functions\MySqlConnect->get_results()
+     * Vector\Engine\MySqlConnect->get_results()
      * @param {string} $sql
      * @param {array} $params
      * @return {array | bool}

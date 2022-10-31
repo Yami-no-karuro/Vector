@@ -64,8 +64,10 @@ class MySqlConnect {
         }
         $result = array(
             'success' => false,
-            'inserted_id' => $clean_sql->insert_id,
-            'affected_rows' => $clean_sql->affected_rows
+            'data'    => array(
+                'inserted_id'   => $clean_sql->insert_id,
+                'affected_rows' => $clean_sql->affected_rows
+            )
         );
         if (!$clean_sql->execute()) { return $result; }
         $result['success'] = true;
@@ -93,13 +95,13 @@ class MySqlConnect {
         if (!$clean_sql->execute()) { 
             return array(
                 'success' => false,
-                'data' => NULL
+                'data'    => NULL
             ); 
         }
         $result = $clean_sql->get_result();
         $results = array(
             'success' => true,
-            'data' => array()
+            'data'    => array()
         );
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) { array_push($results['data'], $row); }
         return $results;

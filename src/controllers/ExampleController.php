@@ -1,32 +1,18 @@
 <?php
 namespace Vector\Controllers;
 use Vector\Router;
-use Vector\Objects\Response;
+use Vector\Functions\Controller;
 use Vector\Functions\MySqlConnect;
+use Vector\Objects\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.0 403 Forbidden');
     die(); 
 }
 
-class ExampleController {
+class ExampleController extends Controller {
 
-    private $router;
-
-    /**
-     * @package Vector
-     * __construct()
-     */
-    public function __construct() {
-        $this->router = Router::get_instance();
-        $this->init();
-    }
-
-    /**
-     * @package Vector
-     * Vector\Controllers\ExampleController->init
-     */
-    private function init(): void {
+    protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(): Response {
             return new Response('<h2> Hello, World! </h2>', [

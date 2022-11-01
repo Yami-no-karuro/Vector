@@ -13,3 +13,4 @@ define('CIPHERING', '');        // Es.. AES-128-CTR
 define('ENCRYPTION_IV', '');    // Es.. 1234567891011121
 define('ENCRYPTION_KEY', '');   // Es.. fZBp$1n3o^Uu3!Y3*19K 
 define('DEFAULT_TIMEZONE', 'Europe/Rome');
+define('APP_URL', 'http://localhost/vector/');

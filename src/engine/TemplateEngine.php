@@ -31,10 +31,32 @@ class TemplateEngine {
 
     /**
 	 * @package Vector
-	 * Vector\Engine\TemplateEngine->get_template_part()
+	 * Vector\Engine\TemplateEngine::get_template_part()
 	 */
     public static function get_template_part(string $template_part): void {
         require_once(__DIR__ . "/../template-parts/{$template_part}.php");
+    }
+
+    /**
+	 * @package Vector
+	 * Vector\Engine\TemplateEngine::get_script_tag()
+     * @param {string} $source
+     * @param {bool} $defer
+     * @param {bool} $async
+	 */
+    public static function get_script_tag(string $source, bool $defer = false, bool $async = false): void {
+        $defer = $defer ? 'defer' : '';
+        $async = $async ? 'async' : '';
+        echo "<script type='text/javascript' src='" . APP_URL . "assets/{$source}' {$defer} {$async}></script>";
+    }
+
+    /**
+	 * @package Vector
+	 * Vector\Engine\TemplateEngine::get_style_tag()
+     * @param {string} $source
+	 */
+    public static function get_style_tag(string $source): void {
+        echo "<link rel='stylesheet' href='" . APP_URL . "assets/{$source}'>";
     }
 
 }

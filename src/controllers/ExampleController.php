@@ -2,11 +2,12 @@
 namespace Vector\Controllers;
 use Vector\Router;
 use Vector\Engine\Controller;
+use Vector\Engine\TemplateEngine;
 use Vector\Engine\MySqlConnect;
 use Vector\Objects\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
-    header('HTTP/1.0 403 Forbidden');
+    header('HTTP/1.1 403 Forbidden');
     die(); 
 }
 
@@ -15,7 +16,8 @@ class ExampleController extends Controller {
     protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(): Response {
-            return new Response('<h2> Hello, World! </h2>', [
+            $template = new TemplateEngine('home');
+            return new Response($template->parse(), [
                 'HTTP/1.1 200 OK',
                 'Content-Type: text/html'
             ]);

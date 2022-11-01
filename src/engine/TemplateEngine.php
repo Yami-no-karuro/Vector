@@ -8,7 +8,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class TemplateEngine {
 
-    private $template;
+    public $template;
 
     /**
      * @package Vector
@@ -25,10 +25,16 @@ class TemplateEngine {
 	 */
     public function parse(): string {
         ob_start();
-        require_once(__DIR__ . '/../template-parts/header.php');
         require_once(__DIR__ . "/../templates/{$this->template}.php");
-        require_once(__DIR__ . '/../template-parts/footer.php');
         return ob_get_clean();
+    }
+
+    /**
+	 * @package Vector
+	 * Vector\Engine\TemplateEngine->get_template_part()
+	 */
+    public static function get_template_part(string $template_part): void {
+        require_once(__DIR__ . "/../template-parts/{$template_part}.php");
     }
 
 }

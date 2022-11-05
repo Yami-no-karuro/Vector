@@ -1,10 +1,9 @@
 <?php use Vector\Engine\TemplateEngine;
-TemplateEngine::get_template_part('header'); ?>
+TemplateEngine::get_template_part('header'); 
+global $template_data; ?>
 
 <main>
-  <header>
-    <h1> Hello, World! </h1>
-  </header>
+  <h1> <?php echo $template_data['pagename']; ?> </h1>
 </main>
 
 <?php TemplateEngine::get_template_part('footer'); ?>

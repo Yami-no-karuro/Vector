@@ -1,5 +1,8 @@
-<?php use Vector\Engine\TemplateEngine; ?> 
-
-  <?php TemplateEngine::get_script_tag('app.js', true); ?>
+<?php use Vector\Engine\TemplateEngine; 
+global $template_data; ?>     
+    
+    <footer>
+      <!-- Footer Content -->
+    </footer>
   </body>
 </html>

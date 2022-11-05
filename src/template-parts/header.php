@@ -1,4 +1,5 @@
-<?php use Vector\Engine\TemplateEngine; ?> 
+<?php use Vector\Engine\TemplateEngine; 
+global $template_data; ?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,6 +8,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php TemplateEngine::get_style_tag('app.css'); ?>
-  <title> Vector </title>
+  <?php TemplateEngine::get_script_tag('app.js', true, true); ?>
+  <title> <?php echo $template_data['pagename']; ?> </title>
 </head>
 <body>
+<header>
+  <!-- Header Content -->
+</header>

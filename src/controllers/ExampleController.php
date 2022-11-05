@@ -16,7 +16,7 @@ class ExampleController extends Controller {
     protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(): Response {
-            $template = new TemplateEngine('home');
+            $template = new TemplateEngine('home', array('pagename' => 'Vector'));
             return new Response($template->parse(), [
                 'HTTP/1.1 200 OK',
                 'Content-Type: text/html'

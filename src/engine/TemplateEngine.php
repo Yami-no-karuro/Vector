@@ -8,32 +8,23 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class TemplateEngine {
 
-    public $template;
+    private $template;
+    private static $template_data;
 
     /**
      * @package Vector
      * __construct()
 	 * @param {string} $template
-     * @param {mixed} $data
      */
-    public function __construct(string $template, mixed $data = NULL) {
+    public function __construct(string $template, mixed $data) {
         $this->template = $template;
-        global $template_data;
-        $template_data = $data;
-    }
-
-    /**
-     * @package Vector
-     * __destruct()
-     */
-    public function __destruct() {
-        global $template_data;
-        unset($template_data);
+        self::$template_data = $data;
     }
 
     /**
 	 * @package Vector
 	 * Vector\Engine\TemplateEngine->parse()
+     * @param {mixed} $data
 	 */
     public function parse(): string {
         ob_start();

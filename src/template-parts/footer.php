@@ -1,5 +1,4 @@
-<?php use Vector\Engine\TemplateEngine; 
-global $template_data; ?>     
+<?php use Vector\Engine\TemplateEngine; ?>     
     
     <footer>
       <!-- Footer Content -->

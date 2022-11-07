@@ -1,5 +1,4 @@
-<?php use Vector\Engine\TemplateEngine; 
-global $template_data; ?> 
+<?php use Vector\Engine\TemplateEngine; ?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +8,7 @@ global $template_data; ?>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php TemplateEngine::get_style_tag('app.css'); ?>
   <?php TemplateEngine::get_script_tag('app.js', true, true); ?>
-  <title> <?php echo $template_data['pagename']; ?> </title>
+  <title> <?php echo self::$template_data['pagename']; ?> </title>
 </head>
 <body>
 <header>

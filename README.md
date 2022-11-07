@@ -2,9 +2,9 @@
 ## A simple yet performing PHP framework
 
 ### Installation
-1. [x] Configure "src/config.php"
-2. [x] Create your first controller in "src/controllers" (Take a look at "ExampleController.php")
-   - Controllers must extend "Vector\Engine\Controller" Class
-   - Controllers must implement "protected function init()"
-   - Controllers must be initialized right after declaration
-3. [x] The installation is complete! You are ready to go!
+1. [x] Download the source code
+2. [x] Configure preferences in src/config.php
+3. [x] Create a Controller class inside src/controllers that extends Vector\Engine\Controller
+4. [x] Implement protected function init() as your controller main method
+5. [x] Register your first route using $this->router->register_route()
+6. [x] That's it! You are ready to go!

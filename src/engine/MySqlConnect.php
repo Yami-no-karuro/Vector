@@ -49,7 +49,6 @@ class MySqlConnect {
      * Vector\Engine\MySqlConnect->exec()
      * @param {string} $sql
      * @param {array} $params
-     * @return {bool}
      */
     public function exec(string $sql, array $params = null): array {
         $clean_sql = $this->mysqlitunnel->prepare($sql);
@@ -79,7 +78,6 @@ class MySqlConnect {
      * Vector\Engine\MySqlConnect->get_results()
      * @param {string} $sql
      * @param {array} $params
-     * @return {array | bool}
      */
     public function get_results(string $sql, array $params = null): array {
         $clean_sql = $this->mysqlitunnel->prepare($sql);

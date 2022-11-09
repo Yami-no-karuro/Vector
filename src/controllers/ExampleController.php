@@ -4,6 +4,7 @@ use Vector\Router;
 use Vector\Engine\Controller;
 use Vector\Engine\TemplateEngine;
 use Vector\Engine\MySqlConnect;
+use Vector\Engine\Transient;
 use Vector\Objects\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -16,8 +17,14 @@ class ExampleController extends Controller {
     protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(): Response {
-            $template = new TemplateEngine('home', array('pagename' => 'Vector'));
-            return new Response($template->parse(), [
+            $transient = new Transient('home');
+            $transient_data = $transient->get_data(900);
+            if (false === $transient_data->valid) {
+                $template = new TemplateEngine('home', array('pagename' => 'Vector'));
+                $html = $template->parse();
+                $transient->set_data($html);
+            } else { $html = $transient_data->content; }
+            return new Response($html, [
                 'HTTP/1.1 200 OK',
                 'Content-Type: text/html'
             ]);

@@ -1,5 +1,3 @@
-<?php use Vector\Engine\TemplateEngine; ?> 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +8,7 @@
   <?php self::get_script_tag('app.js', true, true); ?>
   <title> <?php echo self::$template_data['pagename']; ?> </title>
 </head>
-<body>
-<header>
-  <!-- Header Content -->
-</header>
+  <body>
+    <header>
+      <!-- Header Content -->
+    </header>

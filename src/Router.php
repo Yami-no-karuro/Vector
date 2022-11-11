@@ -11,11 +11,12 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router {
 
-    private static $instance = null;
+    private static mixed $instance = null;
    
     /**
      * @package Vector
      * Vector\Router::get_instance()
+     * @return object
      */
     public static function get_instance(): object {
         if (self::$instance == null) { self::$instance = new Router(); }
@@ -25,11 +26,12 @@ class Router {
     /**
      * @package Vector
      * Vector\Router->register_route()
-     * @param {[string]} $http_methods
+     * @param {array} $http_methods
      * @param {string} $route
-     * @param {function} $callback
+     * @param {callable} $callback
      * @param {int} $rpm
      * @param {bool} $die
+     * @return void
      */
     public function register_route(array $http_methods, string $route, callable $callback, int $rpm = 60, bool $die = true): void {
         $rate_limiter = new RateLimiter($_SERVER['REMOTE_ADDR']);

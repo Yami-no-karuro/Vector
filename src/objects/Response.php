@@ -8,8 +8,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Response {
 
-    public $body;
-    public $headers;
+    public mixed $body;
+    public array $headers;
 
     /**
      * @package Vector
@@ -23,6 +23,7 @@ class Response {
     /**
      * @package Vector
      * Vector\Objects\Response->send()
+     * @return void
      */
     public function send(bool $die = false): void {
         foreach ($this->headers as $header) { header($header); }

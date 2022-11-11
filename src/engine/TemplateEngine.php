@@ -8,8 +8,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class TemplateEngine {
 
-    private $template;
-    private static $template_data;
+    private string $template;
+    private static mixed $template_data;
 
     /**
      * @package Vector
@@ -25,6 +25,7 @@ class TemplateEngine {
 	 * @package Vector
 	 * Vector\Engine\TemplateEngine->parse()
      * @param {mixed} $data
+     * @return string
 	 */
     public function parse(): string {
         ob_start();
@@ -35,6 +36,7 @@ class TemplateEngine {
     /**
 	 * @package Vector
 	 * Vector\Engine\TemplateEngine::get_template_part()
+     * @return void
 	 */
     public static function get_template_part(string $template_part): void {
         require_once(__DIR__ . "/../template-parts/{$template_part}.php");
@@ -46,6 +48,7 @@ class TemplateEngine {
      * @param {string} $source
      * @param {bool} $defer
      * @param {bool} $async
+     * @return void
 	 */
     public static function get_script_tag(string $source, bool $defer = false, bool $async = false): void {
         $defer = $defer ? 'defer' : '';
@@ -57,6 +60,7 @@ class TemplateEngine {
 	 * @package Vector
 	 * Vector\Engine\TemplateEngine::get_style_tag()
      * @param {string} $source
+     * @return void
 	 */
     public static function get_style_tag(string $source): void {
         echo "<link rel='stylesheet' href='" . APP_URL . "assets/{$source}'> \n";

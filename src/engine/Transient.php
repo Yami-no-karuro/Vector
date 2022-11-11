@@ -26,6 +26,7 @@ class Transient {
      * @package Vector
      * Vector\Engine\Transient::get_data()
 	 * @param {int} $seconds
+     * @return mixed
      */
     public function get_data(int $seconds): mixed {
         return (object) [
@@ -38,6 +39,7 @@ class Transient {
      * @package Vector
      * Vector\Engine\Transient::set_data()
 	 * @param {mixed} $data
+     * @return bool
      */
     public function set_data(mixed $data): bool {
         return @file_put_contents($this->filepath, $data);

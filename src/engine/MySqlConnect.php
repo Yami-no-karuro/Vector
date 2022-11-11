@@ -11,8 +11,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class MySqlConnect {
 
-    private $mysqlitunnel;
-    private static $instance;
+    private mysqli $mysqlitunnel;
+    private static mixed $instance;
 
     /**
      * @package Vector
@@ -38,6 +38,7 @@ class MySqlConnect {
     /**
      * @package Vector
      * Vector\Engine\MySqlConnect::get_instance()
+     * @return object
      */
     public static function get_instance(): object {
         if (self::$instance == null) { self::$instance = new MySqlConnect();  }
@@ -49,6 +50,7 @@ class MySqlConnect {
      * Vector\Engine\MySqlConnect->exec()
      * @param {string} $sql
      * @param {array} $params
+     * @return array
      */
     public function exec(string $sql, array $params = null): array {
         $clean_sql = $this->mysqlitunnel->prepare($sql);
@@ -78,6 +80,7 @@ class MySqlConnect {
      * Vector\Engine\MySqlConnect->get_results()
      * @param {string} $sql
      * @param {array} $params
+     * @return array
      */
     public function get_results(string $sql, array $params = null): array {
         $clean_sql = $this->mysqlitunnel->prepare($sql);

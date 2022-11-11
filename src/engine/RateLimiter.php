@@ -10,7 +10,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class RateExceededException extends Exception {}
 class RateLimiter {
 
-	private $prefix;
+	private string $prefix;
 	
 	/**
      * @package Vector
@@ -31,6 +31,7 @@ class RateLimiter {
 	 * Vector\Engine\RateLimiter->limit_requests_in_minutes()
 	 * @param {int} $allowed_request
 	 * @param {int} $minutes
+	 * @return void
 	 */
 	public function limit_requests_in_minutes(int $allowed_requests, int $minutes): void {
 		$this->expire_session_keys();
@@ -49,6 +50,7 @@ class RateLimiter {
 	 * @package Vector
 	 * Vector\Engine\RateLimiter->get_keys()
 	 * @param {int} $minutes
+	 * @return array
 	 */
 	private function get_keys(int $minutes): array {
 		$keys = array();
@@ -64,6 +66,7 @@ class RateLimiter {
 	 * Vector\Engine\RateLimiter->increment()
 	 * @param {string} $key
 	 * @param {int} $inc
+	 * @return void
 	 */
 	private function increment(string $key, int $inc): void {
 		$cnt = 0;
@@ -77,6 +80,7 @@ class RateLimiter {
 	 * @param {string} $key
 	 * @param {int} $val
 	 * @param {int} $expiry
+	 * @return void
 	 */
 	private function set_session_key(string $key, string $val, string $expiry): void {
 		$_SESSION['expiries'][$key] = time() + $expiry;
@@ -87,6 +91,7 @@ class RateLimiter {
 	 * @package Vector
 	 * Vector\Engine\RateLimiter->get_session_key()
 	 * @param {string} $key
+	 * @return mixed 
 	 */
 	private function get_session_key(string $key): mixed {
 		return isset($_SESSION['cache'][$key]) ? $_SESSION['cache'][$key] : false;
@@ -95,6 +100,7 @@ class RateLimiter {
 	/**
 	 * @package Vector
 	 * Vector\Engine\RateLimiter->expire_session_keys()
+	 * @return void
 	 */
 	private function expire_session_keys(): void {
 		foreach ($_SESSION['expiries'] as $key => $value) {

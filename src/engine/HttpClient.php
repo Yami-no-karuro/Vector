@@ -20,6 +20,7 @@ class HttpClient {
 	 * @param {bool} $follow_location
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
+     * @return mixed
 	 */
     public static function remote_put(string $uri, mixed $data = false, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $data_size = strlen($data);
@@ -51,6 +52,7 @@ class HttpClient {
 	 * @param {bool} $follow_location
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
+     * @return mixed
 	 */
     public static function remote_post(string $uri, mixed $data = false, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $ch = curl_init();
@@ -80,6 +82,7 @@ class HttpClient {
 	 * @param {bool} $follow_location
 	 * @param {bool} $verify_host
 	 * @param {bool} $verify_peer
+     * @return mixed
 	 */
     public static function remote_get(string $uri, mixed $headers = false, bool $return_transfer = true, bool $follow_location = true, bool $verify_host = false, bool $verify_peer = false): mixed {
         $ch = curl_init();

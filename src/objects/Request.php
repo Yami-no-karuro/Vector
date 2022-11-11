@@ -8,8 +8,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Request {
 
-    public $request_method;
-    public $request_uri;
+    public mixed $request_method;
+    public mixed $request_uri;
 
     /**
      * @package Vector
@@ -23,6 +23,7 @@ class Request {
     /**
      * @package Vector
      * Vector\Objects\Request->get_request_headers()
+     * @return array
      */
     public function get_headers(): array {
         $headers = array();

@@ -16,9 +16,9 @@ class Router {
     /**
      * @package Vector
      * Vector\Router::get_instance()
-     * @return object
+     * @return Router
      */
-    public static function get_instance(): object {
+    public static function get_instance(): Router {
         if (self::$instance == null) { self::$instance = new Router(); }
         return self::$instance;
     }

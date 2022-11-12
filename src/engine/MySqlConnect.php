@@ -40,7 +40,7 @@ class MySqlConnect {
      * Vector\Engine\MySqlConnect::get_instance()
      * @return object
      */
-    public static function get_instance(): object {
+    public static function get_instance(): MySqlConnect {
         if (self::$instance == null) { self::$instance = new MySqlConnect();  }
         return self::$instance;
     }

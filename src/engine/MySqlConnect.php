@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class MySqlConnect {
 
     private mysqli $mysqlitunnel;
-    private static mixed $instance;
+    private static mixed $instance = null;
 
     /**
      * @package Vector

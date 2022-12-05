@@ -1,6 +1,5 @@
 <?php
 namespace Vector\Controllers;
-use Vector\Router;
 use Vector\Engine\Controller;
 use Vector\Engine\TemplateEngine;
 use Vector\Engine\MySqlConnect;

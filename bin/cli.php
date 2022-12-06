@@ -2,9 +2,9 @@
 <?php
 
 if ($argc == 1) { 
-    echo 'Error. No argument supplied';
+    echo 'Error. No argument supplied.';
 } else if ($argc == 2) {
-    echo 'Error. Missing argument %controller_name%';
+    echo 'Error. Missing arguments.';
 } else {
     switch ($argv[1]) {
         case 'create-controller':
@@ -38,6 +38,6 @@ if ($argc == 1) {
             echo "./src/templates/{$argv[2]}.php created succesfully."; 
             break;
         default:
-        echo "Unknown command.";
+        echo "Error. Unknown command.";
     }    
 }

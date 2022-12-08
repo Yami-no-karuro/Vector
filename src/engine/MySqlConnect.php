@@ -104,7 +104,13 @@ class MySqlConnect {
             'success' => true,
             'data'    => array()
         );
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)) { array_push($results['data'], $row); }
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) { 
+            if ($result->num_rows === 1) { 
+                $results['data'] = $row;
+                break; 
+            }
+            array_push($results['data'], $row); 
+        }
         return $results;
     }
 

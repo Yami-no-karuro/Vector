@@ -29,10 +29,10 @@ class Router {
      * @param {array} $http_methods
      * @param {string} $route
      * @param {callable} $callback
-     * @param {array} $allowed_origins
-     * @param {array} $allowed_headers
-     * @param {int} $rpm
-     * @param {bool} $die
+     * @param {array} $allowed_origins = []
+     * @param {array} $allowed_headers = []
+     * @param {int} $rpm = 60
+     * @param {bool} $die = true
      * @return void
      */
     public function register_route(array $http_methods, string $route, callable $callback, array $allowed_origins = [], array $allowed_headers = [], int $rpm = 60, bool $die = true): void {

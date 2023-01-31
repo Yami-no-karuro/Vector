@@ -8,21 +8,24 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Request {
 
-    public mixed $request_method;
-    public mixed $request_uri;
-
     /**
      * @package Vector
-     * __construct()
+     * Vector\Objects\Request->get_server_info()
+     * @return array
      */
-    public function __construct() {
-        $this->request_method = $_SERVER['REQUEST_METHOD'];
-        $this->request_uri = $_SERVER['REQUEST_URI'];
+    public function get_server_info(): array {
+        $data = array();
+        foreach($_SERVER as $key => $value) {
+            if (substr($key, 0, 5) <> 'HTTP_') { continue; }
+            $record = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
+            $data[$record] = $value;
+        }
+        return $data;
     }
 
     /**
      * @package Vector
-     * Vector\Objects\Request->get_request_headers()
+     * Vector\Objects\Request->get_headers()
      * @return array
      */
     public function get_headers(): array {

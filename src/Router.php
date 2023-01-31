@@ -29,32 +29,11 @@ class Router {
      * @param {array} $http_methods
      * @param {string} $route
      * @param {callable} $callback
-     * @param {array} $allowed_origins = []
-     * @param {array} $allowed_headers = []
      * @param {int} $rpm = 60
      * @param {bool} $die = true
      * @return void
      */
-    public function register_route(array $http_methods, string $route, callable $callback, array $allowed_origins = [], array $allowed_headers = [], int $rpm = 60, bool $die = true): void {
-        if (isset($_SERVER['HTTP_ORIGIN'])) {
-            if (!empty($allowed_origins)) {
-                $origins = implode(', ', $allowed_origins);
-                header("Access-Control-Allow-Origin: {$origins}");     
-            } else { header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}"); }
-        }
-        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) { 
-                $methods = implode(', ', $http_methods);
-                header("Access-Control-Allow-Methods: {$methods}"); 
-            }
-            if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) { 
-                if (!empty($allowed_headers)) {
-                    $headers = implode(', ', $allowed_headers);
-                    header("Access-Control-Allow-Headers: {$headers}");
-                } else { header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}"); }
-            }
-            die();
-        }
+    public function register_route(array $http_methods, string $route, callable $callback, int $rpm = 120, bool $die = true): void {
         $rate_limiter = new RateLimiter($_SERVER['REMOTE_ADDR']);
         $seconds = floor(1 * $rpm);
         try {

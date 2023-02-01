@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class EventDispatcher {
 
     protected string $event_name;
-    protected bool $executed = false;
 
     /**
      * @package Vector

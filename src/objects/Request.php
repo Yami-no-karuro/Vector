@@ -45,12 +45,10 @@ class Request {
      * Vector\Objects\Request->get()
      * @return mixed
      */
-    public function get(string $param): mixed {
-        if ($this->request_method === 'GET') {
+    public function get(string $param, bool $query = false): mixed {
+        if ($query) {
             if (array_key_exists($param, $_GET)) { return $_GET[$param]; }
-        } else if ($this->request_method === 'POST') {
-            if (array_key_exists($param, $_POST)) { return $_POST[$param]; }
-        }
+        } else { if (array_key_exists($param, $_POST)) { return $_POST[$param]; } }
         return null; 
     }
 

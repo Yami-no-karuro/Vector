@@ -44,15 +44,18 @@ class ExampleController extends Controller {
                         ['type' => 's', 'value' => '%' . $_GET['search'] . '%'],
                         ['type' => 's', 'value' => '%' . $_GET['search'] . '%']
                 ));
-            } else { $posts = $mysql->get_results("SELECT * FROM `wp_posts`"); }
-            if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
-            $transient = new Transient('posts');
-            $transient_data = $transient->get_data(900);
-            if (false === $transient_data->valid) {
-                $resp = json_encode($posts['data']);
-                $transient->set_data($resp);
-            } else { $resp = $transient_data->content; }
-            return new Response($resp, [
+                if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
+            } else { 
+                $posts = $mysql->get_results("SELECT * FROM `wp_posts`"); 
+                if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
+                $transient = new Transient('posts');
+                $transient_data = $transient->get_data(900);
+                if (false === $transient_data->valid) {
+                    $posts = json_encode($posts['data']);
+                    $transient->set_data($resp);
+                } else { $posts = $transient_data->content; }
+            }
+            return new Response($posts, [
                 'HTTP/1.1 200 OK',
                 'Content-Type: application/json'
             ]);

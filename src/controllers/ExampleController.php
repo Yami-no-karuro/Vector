@@ -19,9 +19,11 @@ class ExampleController extends Controller {
 
         $this->router->register_route(['GET'], '^/?$', function(Request $request): Response {
             $transient = new Transient('home');
-            $transient_data = $transient->get_data(900);
+            $transient_data = $transient->get_data(0);
             if (false === $transient_data->valid) {
-                $template = new Template('home', array('pagename' => 'Vector'));
+                $template = new Template('home.html.php', array(
+                    'pagename' => 'Vector'
+                ));
                 $html = $template->parse();
                 $transient->set_data($html);
             } else { $html = $transient_data->content; }

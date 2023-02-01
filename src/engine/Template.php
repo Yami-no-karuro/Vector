@@ -29,7 +29,7 @@ class Template {
 	 */
     public function parse(): string {
         ob_start();
-        require_once(__DIR__ . "/../templates/{$this->template}.php");
+        require_once(__DIR__ . "/../templates/{$this->template}");
         return ob_get_clean();
     }
 
@@ -39,7 +39,7 @@ class Template {
      * @return void
 	 */
     public static function get_template_part(string $template_part): void {
-        require_once(__DIR__ . "/../template-parts/{$template_part}.php");
+        require_once(__DIR__ . "/../template-parts/{$template_part}");
     }
 
     /**

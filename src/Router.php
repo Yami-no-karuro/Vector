@@ -1,5 +1,7 @@
 <?php
 namespace Vector;
+
+use Vector\Objects\Request;
 use Vector\Objects\Response;
 use Vector\Engine\RateLimiter;
 use Vector\Engine\RateExceededException;
@@ -34,7 +36,8 @@ class Router {
      * @return void
      */
     public function register_route(array $http_methods, string $route, callable $callback, int $rpm = 120, bool $die = true): void {
-        $rate_limiter = new RateLimiter($_SERVER['REMOTE_ADDR']);
+        $request = new Request();
+        $rate_limiter = new RateLimiter($request->remote_address);
         $seconds = floor(1 * $rpm);
         try {
             $rate_limiter->limit_requests_in_minutes($rpm, 1);
@@ -44,25 +47,25 @@ class Router {
         }
         static $path = null;
         if ($path === null) {
-            $path = parse_url($_SERVER['REQUEST_URI'])['path'];
-            $script_name = dirname(dirname($_SERVER['SCRIPT_NAME']));
+            $path = parse_url($request->request_uri)['path'];
+            $script_name = dirname(dirname($request->script_name));
             $script_name = str_replace('\\', '/', $script_name);
             $len = strlen($script_name);
             if ($len > 0 && $script_name !== '/') { $path = substr($path, $len); }
         }
-        if (!in_array($_SERVER['REQUEST_METHOD'], (array) $http_methods)) { return; }
+        if (!in_array($request->request_method, (array) $http_methods)) { return; }
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
         if (empty($matches)) {
-            $response = $callback();
+            $response = $callback($request);
             $response->send();
         } else {
             $params = array();
             foreach ($matches as $k => $v) {
                 if (!is_numeric($k) && !isset($v[1])) { $params[$k] = $v[0]; }
             }
-            $response = $callback($params);
+            $response = $callback($request, $params);
             $response->send();
         }
         if ($die) { die(); }

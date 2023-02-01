@@ -6,7 +6,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class TemplateEngine {
+class Template {
 
     private string $template;
     private static mixed $template_data;
@@ -23,7 +23,7 @@ class TemplateEngine {
 
     /**
 	 * @package Vector
-	 * Vector\Engine\TemplateEngine->parse()
+	 * Vector\Engine\Template->parse()
      * @param {mixed} $data
      * @return string
 	 */
@@ -35,7 +35,7 @@ class TemplateEngine {
 
     /**
 	 * @package Vector
-	 * Vector\Engine\TemplateEngine::get_template_part()
+	 * Vector\Engine\Template::get_template_part()
      * @return void
 	 */
     public static function get_template_part(string $template_part): void {
@@ -44,7 +44,7 @@ class TemplateEngine {
 
     /**
 	 * @package Vector
-	 * Vector\Engine\TemplateEngine::get_script_tag()
+	 * Vector\Engine\Template::get_script_tag()
      * @param {string} $source
      * @param {bool} $defer
      * @param {bool} $async
@@ -58,7 +58,7 @@ class TemplateEngine {
 
     /**
 	 * @package Vector
-	 * Vector\Engine\TemplateEngine::get_style_tag()
+	 * Vector\Engine\Template::get_style_tag()
      * @param {string} $source
      * @return void
 	 */

@@ -13,6 +13,7 @@ define('NO_DIRECT_ACCESS', 'true');
 
 require_once(__DIR__ . '/../src/config.php');
 require_once(__DIR__ . '/../src/autoload_core.php');
+require_once(__DIR__ . '/../src/functions.php');
 require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);

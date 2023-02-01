@@ -1,5 +1,6 @@
 <?php 
 namespace Vector\Engine;
+
 use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) { 

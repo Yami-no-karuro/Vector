@@ -1,5 +1,6 @@
 <?php
 namespace Vector\Engine;
+
 use Vector\Router;
 
 if (!defined('NO_DIRECT_ACCESS')) { 

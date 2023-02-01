@@ -1,5 +1,6 @@
-/src/vendor/*
 /src/composer.lock
+/src/vendor/*
+!/src/vendor/.gitkeep
 /src/var/transients/*
 !/src/var/transients/.gitkeep
 /src/var/cache/*

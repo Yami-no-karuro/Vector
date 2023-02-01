@@ -20,6 +20,7 @@ class Request {
     public string $request_uri;
     public int $request_time;
     public float $request_time_float;
+    public $request_time_parsed;
 
     /**
      * @package Vector
@@ -36,6 +37,7 @@ class Request {
         $this->request_uri = $_SERVER['REQUEST_URI'];
         $this->request_time_float = $_SERVER['REQUEST_TIME_FLOAT'];
         $this->request_time = $_SERVER['REQUEST_TIME'];
+        $this->request_time_parsed = Carbon::parse($_SERVER['REQUEST_TIME'])->toDateTimeString();
     }
 
     /**

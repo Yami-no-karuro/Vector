@@ -2,6 +2,8 @@
 namespace Vector\Engine;
 
 use Vector\Router;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -10,13 +12,20 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class Controller {
 
+    protected Router $router;
+    protected Environment $template;
+
     /**
      * @package Vector
      * __construct()
      */
-    protected Router $router;
     public function __construct() {
         $this->router = Router::get_instance();
+        $loader = new FilesystemLoader(__DIR__ . '/../templates');
+        $this->template = new Environment($loader, [
+            'cache'       => __DIR__ . '/../var/cache',
+            'auto_reload' => true
+        ]);
         $this->init();
     }
 

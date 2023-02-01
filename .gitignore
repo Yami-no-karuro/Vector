@@ -1,2 +1,4 @@
 /src/vendor
 /src/composer.lock
+/src/var/cache/
+/src/var/transients

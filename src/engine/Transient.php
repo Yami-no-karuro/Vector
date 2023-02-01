@@ -17,7 +17,7 @@ class Transient {
      * __construct()
      */
     public function __construct($transient) {
-        $this->filepath = __DIR__ . '/../transients/' . md5($transient) . '.txt';         
+        $this->filepath = __DIR__ . '/../var/transients/' . md5($transient);         
         $this->content = @file_get_contents($this->filepath, true);
         $this->lsm_time = @filemtime($this->filepath);
     }

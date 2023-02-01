@@ -4,9 +4,8 @@ namespace Vector\Controllers;
 use Vector\Objects\Request;
 use Vector\Objects\Response;
 use Vector\Engine\Controller;
-use Vector\Engine\Template;
-use Vector\Engine\DBC;
 use Vector\Engine\Transient;
+use Vector\Engine\DBC;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -18,15 +17,10 @@ class ExampleController extends Controller {
     protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(Request $request): Response {
-            $transient = new Transient('home');
-            $transient_data = $transient->get_data(0);
-            if (false === $transient_data->valid) {
-                $template = new Template('home.html.php', array(
-                    'pagename' => 'Vector'
-                ));
-                $html = $template->parse();
-                $transient->set_data($html);
-            } else { $html = $transient_data->content; }
+            $html = $this->template->render('home.html.twig', array(
+                'title'       => 'Vector',
+                'description' => 'A simple yet performing PHP framework'
+            ));
             return new Response($html, [
                 'HTTP/1.1 200 OK',
                 'Content-Type: text/html'
@@ -44,7 +38,13 @@ class ExampleController extends Controller {
                 ));
             } else { $posts = $mysql->get_results("SELECT * FROM `wp_posts`"); }
             if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
-            return new Response(json_encode($posts['data']), [
+            $transient = new Transient('posts');
+            $transient_data = $transient->get_data(900);
+            if (false === $transient_data->valid) {
+                $resp = json_encode($posts['data']);
+                $transient->set_data($resp);
+            } else { $resp = $transient_data->content; }
+            return new Response($resp, [
                 'HTTP/1.1 200 OK',
                 'Content-Type: application/json'
             ]);

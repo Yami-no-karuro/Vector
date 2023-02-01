@@ -60,15 +60,17 @@ class Router {
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
-        $callback_event = new EventDispatcher('OnCallback');
         $params = array();
-        if (empty($matches)) {
-            $response = $callback($request);
-        } else {
-            foreach ($matches as $k => $v) { if (!is_numeric($k) && !isset($v[1])) { $params[$k] = $v[0]; } }
-            $response = $callback($request, $params);
+        if (!empty($matches)) {
+            foreach ($matches as $k => $v) { 
+                if (!is_numeric($k) && !isset($v[1])) { 
+                    $params[$k] = $v[0]; 
+                } 
+            }
         }
-        $callback_event->dispatch([$request, &$path, &$params]);
+        $callback_event = new EventDispatcher('OnCallback');
+        $callback_event->dispatch([$request, &$params]);
+        $response = $callback($request, $params);
         $response_event = new EventDispatcher('OnResponse');
         $response_event->dispatch([$request, &$response]);
         $response->send();

@@ -18,9 +18,6 @@ class ExampleController extends Controller {
     protected function init(): void {
 
         $this->router->register_route(['GET'], '^/?$', function(Request $request): Response {
-
-            dump($request);
-
             $transient = new Transient('home');
             $transient_data = $transient->get_data(0);
             if (false === $transient_data->valid) {

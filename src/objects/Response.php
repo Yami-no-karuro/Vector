@@ -23,6 +23,7 @@ class Response {
     /**
      * @package Vector
      * Vector\Objects\Response->send()
+     * @param {bool} $die
      * @return void
      */
     public function send(bool $die = false): void {

@@ -43,6 +43,8 @@ class Request {
     /**
      * @package Vector
      * Vector\Objects\Request->get()
+     * @param {string} $param
+     * @param {bool} $query
      * @return mixed
      */
     public function get(string $param, bool $query = false): mixed {

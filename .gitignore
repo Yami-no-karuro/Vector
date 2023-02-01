@@ -1,4 +1,3 @@
-/src/composer.lock
 /src/vendor/*
 !/src/vendor/.gitkeep
 /src/var/transients/*

@@ -42,6 +42,20 @@ class Request {
 
     /**
      * @package Vector
+     * Vector\Objects\Request->get()
+     * @return mixed
+     */
+    public function get(string $param): mixed {
+        if ($this->request_method === 'GET') {
+            if (array_key_exists($param, $_GET)) { return $_GET[$param]; }
+        } else if ($this->request_method === 'POST') {
+            if (array_key_exists($param, $_POST)) { return $_POST[$param]; }
+        }
+        return null; 
+    }
+
+    /**
+     * @package Vector
      * Vector\Objects\Request->get_server_info()
      * @return array
      */

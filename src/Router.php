@@ -5,6 +5,7 @@ use Vector\Objects\Request;
 use Vector\Objects\Response;
 use Vector\Engine\RateLimiter;
 use Vector\Engine\RateExceededException;
+use Vector\Engine\EventDispatcher;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -45,6 +46,8 @@ class Router {
             $response = new Response(NULL, ['HTTP/1.1 429 Too Many Requests']);
             $response->send(true);
         }
+        $request_event = new EventDispatcher('OnRequest');
+        $request_event->dispatch([$request]);
         static $path = null;
         if ($path === null) {
             $path = parse_url($request->request_uri)['path'];
@@ -57,17 +60,21 @@ class Router {
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
+        $callback_event = new EventDispatcher('OnCallback');
         if (empty($matches)) {
+            $callback_event->dispatch([$request, $path, null]);
             $response = $callback($request);
-            $response->send();
         } else {
             $params = array();
             foreach ($matches as $k => $v) {
                 if (!is_numeric($k) && !isset($v[1])) { $params[$k] = $v[0]; }
             }
+            $callback_event->dispatch([$request, $path, $params]);
             $response = $callback($request, $params);
-            $response->send();
         }
+        $response_event = new EventDispatcher('OnResponse');
+        $response_event->dispatch([$request, $response]);
+        $response->send();
         if ($die) { die(); }
     }
 

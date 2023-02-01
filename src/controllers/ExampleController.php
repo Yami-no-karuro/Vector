@@ -52,7 +52,7 @@ class ExampleController extends Controller {
                 $transient_data = $transient->get_data(900);
                 if (false === $transient_data->valid) {
                     $posts = json_encode($posts['data']);
-                    $transient->set_data($resp);
+                    $transient->set_data($posts);
                 } else { $posts = $transient_data->content; }
             }
             return new Response($posts, [

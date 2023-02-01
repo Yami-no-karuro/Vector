@@ -1,6 +1,7 @@
 {
     "require": {
         "twig/twig": "^3.5",
-        "nesbot/carbon": "^2.66"
+        "nesbot/carbon": "^2.66",
+        "phpmailer/phpmailer": "^6.7"
     }
 }

@@ -16,6 +16,10 @@ class ExampleController extends Controller {
 
     protected function init(): void {
 
+        /**
+         * GET "/"
+         * Twig Template
+         */
         $this->router->register_route(['GET'], '^/?$', function(Request $request): Response {
             $html = $this->template->render('home.html.twig', array(
                 'title'       => 'Vector',
@@ -27,6 +31,10 @@ class ExampleController extends Controller {
             ]);
         });
 
+        /**
+         * GET "/posts/"
+         * Cached JSON Response (Refresh Time: 900s)
+         */
         $this->router->register_route(['GET'], '^/posts/?$', function(Request $request): Response {
             $mysql = DBC::get_instance();
             if (isset($_GET['search'])) {
@@ -50,6 +58,10 @@ class ExampleController extends Controller {
             ]);
         });
 
+        /**
+         * GET "/posts/<id>"
+         * JSON Response
+         */
         $this->router->register_route(['GET'], '^/posts/(?<id>\d+)/?$', function(Request $request, $params): Response {
             $mysql = DBC::get_instance();
             $posts = $mysql->get_results("SELECT * FROM `wp_posts` WHERE `ID` = ?", array(
@@ -62,6 +74,10 @@ class ExampleController extends Controller {
             ]);
         });
 
+        /**
+         * POST "/posts/"
+         * JSON Response
+         */
         $this->router->register_route(['POST'], '^/posts/?$', function(Request $request): Response {
             $req_body = file_get_contents('php://input');
             return new Response($req_body, [

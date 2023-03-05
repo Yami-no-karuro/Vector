@@ -18,8 +18,8 @@ class Transient {
      */
     public function __construct($transient) {
         $this->filepath = __DIR__ . '/../var/transients/' . md5($transient) . '.txt';         
-        $this->content = @file_get_contents($this->filepath, true);
-        $this->lsm_time = @filemtime($this->filepath);
+        $this->content = file_get_contents($this->filepath, true);
+        $this->lsm_time = filemtime($this->filepath);
     }
 
     /**
@@ -42,7 +42,7 @@ class Transient {
      * @return bool
      */
     public function set_data(mixed $data): bool {
-        return @file_put_contents($this->filepath, $data);
+        return file_put_contents($this->filepath, $data);
     }
 
 }

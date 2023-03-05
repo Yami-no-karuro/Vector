@@ -23,7 +23,11 @@ $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
 $iterator = new RecursiveIteratorIterator($dir);
 foreach ($iterator as $file) {
     $fname = $file->getFilename();
-    if (preg_match('%\.php$%', $fname)) { require_once ($file->getPathname()); }
+    if (preg_match('%\.php$%', $fname)) { 
+        require_once ($file->getPathname());
+        $controller = 'Vector\\Controllers\\' . basename($fname, '.php'); 
+        new $controller; 
+    }
 }
 
 use Vector\Objects\Response;

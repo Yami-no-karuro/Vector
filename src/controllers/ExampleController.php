@@ -92,5 +92,3 @@ class ExampleController extends Controller {
     }
     
 }
-
-new ExampleController();

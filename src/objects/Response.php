@@ -8,17 +8,14 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Response {
 
-    public mixed $body;
-    public array $headers;
-
     /**
      * @package Vector
      * __construct();
      */
-    public function __construct(mixed $body, array $headers) {
-        $this->headers = $headers;
-        $this->body = $body;
-    }
+    public function __construct(
+        public mixed $body, 
+        public array $headers
+    ) {}
 
     /**
      * @package Vector

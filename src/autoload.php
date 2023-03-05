@@ -10,8 +10,8 @@ spl_autoload_register(function($class) {
     $classname = $path_arr[count($path_arr) - 1];
     if (file_exists(__DIR__ . '/engine/' . $classname . '.php')) {
         require_once(__DIR__ . '/engine/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/objects/' . $classname . '.php')) {
-        require_once(__DIR__ . '/objects/' . $classname . '.php');
+    } else if (file_exists(__DIR__ . '/entities/' . $classname . '.php')) {
+        require_once(__DIR__ . '/entities/' . $classname . '.php');
     } else if (file_exists(__DIR__ . '/events/' . $classname . '.php')) {
         require_once(__DIR__ . '/events/' . $classname . '.php');
     }

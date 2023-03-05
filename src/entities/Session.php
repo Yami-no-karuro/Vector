@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Objects;
+namespace Vector\Entities;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -10,7 +10,7 @@ class Session {
 
     /**
      * @package Vector
-     * Vector\Objects\Session::get()
+     * Vector\Entities\Session::get()
      * @param {string} $key
      * @return mixed
      */
@@ -23,7 +23,7 @@ class Session {
 
     /**
      * @package Vector
-     * Vector\Objects\Session::set()
+     * Vector\Entities\Session::set()
      * @param {string} $key
      * @param {mixed} $val
      * @return {void}

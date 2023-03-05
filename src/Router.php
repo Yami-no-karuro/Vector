@@ -1,8 +1,8 @@
 <?php
 namespace Vector;
 
-use Vector\Objects\Request;
-use Vector\Objects\Response;
+use Vector\Entities\Request;
+use Vector\Entities\Response;
 use Vector\Engine\RateLimiter;
 use Vector\Engine\RateExceededException;
 use Vector\Engine\EventDispatcher;
@@ -68,11 +68,9 @@ class Router {
                 } 
             }
         }
-        $callback_event = new EventDispatcher('OnCallback');
-        $callback_event->dispatch([$request, &$params]);
         $response = $callback($request, $params);
         $response_event = new EventDispatcher('OnResponse');
-        $response_event->dispatch([$request, &$response]);
+        $response_event->dispatch([$request, $response]);
         $response->send();
         if ($die) { die(); }
     }

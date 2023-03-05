@@ -1,8 +1,8 @@
 <?php
 namespace Vector\Controllers;
 
-use Vector\Objects\Request;
-use Vector\Objects\Response;
+use Vector\Entities\Request;
+use Vector\Entities\Response;
 use Vector\Engine\Controller;
 use Vector\Engine\Transient;
 use Vector\Engine\DBC;
@@ -64,7 +64,9 @@ class ExampleController extends Controller {
             $posts = $mysql->get_results("SELECT * FROM `wp_posts` WHERE `ID` = ?", array(
                 ['type' => 'i', 'value' => $params['id']]
             ));
-            if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
+            if (false === $posts['success']) { 
+                return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); 
+            }
             return new Response(json_encode($posts['data']), [
                 'HTTP/1.1 200 OK',
                 'Content-Type: application/json'

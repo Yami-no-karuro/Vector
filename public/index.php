@@ -30,7 +30,7 @@ foreach ($iterator as $file) {
     }
 }
 
-use Vector\Objects\Response;
+use Vector\Entities\Response;
 $response = new Response(NULL, ['HTTP/1.1 404 Not Found']);
 $response->send(true);
 

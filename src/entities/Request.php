@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Objects;
+namespace Vector\Entities;
 
 use Carbon\Carbon;
 
@@ -42,7 +42,7 @@ class Request {
 
     /**
      * @package Vector
-     * Vector\Objects\Request->get()
+     * Vector\Entities\Request->get()
      * @param {string} $param
      * @param {bool} $query
      * @return mixed
@@ -58,7 +58,7 @@ class Request {
 
     /**
      * @package Vector
-     * Vector\Objects\Request->get_server_info()
+     * Vector\Entities\Request->get_server_info()
      * @return array
      */
     public function get_server_info(): array {
@@ -73,7 +73,7 @@ class Request {
 
     /**
      * @package Vector
-     * Vector\Objects\Request->get_headers()
+     * Vector\Entities\Request->get_headers()
      * @return array
      */
     public function get_headers(): array {

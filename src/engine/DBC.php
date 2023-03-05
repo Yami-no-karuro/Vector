@@ -1,7 +1,7 @@
 <?php
 namespace Vector\Engine;
 
-use Vector\Objects\Response;
+use Vector\Entities\Response;
 use Exception;
 use mysqli;
 

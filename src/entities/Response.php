@@ -1,5 +1,5 @@
 <?php
-namespace Vector\Objects;
+namespace Vector\Entities;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -19,7 +19,7 @@ class Response {
 
     /**
      * @package Vector
-     * Vector\Objects\Response->send()
+     * Vector\Entities\Response->send()
      * @param {bool} $die
      * @return void
      */

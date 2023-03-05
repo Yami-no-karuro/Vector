@@ -14,5 +14,3 @@ class %controller_name% extends Controller {
     }
     
 }
-
-new %controller_name%();

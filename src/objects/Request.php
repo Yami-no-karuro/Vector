@@ -50,7 +50,9 @@ class Request {
     public function get(string $param, bool $query = false): mixed {
         if ($query) {
             if (array_key_exists($param, $_GET)) { return $_GET[$param]; }
-        } else { if (array_key_exists($param, $_POST)) { return $_POST[$param]; } }
+        } else { 
+            if (array_key_exists($param, $_POST)) { return $_POST[$param]; } 
+        }
         return null; 
     }
 

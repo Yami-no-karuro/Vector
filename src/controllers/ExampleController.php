@@ -37,23 +37,17 @@ class ExampleController extends Controller {
          */
         $this->router->register_route(['GET'], '^/posts/?$', function(Request $request): Response {
             $mysql = DBC::get_instance();
-            if (isset($_GET['search'])) {
-                $posts = $mysql->get_results("SELECT * FROM `wp_posts` WHERE 
-                    `post_title` LIKE ? OR
-                    `post_content` LIKE ?", array(
-                        ['type' => 's', 'value' => '%' . $_GET['search'] . '%'],
-                        ['type' => 's', 'value' => '%' . $_GET['search'] . '%']
-                ));
-                if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
+            $posts = $mysql->get_results("SELECT * FROM `wp_posts`"); 
+            if (false === $posts['success']) {
+                return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); 
+            }
+            $transient = new Transient('posts');
+            $transient_data = $transient->get_data(900);
+            if (false === $transient_data->valid) {
+                $posts = json_encode($posts['data']);
+                $transient->set_data($posts);
             } else { 
-                $posts = $mysql->get_results("SELECT * FROM `wp_posts`"); 
-                if (false === $posts['success']) { return new Response(NULL, ['HTTP/1.1 500 Internal Server Error']); }
-                $transient = new Transient('posts');
-                $transient_data = $transient->get_data(900);
-                if (false === $transient_data->valid) {
-                    $posts = json_encode($posts['data']);
-                    $transient->set_data($posts);
-                } else { $posts = $transient_data->content; }
+                $posts = $transient_data->content; 
             }
             return new Response($posts, [
                 'HTTP/1.1 200 OK',

@@ -1,0 +1,81 @@
+version: "3"
+
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vector-apache
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+    - php
+    - mariadb
+    - redis
+    - phpmyadmin
+    networks:
+      - vector-network
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "8.1"
+    container_name: vector-php
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - PHP_MEMORY_LIMIT=512M
+      - PHP_UPLOAD_MAX_FILESIZE=100M
+      - PHP_POST_MAX_SIZE=100M
+      - COMPOSER_ALLOW_SUPERUSER=1
+    networks:
+      - vector-network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: vector-mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: ROOT
+      MYSQL_DATABASE: vector_db
+      MYSQL_USER: vector_usr
+      MYSQL_PASSWORD: vector_pwd
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    networks:
+      - vector-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: vector-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: ROOT
+    ports:
+      - "8080:80"
+    networks:
+      - vector-network
+
+  redis:
+    image: redis:latest
+    container_name: vector-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - vector-network
+
+networks:
+  vector-network:

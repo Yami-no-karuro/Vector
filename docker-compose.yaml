@@ -30,6 +30,8 @@ services:
       - PHP_UPLOAD_MAX_FILESIZE=100M
       - PHP_POST_MAX_SIZE=100M
       - COMPOSER_ALLOW_SUPERUSER=1
+    depends_on:
+      - apache
     networks:
       - vector-network
 
@@ -59,6 +61,8 @@ services:
       MYSQL_ROOT_PASSWORD: ROOT
     ports:
       - "8080:80"
+    depends_on:
+      - mariadb
     networks:
       - vector-network
 

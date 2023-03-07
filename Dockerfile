@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite
 RUN a2enmod deflate
+RUN a2enmod headers
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

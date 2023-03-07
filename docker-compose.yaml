@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   apache:
     build:
       context: .
@@ -11,11 +12,6 @@ services:
       - "80:80"
     volumes:
       - ./:/var/www/html
-    depends_on:
-    - php
-    - mariadb
-    - redis
-    - phpmyadmin
     networks:
       - vector-network
 

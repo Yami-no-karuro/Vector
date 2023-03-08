@@ -19,8 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        PHP_VERSION: "8.1"
     container_name: vector-php
     restart: unless-stopped
     volumes:

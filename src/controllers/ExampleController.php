@@ -3,6 +3,7 @@
 namespace Vector\Controllers;
 
 use Vector\Module\Controller;
+use Vector\Module\SqlConnection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

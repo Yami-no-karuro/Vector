@@ -34,6 +34,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN chown -R 1000:1000 /var/www/html
 
-WORKDIR /var/www/html
+WORKDIR /var/www/html/public
 
 EXPOSE 80

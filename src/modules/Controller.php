@@ -22,7 +22,7 @@ abstract class Controller {
      */
     public function __construct() 
     {
-        $this->router = Router::get_instance();
+        $this->router = Router::getInstance();
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->template = new Environment($loader, [
             'cache'       => __DIR__ . '/../var/cache',

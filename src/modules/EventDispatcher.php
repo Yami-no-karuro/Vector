@@ -23,7 +23,7 @@ class EventDispatcher {
     /**
      * @package Vector
      * Vector\Module\EventDispatcher->dispatch()
-     * @param {array} $args
+     * @param array $args
      * @return void
      */
     public function dispatch(array $args): void 

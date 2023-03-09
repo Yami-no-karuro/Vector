@@ -30,9 +30,9 @@ class Transient {
 	 * @param {int} $seconds
      * @return object
      */
-    public function getData(int $seconds): object 
+    public function getData(int $seconds): array 
     {
-        return (object) [
+        return [
             'valid'   => (time() - $this->lsmTime) > $seconds ? false : true,
             'content' => $this->content
         ];

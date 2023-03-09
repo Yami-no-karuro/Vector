@@ -1,8 +1,9 @@
 <?php
-namespace Vector\Engine;
 
-use Vector\Entities\Response;
-use Exception;
+namespace Vector\Module;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use mysqli;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -10,7 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class DBC {
+class SqlConnection {
 
     private mysqli $mysqlitunnel;
     private static mixed $instance = null;
@@ -22,9 +23,12 @@ class DBC {
     private function __construct() {
         try {
             $this->mysqlitunnel = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        } catch (Exception $e) { 
-            $response = new Response(NULL, ['HTTP/1.1 500 Internal Server Error']);
-            $response->send(true);
+        } catch (\Exception $e) { 
+            $request = Request::createFromGlobals();
+            $response = new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+            $response->prepare($request);
+            $response->send();
+            die();
         }
     }
 
@@ -32,45 +36,48 @@ class DBC {
      * @package Vector
      * __destruct()
      */
-    public function __destruct() {
+    public function __destruct() 
+    {
         $this->mysqlitunnel->close();
     }
 
     /**
      * @package Vector
-     * Vector\Engine\DBC::get_instance()
-     * @return object
+     * Vector\Module\SqlConnection::getInstance()
+     * @return SqlConnection
      */
-    public static function get_instance(): DBC {
-        if (self::$instance == null) { self::$instance = new DBC();  }
+    public static function getInstance(): SqlConnection 
+    {
+        if (self::$instance == null) { self::$instance = new SqlConnection(); }
         return self::$instance;
     }
 
     /**
      * @package Vector
-     * Vector\Engine\DBC->exec()
-     * @param {string} $sql
-     * @param {array} $params
+     * Vector\Module\SqlConnection->exec()
+     * @param string $sql
+     * @param array $params
      * @return array
      */
-    public function exec(string $sql, array $params = null): array {
+    public function exec(string $sql, array $params = null): array 
+    {
         $clean_sql = $this->mysqlitunnel->prepare($sql);
         if ($params !== null) {
             $types = '';
-            $values = array();
+            $values = [];
             foreach($params as $param) { 
                 $types .= $param['type'];
                 array_push($values, $param['value']); 
             }
             $clean_sql->bind_param($types, ...$values);
         }
-        $result = array(
+        $result = [
             'success' => false,
-            'data'    => array(
+            'data'    => [
                 'inserted_id'   => $clean_sql->insert_id,
                 'affected_rows' => $clean_sql->affected_rows
-            )
-        );
+            ]
+        ];
         if (!$clean_sql->execute()) { return $result; }
         $result['success'] = true;
         return $result;
@@ -78,16 +85,17 @@ class DBC {
 
     /**
      * @package Vector
-     * Vector\Engine\DBC->get_results()
-     * @param {string} $sql
-     * @param {array} $params
+     * Vector\Module\SqlConnection->get_results()
+     * @param string $sql
+     * @param array $params
      * @return array
      */
-    public function get_results(string $sql, array $params = null): array {
+    public function get_results(string $sql, array $params = null): array 
+    {
         $clean_sql = $this->mysqlitunnel->prepare($sql);
         if ($params !== null) {
             $types = '';
-            $values = array();
+            $values = [];
             foreach($params as $param) { 
                 $types .= $param['type'];
                 array_push($values, $param['value']); 
@@ -95,16 +103,16 @@ class DBC {
             $clean_sql->bind_param($types, ...$values);
         }
         if (!$clean_sql->execute()) { 
-            return array(
+            return [
                 'success' => false,
                 'data'    => NULL
-            ); 
+            ]; 
         }
         $result = $clean_sql->get_result();
-        $results = array(
+        $results = [
             'success' => true,
-            'data'    => array()
-        );
+            'data'    => []
+        ];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) { 
             if ($result->num_rows === 1) { 
                 $results['data'] = $row;

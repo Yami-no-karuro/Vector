@@ -8,11 +8,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
 /**
  * @package Vector
  * dump()
- * @param {mixed} $data
- * @return {void}
+ * @param mixed $data
+ * @return void
  */
-function dump(mixed $data): void {
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
+function dump(mixed $data): void 
+{
+    echo '<pre>' . var_dump($data) . '</pre>';
 }

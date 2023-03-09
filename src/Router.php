@@ -1,11 +1,12 @@
 <?php
+
 namespace Vector;
 
-use Vector\Entities\Request;
-use Vector\Entities\Response;
-use Vector\Engine\RateLimiter;
-use Vector\Engine\RateExceededException;
-use Vector\Engine\EventDispatcher;
+use Vector\Module\RateLimiter;
+use Vector\Module\RateExceededException;
+use Vector\Module\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -21,14 +22,15 @@ class Router {
      * Vector\Router::get_instance()
      * @return Router
      */
-    public static function get_instance(): Router {
+    public static function get_instance(): Router 
+    {
         if (self::$instance == null) { self::$instance = new Router(); }
         return self::$instance;
     }
 
     /**
      * @package Vector
-     * Vector\Router->register_route()
+     * Vector\Router->registerRoute()
      * @param {array} $http_methods
      * @param {string} $route
      * @param {callable} $callback
@@ -36,27 +38,30 @@ class Router {
      * @param {bool} $die = true
      * @return void
      */
-    public function register_route(array $http_methods, string $route, callable $callback, int $rpm = 120, bool $die = true): void {
-        $request = new Request();
-        $rate_limiter = new RateLimiter($request->remote_address);
-        $seconds = floor(1 * $rpm);
+    public function registerRoute(array $http_methods, string $route, callable $callback, int $rpm = 120, bool $die = true): void 
+    {
+        $request = Request::createFromGlobals();
+        $rateLimiter = new RateLimiter($request->getClientIp());
         try {
-            $rate_limiter->limit_requests_in_minutes($rpm, 1);
+            $rateLimiter->limitRequestsInMinutes($rpm, 1);
         } catch (RateExceededException $e) {
-            $response = new Response(NULL, ['HTTP/1.1 429 Too Many Requests']);
-            $response->send(true);
+            $response = new Response('', Response::HTTP_TOO_MANY_REQUESTS, [
+                'Content-Type: text/plain'
+            ]);
+            $response->prepare($request);
+            $response->send();
         }
-        $request_event = new EventDispatcher('OnRequest');
-        $request_event->dispatch([$request]);
+        $requestEvent = new EventDispatcher('OnRequest');
+        $requestEvent->dispatch([&$request]);
         static $path = null;
         if ($path === null) {
-            $path = parse_url($request->request_uri)['path'];
-            $script_name = dirname(dirname($request->script_name));
-            $script_name = str_replace('\\', '/', $script_name);
-            $len = strlen($script_name);
-            if ($len > 0 && $script_name !== '/') { $path = substr($path, $len); }
+            $path = parse_url($request->getRequestUri())['path'];
+            $scriptName = dirname(dirname($request->getScriptName()));
+            $scriptName = str_replace('\\', '/', $scriptName);
+            $len = strlen($scriptName);
+            if ($len > 0 && $scriptName !== '/') { $path = substr($path, $len); }
         }
-        if (!in_array($request->request_method, (array) $http_methods)) { return; }
+        if (!in_array($request->getMethod(), (array) $http_methods)) { return; }
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
@@ -69,8 +74,9 @@ class Router {
             }
         }
         $response = $callback($request, $params);
-        $response_event = new EventDispatcher('OnResponse');
-        $response_event->dispatch([$request, $response]);
+        $responseEvent = new EventDispatcher('OnResponse');
+        $responseEvent->dispatch([&$request, &$response]);
+        $response->prepare($request);
         $response->send();
         if ($die) { die(); }
     }

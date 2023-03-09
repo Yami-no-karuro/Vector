@@ -1,6 +1,0 @@
-<?php
-/**
- * @package Vector
- * Template Name: %template_name%
- */
-?>

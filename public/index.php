@@ -7,6 +7,9 @@
 * -----------------------------------
 */
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 session_start();
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('NO_DIRECT_ACCESS', 'true');
@@ -30,9 +33,11 @@ foreach ($iterator as $file) {
     }
 }
 
-use Vector\Entities\Response;
-$response = new Response(NULL, ['HTTP/1.1 404 Not Found']);
-$response->send(true);
+$request = Request::createFromGlobals();
+$response = new Response('', Response::HTTP_NOT_FOUND);
+$response->prepare($request);
+$response->send();
+die();
 
 
 

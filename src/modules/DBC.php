@@ -1,5 +1,6 @@
 <?php
-namespace Vector\Engine;
+
+namespace Vector\Module;
 
 use Vector\Entities\Response;
 use Exception;
@@ -38,7 +39,7 @@ class DBC {
 
     /**
      * @package Vector
-     * Vector\Engine\DBC::get_instance()
+     * Vector\Module\DBC::get_instance()
      * @return object
      */
     public static function get_instance(): DBC {
@@ -48,7 +49,7 @@ class DBC {
 
     /**
      * @package Vector
-     * Vector\Engine\DBC->exec()
+     * Vector\Module\DBC->exec()
      * @param {string} $sql
      * @param {array} $params
      * @return array
@@ -78,7 +79,7 @@ class DBC {
 
     /**
      * @package Vector
-     * Vector\Engine\DBC->get_results()
+     * Vector\Module\DBC->get_results()
      * @param {string} $sql
      * @param {array} $params
      * @return array

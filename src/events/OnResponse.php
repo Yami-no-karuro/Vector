@@ -1,9 +1,14 @@
 <?php
-namespace Vector\Events;
+
+namespace Vector\Event;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class OnResponse {
 
-    public function __construct(array $args) {
+    public function __construct(Request $request, Response $response) 
+    {
         // ...
     }
 

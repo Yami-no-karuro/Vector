@@ -1,5 +1,6 @@
 <?php
-namespace Vector\Engine;
+
+namespace Vector\Module;
 
 use Exception;
 
@@ -19,41 +20,44 @@ class RateLimiter {
 	 * @param {string} $token
 	 * @param {string} $prefix = 'rate'
      */
-	public function __construct(string $token, string $prefix = 'rate') {
+	public function __construct(string $token, string $prefix = 'rate') 
+	{
 		$this->prefix = md5($prefix . $token);
 		if(!isset($_SESSION['cache'])) { $_SESSION['cache'] = array(); }
 		if(!isset($_SESSION['expiries'])) {
 			$_SESSION['expiries'] = array();
-		} else { $this->expire_session_keys(); }
+		} else { $this->expireSessionKeys(); }
 	}
 
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->limit_requests_in_minutes()
+	 * Vector\Module\RateLimiter->limitRequestsInMinutes()
 	 * @param {int} $allowed_request
 	 * @param {int} $minutes
 	 * @return void
 	 */
-	public function limit_requests_in_minutes(int $allowed_requests, int $minutes): void {
-		$this->expire_session_keys();
+	public function limitRequestsInMinutes(int $allowedRequests, int $minutes): void 
+	{
+		$this->expireSessionKeys();
 		$requests = 0;
-		foreach ($this->get_keys($minutes) as $key) {
-			$requests_in_current_minute = $this->get_session_key($key);
-			if (false !== $requests_in_current_minute) $requests += $requests_in_current_minute;
+		foreach ($this->getKeys($minutes) as $key) {
+			$requestsInCurrentMinute = $this->getSessionKey($key);
+			if (false !== $requestsInCurrentMinute) $requests += $requestsInCurrentMinute;
 		}
-		if (false === $requests_in_current_minute) {
-			$this->set_session_key($key, 1, ($minutes * 60 + 1));
+		if (false === $requestsInCurrentMinute) {
+			$this->setSessionKey($key, 1, ($minutes * 60 + 1));
 		} else { $this->increment($key, 1); }
-		if ($requests > $allowed_requests) throw new RateExceededException;
+		if ($requests > $allowedRequests) throw new RateExceededException;
 	}
 
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->get_keys()
+	 * Vector\Module\RateLimiter->getKeys()
 	 * @param {int} $minutes
 	 * @return array
 	 */
-	private function get_keys(int $minutes): array {
+	private function getKeys(int $minutes): array 
+	{
 		$keys = array();
 		$now = time();
 		for ($time = $now - $minutes * 60; $time <= $now; $time += 60) {
@@ -64,12 +68,13 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->increment()
+	 * Vector\Module\RateLimiter->increment()
 	 * @param {string} $key
 	 * @param {int} $inc
 	 * @return void
 	 */
-	private function increment(string $key, int $inc): void {
+	private function increment(string $key, int $inc): void 
+	{
 		$cnt = 0;
 		if (isset($_SESSION['cache'][$key])) { $cnt = $_SESSION['cache'][$key]; }
 		$_SESSION['cache'][$key] = $cnt + $inc;
@@ -77,33 +82,36 @@ class RateLimiter {
 
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->set_session_key()
+	 * Vector\Module\RateLimiter->setSessionKey()
 	 * @param {string} $key
 	 * @param {int} $val
 	 * @param {int} $expiry
 	 * @return void
 	 */
-	private function set_session_key(string $key, string $val, string $expiry): void {
+	private function setSessionKey(string $key, string $val, string $expiry): void 
+	{
 		$_SESSION['expiries'][$key] = time() + $expiry;
 		$_SESSION['cache'][$key] = $val;
 	}
 	
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->get_session_key()
+	 * Vector\Module\RateLimiter->getSessionKey()
 	 * @param {string} $key
 	 * @return mixed 
 	 */
-	private function get_session_key(string $key): mixed {
+	private function getSessionKey(string $key): mixed 
+	{
 		return isset($_SESSION['cache'][$key]) ? $_SESSION['cache'][$key] : false;
 	}
 
 	/**
 	 * @package Vector
-	 * Vector\Engine\RateLimiter->expire_session_keys()
+	 * Vector\Module\RateLimiter->expireSessionKeys()
 	 * @return void
 	 */
-	private function expire_session_keys(): void {
+	private function expireSessionKeys(): void 
+	{
 		foreach ($_SESSION['expiries'] as $key => $value) {
 			if (time() > $value) { 
 				unset($_SESSION['cache'][$key]);

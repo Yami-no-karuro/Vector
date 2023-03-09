@@ -1,5 +1,6 @@
 <?php
-namespace Vector\Engine;
+
+namespace Vector\Module;
 
 use Vector\Router;
 use Twig\Loader\FilesystemLoader;
@@ -19,7 +20,8 @@ abstract class Controller {
      * @package Vector
      * __construct()
      */
-    public function __construct() {
+    public function __construct() 
+    {
         $this->router = Router::get_instance();
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->template = new Environment($loader, [
@@ -32,7 +34,7 @@ abstract class Controller {
     
     /**
      * @package Vector
-     * Vector\Engine\Controller->init
+     * Vector\Module\Controller->init
      * @return void
      */
     abstract protected function init();

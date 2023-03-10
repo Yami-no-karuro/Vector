@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     libcurl4-openssl-dev \
-    redis-tools \
     && docker-php-ext-install \
     pdo_mysql \
     mysqli \
@@ -22,8 +21,6 @@ RUN apt-get update && apt-get install -y \
     intl \
     xml \
     curl \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite

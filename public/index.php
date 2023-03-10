@@ -22,13 +22,13 @@ require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
+$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/Controller');
 $iterator = new RecursiveIteratorIterator($dir);
 foreach ($iterator as $file) {
     $fname = $file->getFilename();
     if (preg_match('%\.php$%', $fname)) { 
         require_once ($file->getPathname());
-        $controller = 'Vector\\Controllers\\' . basename($fname, '.php'); 
+        $controller = 'Vector\\Controller\\' . basename($fname, '.php'); 
         new $controller; 
     }
 }

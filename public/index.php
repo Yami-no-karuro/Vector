@@ -22,7 +22,7 @@ require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/Controller');
+$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
 $iterator = new RecursiveIteratorIterator($dir);
 foreach ($iterator as $file) {
     $fname = $file->getFilename();

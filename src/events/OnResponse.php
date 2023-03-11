@@ -13,8 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class OnResponse {
 
     public function __construct(Request $request, Response $response) 
-    {
-        // ...
-    }
+    {}
 
 }

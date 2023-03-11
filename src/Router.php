@@ -13,6 +13,16 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Router {
 
     private static mixed $instance = null;
+    private Request $request;
+
+    /**
+     * @package Vector
+     * __construct()
+     */
+    private function __construct() 
+    {
+        $this->request = Request::createFromGlobals();
+    }
    
     /**
      * @package Vector
@@ -31,22 +41,24 @@ class Router {
      * @param array $httpMethods
      * @param string $route
      * @param callable $callback
-     * @param int $rpm = 60
      * @param bool $die = true
      * @return void
      */
-    public function registerRoute(array $httpMethods, string $route, callable $callback, int $rpm = 10, bool $die = true): void 
+    public function registerRoute(
+        array $httpMethods, 
+        string $route, 
+        callable $callback, 
+        bool $die = true): void 
     {
-        $request = Request::createFromGlobals();
         static $path = null;
         if ($path === null) {
-            $path = parse_url($request->getRequestUri())['path'];
-            $scriptName = dirname(dirname($request->getScriptName()));
+            $path = parse_url($this->request->getRequestUri())['path'];
+            $scriptName = dirname(dirname($this->request->getScriptName()));
             $scriptName = str_replace('\\', '/', $scriptName);
             $len = strlen($scriptName);
             if ($len > 0 && $scriptName !== '/') { $path = substr($path, $len); }
         }
-        if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
+        if (!in_array($this->request->getMethod(), (array) $httpMethods)) { return; }
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
@@ -57,11 +69,11 @@ class Router {
             }
         }
         $requestEvent = new EventDispatcher('OnRequest');
-        $requestEvent->dispatch([&$request]);
-        $response = $callback($request, $params);
+        $requestEvent->dispatch([&$this->request]);
+        $response = $callback($this->request, $params);
         $responseEvent = new EventDispatcher('OnResponse');
-        $responseEvent->dispatch([&$request, &$response]);
-        $response->prepare($request);
+        $responseEvent->dispatch([&$this->request, &$response]);
+        $response->prepare($this->request);
         $response->send();
         if ($die) { die(); }
     }

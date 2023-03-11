@@ -11,7 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-abstract class Controller {
+abstract class AbstractController {
 
     protected Router $router;
     protected Environment $template;

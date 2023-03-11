@@ -2,8 +2,7 @@
 
 namespace Vector\Module;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Exception;
 use mysqli;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -11,6 +10,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
+class SqlConnectionException extends Exception {}
 class SqlConnection {
 
     private mysqli $mysqlitunnel;
@@ -23,12 +23,8 @@ class SqlConnection {
     private function __construct() {
         try {
             $this->mysqlitunnel = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        } catch (\Exception $e) { 
-            $request = Request::createFromGlobals();
-            $response = new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
-            $response->prepare($request);
-            $response->send();
-            die();
+        } catch (Exception $e) { 
+            throw new SqlConnectionException;
         }
     }
 
@@ -85,12 +81,12 @@ class SqlConnection {
 
     /**
      * @package Vector
-     * Vector\Module\SqlConnection->get_results()
+     * Vector\Module\SqlConnection->getResults()
      * @param string $sql
      * @param array $params
      * @return array
      */
-    public function get_results(string $sql, array $params = null): array 
+    public function getResults(string $sql, array $params = null): array 
     {
         $clean_sql = $this->mysqlitunnel->prepare($sql);
         if ($params !== null) {
@@ -102,17 +98,9 @@ class SqlConnection {
             }
             $clean_sql->bind_param($types, ...$values);
         }
-        if (!$clean_sql->execute()) { 
-            return [
-                'success' => false,
-                'data'    => NULL
-            ]; 
-        }
+        if (!$clean_sql->execute()) { return ['success' => false, 'data' => NULL]; }
         $result = $clean_sql->get_result();
-        $results = [
-            'success' => true,
-            'data'    => []
-        ];
+        $results = ['success' => true, 'data' => []];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) { 
             if ($result->num_rows === 1) { 
                 $results['data'] = $row;

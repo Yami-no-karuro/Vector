@@ -49,4 +49,14 @@ class Transient {
         return file_put_contents($this->filepath, $data);
     }
 
+    /**
+     * @package Vector
+     * Vector\Module\Transitne->delete()
+     * @return bool
+     */
+    public function delete(): bool
+    {
+        return unlink($this->filepath);
+    }
+
 }

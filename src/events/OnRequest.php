@@ -12,8 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class OnRequest {
 
     public function __construct(Request $request) 
-    {
-        // ...
-    }
+    {}
 
 }

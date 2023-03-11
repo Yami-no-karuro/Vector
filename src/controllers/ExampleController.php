@@ -2,7 +2,7 @@
 
 namespace Vector\Controller;
 
-use Vector\Module\Controller;
+use Vector\Module\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,7 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class ExampleController extends Controller {
+class ExampleController extends AbstractController {
 
     protected function init(): void {
 

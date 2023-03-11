@@ -11,7 +11,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./:/var/www/html
+      - .:/var/www/html
     networks:
       - vector-network
 
@@ -22,14 +22,12 @@ services:
     container_name: vector-php
     restart: unless-stopped
     volumes:
-      - ./:/var/www/html
+      - .:/var/www/html
     environment:
-      - PHP_MEMORY_LIMIT=512M
+      - PHP_MEMORY_LIMIT=1024M
       - PHP_UPLOAD_MAX_FILESIZE=100M
       - PHP_POST_MAX_SIZE=100M
       - COMPOSER_ALLOW_SUPERUSER=1
-    depends_on:
-      - apache
     networks:
       - vector-network
 

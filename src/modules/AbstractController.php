@@ -34,7 +34,7 @@ abstract class AbstractController {
     
     /**
      * @package Vector
-     * Vector\Module\Controller->init
+     * Vector\Module\AbstractController->init
      * @return void
      */
     abstract protected function init();

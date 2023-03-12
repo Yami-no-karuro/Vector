@@ -13,7 +13,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class ExampleController extends AbstractController {
 
-    protected function init(): void {
+    protected function init(): void 
+    {
 
         /**
          * GET "/"

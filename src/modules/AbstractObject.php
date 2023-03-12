@@ -24,10 +24,10 @@ abstract class AbstractObject {
 
     /**
      * @package Vector
-     * Vector\Model\AbstractObject::create()
-     * @return AbstractObject
+     * Vector\Model\AbstractObject->insert()
+     * @return bool
      */
-    abstract public static function create(); 
+    abstract public function insert(); 
 
     /**
      * @package Vector

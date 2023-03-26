@@ -4,5 +4,3 @@
 !/src/var/transients/.gitkeep
 /src/var/cache/*
 !/src/var/cache/.gitkeep
-data/*
-!data/.gitkeep

@@ -44,7 +44,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./data/mariadb:/var/lib/mysql
+      - vector-database:/var/lib/mysql
     networks:
       - vector-network
 
@@ -64,3 +64,6 @@ services:
 
 networks:
   vector-network:
+
+volumes:
+  vector-database:

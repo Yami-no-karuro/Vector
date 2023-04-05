@@ -27,7 +27,7 @@ abstract class AbstractObject {
      * Vector\Model\AbstractObject->insert()
      * @return bool
      */
-    abstract public function insert(); 
+    abstract protected function insert(); 
 
     /**
      * @package Vector

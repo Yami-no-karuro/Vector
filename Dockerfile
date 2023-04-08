@@ -34,6 +34,7 @@ RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
 RUN find /var/www/html -type d -exec chmod 755 {} \;
 RUN find /var/www/html -type f -exec chmod 644 {} \;
+RUN chmod 755 /var/www/html/bin/console
 
 WORKDIR /var/www/html
 

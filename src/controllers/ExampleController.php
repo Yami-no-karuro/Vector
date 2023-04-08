@@ -24,13 +24,7 @@ class ExampleController extends AbstractController {
          */
         $this->router->registerRoute(['GET'], '^/?$', function(Request $request): Response 
         {
-            $rateLimiter = new RateLimiter($request);
-            try {
-                $rateLimiter->limitRequestsInMinutes(120, 1);
-            } catch (RateExceededException) {
-                return new Response(null, Response::HTTP_TOO_MANY_REQUESTS);
-            }
-            return new Response($this->template->render('home.html.twig', [
+            return new Response($this->template->render('example.html.twig', [
                 'title' => 'Vector',
                 'description' => 'A simple yet performing PHP framework'
             ]), Response::HTTP_OK);

@@ -27,7 +27,7 @@ class Transient {
     /**
      * @package Vector
      * Vector\Module\Transient->getData()
-	 * @param {int} $seconds
+	 * @param int $seconds
      * @return object
      */
     public function getData(int $seconds): array 
@@ -41,7 +41,7 @@ class Transient {
     /**
      * @package Vector
      * Vector\Module\Transient->setData()
-	 * @param {mixed} $data
+	 * @param mixed $data
      * @return bool
      */
     public function setData(mixed $data): bool 

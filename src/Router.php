@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Router {
 
     private static mixed $instance = null;
-    private Request $request;
+    protected Request $request;
 
     /**
      * @package Vector

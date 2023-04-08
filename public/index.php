@@ -7,7 +7,6 @@
 * -----------------------------------
 */
 
-session_start();
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('NO_DIRECT_ACCESS', 'true');
 

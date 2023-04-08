@@ -3,6 +3,8 @@
 namespace Vector\Controller;
 
 use Vector\Module\AbstractController;
+use Vector\Module\RateLimiter;
+use Vector\Module\RateExceededException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,13 +24,16 @@ class ExampleController extends AbstractController {
          */
         $this->router->registerRoute(['GET'], '^/?$', function(Request $request): Response 
         {
-            $html = $this->template->render('home.html.twig', [
+            $rateLimiter = new RateLimiter($request);
+            try {
+                $rateLimiter->limitRequestsInMinutes(120, 1);
+            } catch (RateExceededException $e) {
+                return new Response(null, Response::HTTP_TOO_MANY_REQUESTS);
+            }
+            return new Response($this->template->render('home.html.twig', [
                 'title' => 'Vector',
                 'description' => 'A simple yet performing PHP framework'
-            ]);
-            return new Response($html, Response::HTTP_OK, [
-                'Content-Type: text/html'
-            ]);
+            ]), Response::HTTP_OK);
         });
 
     }

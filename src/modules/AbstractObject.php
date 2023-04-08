@@ -22,25 +22,4 @@ abstract class AbstractObject {
         $this->sql = SqlConnection::getInstance();
     }
 
-    /**
-     * @package Vector
-     * Vector\Model\AbstractObject->insert()
-     * @return bool
-     */
-    abstract protected function insert(); 
-
-    /**
-     * @package Vector
-     * Vector\Module\AbstractObject->save
-     * @return bool
-     */
-    abstract public function save();
-
-    /**
-     * @package Vector
-     * Vector\Module\AbstractObject->delete
-     * @return bool
-     */
-    abstract public function delete();
-
 }

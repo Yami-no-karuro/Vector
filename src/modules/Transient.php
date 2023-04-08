@@ -15,38 +15,46 @@ class Transient {
 
     /**
      * @package Vector
+     * @param string $transient
      * __construct()
      */
-    public function __construct($transient) 
+    public function __construct(string $transient) 
     {
         $this->filepath = __DIR__ . '/../var/transients/' . md5($transient) . '.txt';         
-        $this->content = file_get_contents($this->filepath, true);
-        $this->lsmTime = filemtime($this->filepath);
+        $this->content = @file_get_contents($this->filepath, true);
+        $this->lsmTime = @filemtime($this->filepath);
     }
 
     /**
      * @package Vector
-     * Vector\Module\Transient->getData()
-	 * @param int $seconds
-     * @return object
+     * Vector\Module\Transient->isValid() 
+     * @param int $seconds
+     * @return bool
      */
-    public function getData(int $seconds): array 
+    public function isValid(int $seconds): bool
     {
-        return [
-            'valid'   => (time() - $this->lsmTime) > $seconds ? false : true,
-            'content' => $this->content
-        ];
+        return (time() - $this->lsmTime) > $seconds ? false : true;
     }
 
     /**
      * @package Vector
-     * Vector\Module\Transient->setData()
+     * Vector\Module\Transient->getContent()
+     * @return mixed
+     */
+    public function getContent(): mixed 
+    {
+        return $this->content;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Transient->setContent()
 	 * @param mixed $data
      * @return bool
      */
-    public function setData(mixed $data): bool 
+    public function setContent(mixed $data): bool 
     {
-        return file_put_contents($this->filepath, $data);
+        return @file_put_contents($this->filepath, $data);
     }
 
     /**
@@ -56,7 +64,7 @@ class Transient {
      */
     public function delete(): bool
     {
-        return unlink($this->filepath);
+        return @unlink($this->filepath);
     }
 
 }

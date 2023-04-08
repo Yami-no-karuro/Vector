@@ -1,7 +1,18 @@
+# vendor
 /src/vendor/*
 !/src/vendor/.gitkeep
+
+# transients
 /src/var/transients/*
 !/src/var/transients/.gitkeep
+
+# cache
 /src/var/cache/*
 !/src/var/cache/.gitkeep
+
+# node_modules
 node_modules
+
+# webpack build
+/public/assets/build/*
+!/public/assets/build/.gitkeep

@@ -23,7 +23,7 @@ class SqlConnection {
     private function __construct() {
         try {
             $this->mysqlitunnel = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        } catch (Exception $e) { 
+        } catch (Exception) { 
             throw new SqlConnectionException;
         }
     }

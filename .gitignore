@@ -4,3 +4,4 @@
 !/src/var/transients/.gitkeep
 /src/var/cache/*
 !/src/var/cache/.gitkeep
+node_modules

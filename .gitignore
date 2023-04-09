@@ -10,6 +10,10 @@
 /src/var/cache/*
 !/src/var/cache/.gitkeep
 
+# logs
+/src/var/log/*
+!/src/var/log/.gitkeep
+
 # node_modules
 node_modules
 

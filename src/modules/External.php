@@ -7,26 +7,27 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class SubProcess {
+class External {
 
     protected string $resource;
+    protected string $initiator;
     protected array $descriptorspec;
 
-    /** @param string $processName */
-    public function __construct(string $processName)
+    /** @param string $process */
+    public function __construct(string $process, string $initiator)
     {
-        $this->resource = __DIR__ . '/../subs/' . $processName . '.php';
+        $this->resource = __DIR__ . '/../external/' . $process;
         $this->descriptorspec = [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
-            2 => ['file', __DIR__ . '/../var/log/subprocs.log.txt', 'a']
+            2 => ['file', __DIR__ . '/../var/log/proc_open.log.txt', 'a']
         ];
     }
 
     /** @return int */
     public function execute(): int
     {
-        $process = proc_open('php ' . $this->resource, $this->descriptorspec, $pipes);
+        $process = proc_open($this->initiator . ' ' . $this->resource, $this->descriptorspec, $pipes);
         if (is_resource($process)) {
             array_map('fclose', $pipes);
             return proc_close($process);

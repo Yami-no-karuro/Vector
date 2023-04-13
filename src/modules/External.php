@@ -17,6 +17,7 @@ class External {
     public function __construct(string $process, string $initiator)
     {
         $this->resource = __DIR__ . '/../external/' . $process;
+        $this->initiator = $initiator;
         $this->descriptorspec = [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],

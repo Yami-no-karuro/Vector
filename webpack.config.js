@@ -20,6 +20,7 @@ Encore.setOutputPath('public/assets/build/')
         config.corejs = 3;
     })
     .enableSassLoader()
+    .enableReactPreset()
     .enableTypeScriptLoader();
 
 module.exports = Encore.getWebpackConfig();

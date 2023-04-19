@@ -28,7 +28,7 @@ class External {
     /** @return int */
     public function execute(): int
     {
-        $process = proc_open($this->initiator . ' ' . $this->resource, $this->descriptorspec, $pipes);
+        $process = @proc_open($this->initiator . ' ' . $this->resource, $this->descriptorspec, $pipes);
         if (is_resource($process)) {
             array_map('fclose', $pipes);
             return proc_close($process);

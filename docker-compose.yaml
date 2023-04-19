@@ -9,7 +9,7 @@ services:
     container_name: vector-apache
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - .:/var/www/html
     networks:
@@ -56,7 +56,7 @@ services:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: ROOT
     ports:
-      - "8080:80"
+      - "8088:80"
     depends_on:
       - mariadb
     networks:

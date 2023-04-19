@@ -125,16 +125,15 @@ class RateLimiter {
 	 */
 	protected function expireSessionKeys(): void 
     {	
-		if ($this->session->has('expiries')) {
-			foreach ($this->session->get('expiries') as $key => $value) {
-				if (time() > $value) { 
-					$cache = $this->session->get('cache');
-					$expiries = $this->session->get('expiries');
-					unset($cache[$key]);
-					unset($expiries[$key]);
-					$this->session->set('cache', $cache);
-					$this->session->set('expiries', $expiries);
-				}
+		if (!$this->session->has('expiries')) { return; }
+		foreach ($this->session->get('expiries') as $key => $value) {
+			if (time() > $value) {
+				$cache = $this->session->get('cache');
+				$expiries = $this->session->get('expiries');
+				unset($cache[$key]);
+				unset($expiries[$key]);
+				$this->session->set('cache', $cache);
+				$this->session->set('expiries', $expiries);
 			}
 		}
 	}

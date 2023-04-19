@@ -16,4 +16,6 @@ By default webpack compiles inside `` public/assets/build `` but you can customi
 See `` package.json `` to explore encore available scripts.  
 
 ### Notes
-If the default port is not available you can check what process is on it using the ``sudo netstat -pna | grep 80`` and decide either to kill that process or start apache on a different port.
+If the default port is not available you can check which process is using it with the command ``sudo netstat -pna | grep 80`` and decide either to kill that process or start apache on a different port.  
+If you run into permissions problems be sure that the `` var `` folder inside `` src `` is owned by `` www-data ``.  
+To fix `` var `` read/write permissions `` cd `` inside the `` src `` directory and run `` chown -R www-data:www-data ./var ``.  

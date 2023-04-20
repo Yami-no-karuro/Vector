@@ -44,9 +44,7 @@ class RateLimiter {
 		$requests = 0;
 		foreach ($this->getKeys($minutes) as $key) {
 			$requestsInCurrentMinute = $this->getSessionKey($key);
-			if (false !== $requestsInCurrentMinute) { 
-                $requests += $requestsInCurrentMinute;
-            }
+			if (false !== $requestsInCurrentMinute) { $requests += $requestsInCurrentMinute; }
 		}
 		if (false === $requestsInCurrentMinute) {
 			$this->setSessionKey($key, 1, ($minutes * 60 + 1));
@@ -79,12 +77,12 @@ class RateLimiter {
 	 */
 	protected function increment(string $key, int $inc): void 
     {
-		$cnt = 0;
+		$count = 0;
         if ($this->session->has('cache')) {
             $cache = $this->session->get('cache');
-            if (isset($cache[$key])) { $cnt = $cache[$key]; }
+            if (isset($cache[$key])) { $count = $cache[$key]; }
         }
-        $cache[$key] = $cnt + $inc;
+        $cache[$key] = $count + $inc;
         $this->session->set('cache', $cache);
 	}
 

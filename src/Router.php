@@ -2,7 +2,6 @@
 
 namespace Vector;
 
-use Vector\Module\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -68,11 +67,7 @@ class Router {
                 if (!is_numeric($k) && !isset($v[1])) { $params[$k] = $v[0]; } 
             }
         }
-        $requestEvent = new EventDispatcher('OnRequest');
-        $requestEvent->dispatch([&$this->request]);
         $response = $callback($this->request, $params);
-        $responseEvent = new EventDispatcher('OnResponse');
-        $responseEvent->dispatch([&$this->request, &$response]);
         $response->prepare($this->request);
         $response->send();
         if ($die) { die(); }

@@ -36,5 +36,3 @@ RUN find /var/www/html -type d -exec chmod 755 {} \;
 RUN find /var/www/html -type f -exec chmod 644 {} \;
 
 WORKDIR /var/www/html
-
-EXPOSE 80

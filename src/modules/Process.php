@@ -7,32 +7,33 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class External {
+class Process {
 
-    protected string $resource;
-    protected string $initiator;
+    protected string $command;
     protected array $descriptorspec;
 
-    /** @param string $process */
-    public function __construct(string $process, string $initiator)
+    /** @param array $commandArr */
+    public function __construct($commandArr)
     {
-        $this->resource = __DIR__ . '/../external/' . $process;
-        $this->initiator = $initiator;
+        $this->command = implode(' ', $commandArr);
         $this->descriptorspec = [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
-            2 => ['file', __DIR__ . '/../var/log/proc_open.log.txt', 'a']
+            2 => ['file', __DIR__ . '/../var/log/process.log.txt', 'a']
         ];
     }
 
-    /** @return int */
-    public function execute(): int
+    /** @return int|false */
+    public function execute(): int|false
     {
-        $process = @proc_open($this->initiator . ' ' . $this->resource, $this->descriptorspec, $pipes);
+        $process = @proc_open($this->command, $this->descriptorspec, $pipes);
         if (is_resource($process)) {
-            array_map('fclose', $pipes);
+            array_map(function($pipe) {
+                fclose($pipe);
+            }, $pipes);
             return proc_close($process);
         }
+        return false;
     }
 
 }

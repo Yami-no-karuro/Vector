@@ -10,4 +10,3 @@ define('DB_USER', 'vector_usr');
 define('DB_PASSWORD', 'vector_pwd');
 define('DB_NAME', 'vector_db');
 define('DEFAULT_TIMEZONE', 'Europe/Rome');
-define('APP_URL', 'http://localhost/vector/');

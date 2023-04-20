@@ -1,6 +1,6 @@
 # vendor
-/src/vendor/*
-!/src/vendor/.gitkeep
+/vendor/*
+!/vendor/.gitkeep
 
 # transients
 /src/var/transients/*

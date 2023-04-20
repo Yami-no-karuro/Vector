@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlConnectionException extends Exception {}
 class SqlConnection {
 
-    private mysqli $mysqlitunnel;
+    protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
 
     /**
@@ -57,7 +57,7 @@ class SqlConnection {
      */
     public function exec(string $sql, array $params = null): array 
     {
-        $clean_sql = $this->mysqlitunnel->prepare($sql);
+        $cleanSql = $this->mysqlitunnel->prepare($sql);
         if ($params !== null) {
             $types = '';
             $values = [];
@@ -65,16 +65,16 @@ class SqlConnection {
                 $types .= $param['type'];
                 array_push($values, $param['value']); 
             }
-            $clean_sql->bind_param($types, ...$values);
+            $cleanSql->bind_param($types, ...$values);
         }
         $result = [
             'success' => false,
             'data'    => [
-                'inserted_id'   => $clean_sql->insert_id,
-                'affected_rows' => $clean_sql->affected_rows
+                'inserted_id'   => $cleanSql->insert_id,
+                'affected_rows' => $cleanSql->affected_rows
             ]
         ];
-        if (!$clean_sql->execute()) { return $result; }
+        if (!$cleanSql->execute()) { return $result; }
         $result['success'] = true;
         return $result;
     }
@@ -88,7 +88,7 @@ class SqlConnection {
      */
     public function getResults(string $sql, array $params = null): array 
     {
-        $clean_sql = $this->mysqlitunnel->prepare($sql);
+        $cleanSql = $this->mysqlitunnel->prepare($sql);
         if ($params !== null) {
             $types = '';
             $values = [];
@@ -96,10 +96,10 @@ class SqlConnection {
                 $types .= $param['type'];
                 array_push($values, $param['value']); 
             }
-            $clean_sql->bind_param($types, ...$values);
+            $cleanSql->bind_param($types, ...$values);
         }
-        if (!$clean_sql->execute()) { return ['success' => false, 'data' => NULL]; }
-        $result = $clean_sql->get_result();
+        if (!$cleanSql->execute()) { return ['success' => false, 'data' => NULL]; }
+        $result = $cleanSql->get_result();
         $results = ['success' => true, 'data' => []];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) { 
             if ($result->num_rows === 1) { 

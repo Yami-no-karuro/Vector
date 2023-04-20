@@ -25,7 +25,7 @@ class DefaultController extends AbstractController {
         $this->router->registerRoute(['GET'], '^/?$', function(Request $request): Response 
         {
 
-            $rateLimiter = new RateLimiter($request);
+            $rateLimiter = new RateLimiter($request, 'default-rate');
             try {
                 $rateLimiter->limitRequestsInMinutes(120, 1);
             } catch (RateExceededException) {

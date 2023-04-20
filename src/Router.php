@@ -43,11 +43,7 @@ class Router {
      * @param bool $die = true
      * @return void
      */
-    public function registerRoute(
-        array $httpMethods, 
-        string $route, 
-        callable $callback, 
-        bool $die = true): void 
+    public function registerRoute(array $httpMethods, string $route, callable $callback, bool $die = true): void 
     {
         static $path = null;
         if ($path === null) {

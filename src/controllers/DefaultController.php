@@ -24,21 +24,17 @@ class DefaultController extends AbstractController {
          */
         $this->router->registerRoute(['GET'], '^/?$', function(Request $request): Response 
         {
-
-            $rateLimiter = new RateLimiter($request, 'default-rate');
+            $rateLimiter = new RateLimiter($request, 'default-route-rate');
             try {
                 $rateLimiter->limitRequestsInMinutes(120, 1);
             } catch (RateExceededException) {
                 return new Response(null, Response::HTTP_TOO_MANY_REQUESTS);
             }
-
             $html = $this->template->render('default.html.twig', [
                 'title' => 'Vector',
-                'description' => 'A simple yet performing PHP framework'
+                'description' => 'A simple HttpFoundation framework for PHP.'
             ]);
-
             return new Response($html, Response::HTTP_OK);
-
         });
 
     }

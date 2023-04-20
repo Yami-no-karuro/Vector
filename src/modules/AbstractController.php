@@ -25,7 +25,7 @@ abstract class AbstractController {
         $this->router = Router::getInstance();
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->template = new Environment($loader, [
-            'cache'       => __DIR__ . '/../var/cache',
+            'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true
         ]);
         $this->init();

@@ -23,8 +23,8 @@ class Process {
         ];
     }
 
-    /** @return int */
-    public function execute(): int
+    /** @return int|false */
+    public function execute(): int|false
     {
         $process = @proc_open($this->command, $this->descriptorspec, $pipes);
         if (is_resource($process)) {
@@ -33,7 +33,7 @@ class Process {
             }, $pipes);
             return proc_close($process);
         }
-        return 1;
+        return false;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Vector;
 
 use Symfony\Component\HttpFoundation\Request;
+use Vector\Module\AbstractController;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -61,6 +62,13 @@ class Router {
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
+        $backtrace = debug_backtrace(0);
+        $routeMapFilepath =  __DIR__ . '/var/cache/router/routes.json';
+        $routeMap = json_decode(@file_get_contents($routeMapFilepath), true);
+        if (!$routeMap OR !array_key_exists($path, $routeMap)) {
+            $routeMap[$path] = $backtrace[1]['class'];
+            @file_put_contents($routeMapFilepath, json_encode($routeMap));
+        }
         $params = array();
         if (!empty($matches)) {
             foreach ($matches as $k => $v) { 

@@ -12,7 +12,5 @@ spl_autoload_register(function($class) {
         require_once(__DIR__ . '/modules/' . $classname . '.php');
     } else if (file_exists(__DIR__ . '/objects/' . $classname . '.php')) {
         require_once(__DIR__ . '/objects/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/events/' . $classname . '.php')) {
-        require_once(__DIR__ . '/events/' . $classname . '.php');
     }
 });

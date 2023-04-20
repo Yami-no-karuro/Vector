@@ -24,31 +24,22 @@ class Bootstrap {
         $this->dir = new \RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
         $this->iterator = new \RecursiveIteratorIterator($this->dir);
         $this->request = Request::createFromGlobals();
-        // $this->init();
     }
 
-    public function init(): void
-    {
-
-        $path = parse_url($this->request->getRequestUri())['path'];
-        var_dump($path);
-        die();
-
-    }
 
     /**
      * @package Vector
-     * Vector\Bootstrap->executeRouter()
+     * Vector\Bootstrap->boot()
      * @return void
      */
-    protected function fallback(): void
+    public function boot(): void
     {
         foreach ($this->iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match('%\.php$%', $fname)) { 
                 require_once ($file->getPathname());
                 $controller = 'Vector\\Controller\\' . basename($fname, '.php'); 
-                new $controller; 
+                new $controller($this->request); 
             }
         }
     }

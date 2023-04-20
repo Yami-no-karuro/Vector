@@ -19,18 +19,8 @@ require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-new Vector\Bootstrap();
-
-$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
-$iterator = new RecursiveIteratorIterator($dir);
-foreach ($iterator as $file) {
-    $fname = $file->getFilename();
-    if (preg_match('%\.php$%', $fname)) { 
-        require_once ($file->getPathname());
-        $controller = 'Vector\\Controller\\' . basename($fname, '.php'); 
-        new $controller; 
-    }
-}
+$application = new Vector\Bootstrap();
+$application->boot();
 
 header('HTTP/1.1 404 Not Found');
 die(); 

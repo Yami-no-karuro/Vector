@@ -3,6 +3,7 @@
 namespace Vector\Module;
 
 use Vector\Router;
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
@@ -20,9 +21,9 @@ abstract class AbstractController {
      * @package Vector
      * __construct()
      */
-    public function __construct() 
+    public function __construct(Request $request = null) 
     {
-        $this->router = Router::getInstance();
+        $this->router = Router::getInstance($request);
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->template = new Environment($loader, [
             'cache'       => __DIR__ . '/../var/cache/twig',

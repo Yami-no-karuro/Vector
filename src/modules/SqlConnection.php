@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlConnectionException extends Exception {}
 class SqlConnection {
 
-    private mysqli $mysqlitunnel;
+    protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
 
     /**

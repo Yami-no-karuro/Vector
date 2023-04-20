@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Transient {
 
-    private string $filepath;
+    protected string $filepath;
     public mixed $content;
     public mixed $lsmTime;
 

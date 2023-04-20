@@ -3,7 +3,6 @@
 namespace Vector\Controller;
 
 use Vector\Module\AbstractController;
-use Vector\Module\Transient;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
 use Symfony\Component\HttpFoundation\Request;

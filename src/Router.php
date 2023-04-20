@@ -2,7 +2,6 @@
 
 namespace Vector;
 
-use Vector\Module\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) { 

@@ -14,9 +14,12 @@ require_once(__DIR__ . '/../src/config.php');
 require_once(__DIR__ . '/../src/autoload.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../src/functions.php');
+require_once(__DIR__ . '/../src/Bootstrap.php');
 require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
+
+new Vector\Bootstrap();
 
 $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
 $iterator = new RecursiveIteratorIterator($dir);

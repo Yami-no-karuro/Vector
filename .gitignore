@@ -2,17 +2,17 @@
 /vendor/*
 !/vendor/.gitkeep
 
-# transients
-/src/var/transients/*
-!/src/var/transients/.gitkeep
+# cache - twig
+/src/var/cache/twig/*
+!/src/var/cache/twig/.gitkeep
 
-# cache
-/src/var/cache/*
-!/src/var/cache/.gitkeep
+# cache - router
+/src/var/cache/transients/*
+!/src/var/cache/transients/.gitkeep
 
 # logs
-/src/var/log/*
-!/src/var/log/.gitkeep
+/src/var/logs/*
+!/src/var/logs/.gitkeep
 
 # node_modules
 node_modules

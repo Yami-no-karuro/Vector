@@ -14,20 +14,13 @@ require_once(__DIR__ . '/../src/config.php');
 require_once(__DIR__ . '/../src/autoload.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../src/functions.php');
+require_once(__DIR__ . '/../src/Kernel.php');
 require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-$dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
-$iterator = new RecursiveIteratorIterator($dir);
-foreach ($iterator as $file) {
-    $fname = $file->getFilename();
-    if (preg_match('%\.php$%', $fname)) { 
-        require_once ($file->getPathname());
-        $controller = 'Vector\\Controller\\' . basename($fname, '.php'); 
-        new $controller; 
-    }
-}
+$kernel = new Vector\Kernel();
+$kernel->boot();
 
 header('HTTP/1.1 404 Not Found');
 die(); 

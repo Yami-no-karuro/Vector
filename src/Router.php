@@ -16,21 +16,23 @@ class Router {
 
     /**
      * @package Vector
+     * @param Request $request
      * __construct()
      */
-    private function __construct() 
+    private function __construct(Request $request) 
     {
-        $this->request = Request::createFromGlobals();
+        $this->request = $request;
     }
    
     /**
      * @package Vector
      * Vector\Router::getInstance()
+     * @param Request $request
      * @return Router
      */
-    public static function getInstance(): Router 
+    public static function getInstance(Request $request): Router 
     {
-        if (self::$instance == null) { self::$instance = new Router(); }
+        if (self::$instance == null) { self::$instance = new Router($request); }
         return self::$instance;
     }
 

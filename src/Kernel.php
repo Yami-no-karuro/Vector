@@ -3,16 +3,18 @@
 namespace Vector;
 
 use Symfony\Component\HttpFoundation\Request;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
     die(); 
 }
 
-class Bootstrap {
+class Kernel {
 
-    protected \RecursiveDirectoryIterator $dir;
-    protected \RecursiveIteratorIterator $iterator;
+    protected RecursiveDirectoryIterator $dir;
+    protected RecursiveIteratorIterator $iterator;
     protected Request $request;
 
     /**
@@ -21,8 +23,8 @@ class Bootstrap {
      */
     public function __construct()
     {
-        $this->dir = new \RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
-        $this->iterator = new \RecursiveIteratorIterator($this->dir);
+        $this->dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
+        $this->iterator = new RecursiveIteratorIterator($this->dir);
         $this->request = Request::createFromGlobals();
     }
 

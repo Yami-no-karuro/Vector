@@ -20,11 +20,9 @@ class Router {
      * @param Request $request
      * __construct()
      */
-    private function __construct(Request $request = null) 
+    private function __construct(Request $request) 
     {
-        if (null === $request) {
-            $this->request = Request::createFromGlobals();
-        } else { $this->request = $request; }
+        $this->request = $request;
     }
    
     /**
@@ -33,7 +31,7 @@ class Router {
      * @param Request $request
      * @return Router
      */
-    public static function getInstance(Request $request = null): Router 
+    public static function getInstance(Request $request): Router 
     {
         if (self::$instance == null) { self::$instance = new Router($request); }
         return self::$instance;
@@ -62,13 +60,6 @@ class Router {
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
-        $backtrace = debug_backtrace(0);
-        $routeMapFilepath =  __DIR__ . '/var/cache/router/routes.json';
-        $routeMap = json_decode(@file_get_contents($routeMapFilepath), true);
-        if (!$routeMap OR !array_key_exists($path, $routeMap)) {
-            $routeMap[$path] = $backtrace[1]['class'];
-            @file_put_contents($routeMapFilepath, json_encode($routeMap));
-        }
         $params = array();
         if (!empty($matches)) {
             foreach ($matches as $k => $v) { 

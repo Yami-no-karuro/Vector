@@ -15,8 +15,8 @@
 !/src/var/cache/router/.gitkeep
 
 # logs
-/src/var/log/*
-!/src/var/log/.gitkeep
+/src/var/logs/*
+!/src/var/logs/.gitkeep
 
 # node_modules
 node_modules

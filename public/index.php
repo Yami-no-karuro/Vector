@@ -14,13 +14,13 @@ require_once(__DIR__ . '/../src/config.php');
 require_once(__DIR__ . '/../src/autoload.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../src/functions.php');
-require_once(__DIR__ . '/../src/Bootstrap.php');
+require_once(__DIR__ . '/../src/Kernel.php');
 require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-$application = new Vector\Bootstrap();
-$application->boot();
+$loader = new Vector\Kernel();
+$loader->boot();
 
 header('HTTP/1.1 404 Not Found');
 die(); 

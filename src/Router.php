@@ -3,7 +3,6 @@
 namespace Vector;
 
 use Symfony\Component\HttpFoundation\Request;
-use Vector\Module\AbstractController;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');

@@ -19,8 +19,8 @@ require_once(__DIR__ . '/../src/Router.php');
 
 date_default_timezone_set(DEFAULT_TIMEZONE);
 
-$loader = new Vector\Kernel();
-$loader->boot();
+$kernel = new Vector\Kernel();
+$kernel->boot();
 
 header('HTTP/1.1 404 Not Found');
 die(); 

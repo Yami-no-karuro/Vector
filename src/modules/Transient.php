@@ -43,6 +43,7 @@ class Transient {
      */
     public function getContent(): mixed 
     {
+        $data = unserialize($this->content);
         return $this->content;
     }
 
@@ -54,12 +55,13 @@ class Transient {
      */
     public function setContent(mixed $data): bool 
     {
-        return @file_put_contents($this->filepath, $data);
+        $srlData = serialize($data);
+        return @file_put_contents($this->filepath, $srlData);
     }
 
     /**
      * @package Vector
-     * Vector\Module\Transitne->delete()
+     * Vector\Module\Transient->delete()
      * @return bool
      */
     public function delete(): bool

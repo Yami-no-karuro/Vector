@@ -22,7 +22,7 @@ Run `` npm run watch ``  to start the watcher on the `` assets `` folder.
 By default webpack compiles inside `` public/assets/build `` but you can customize the defaul configuration in `` webpack.config.js `` located in the project root.  
 See `` package.json `` to explore encore available scripts.  
 
-# Docs
+# Customization and Settings
 ## Transients
 By default Vector store transients data as md5 named files inside `` src/var/cache/transients ``.  
 You can change the default behaviour and save transients on the database be setting `` define('DATABASE_TRANSIENTS', true); `` in `` config.php ``.  

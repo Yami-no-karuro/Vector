@@ -35,10 +35,10 @@ class DefaultController extends AbstractController {
 
             $transient = new Transient('example');
             if ($transient->isValid(0)) {
-                $data = json_decode($transient->getContent());
+                $data = $transient->getContent();
             } else { 
                 $data = $this->exampleFuntion();
-                $transient->setContent(json_encode($data));
+                $transient->setContent($data);
             }
 
             $html = $this->template->render('default.html.twig', [

@@ -14,3 +14,4 @@ define('DB_NAME', 'vector_db');
 # Envoirment
 define('DEFAULT_TIMEZONE', 'Europe/Rome');
 define('DATABASE_TRANSIENTS', false);
+define('DATABASE_LOGS', false);

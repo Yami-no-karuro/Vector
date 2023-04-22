@@ -1,4 +1,7 @@
+@import 'variables.scss';
+
 body {
+    background-color: $bg-defaul;
     * {
         box-sizing: border-box;
         margin: 0;

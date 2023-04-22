@@ -95,7 +95,7 @@ class Transient {
                 ]);
             }
             return $execResult['success'];
-        } else { return @file_put_contents($this->filepath, $srlData); }
+        } else { return @file_put_contents($this->filepath, $srlData, LOCK_EX); }
     }
 
     /**

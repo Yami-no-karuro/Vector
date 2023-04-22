@@ -1,4 +1,5 @@
 <?php
+
 namespace Vector\Module;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -126,7 +127,7 @@ class RateLimiter {
 		if (!$this->session->has('expiries')) { return; }
 		foreach ($this->session->get('expiries') as $key => $value) {
 			if (time() > $value) {
-				$cache = $this->session->get('cache');
+			    $cache = $this->session->get('cache');
 				$expiries = $this->session->get('expiries');
 				unset($cache[$key]);
 				unset($expiries[$key]);

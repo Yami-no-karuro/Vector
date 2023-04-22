@@ -1,7 +1,7 @@
 <?php
 
 /*
-MySql
+Transients MySql Table
 ----
 CREATE TABLE `<dbname>`.`transients` (
     `ID` INT NOT NULL AUTO_INCREMENT , 
@@ -26,10 +26,10 @@ class Transient {
 
     protected string $transient;
     public mixed $content = null;
-    public null|int $lsmTime = null;
+    public ?int $lsmTime = null;
 
-    protected null|string $filepath;
-    protected null|SqlConnection $sql;
+    protected ?string $filepath;
+    protected ?SqlConnection $sql;
 
     /**
      * @package Vector

@@ -3,6 +3,7 @@
 namespace Vector\Module;
 
 use Vector\Module\SqlConnection;
+use Vector\Module\ApplicationLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -12,6 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractObject {
 
     protected SqlConnection $sql;
+    protected ApplicationLogger $applicationLogger;
 
     /**
      * @package Vector
@@ -20,6 +22,21 @@ abstract class AbstractObject {
     public function __construct()
     {
         $this->sql = SqlConnection::getInstance();
+        $this->applicationLogger = new ApplicationLogger('objects');
     }
+
+    /**
+     * @package Vector
+     * Vector\Module\AbstractObject->persist
+     * @return self
+     */
+    abstract public function persist(): self;
+
+    /**
+     * @package Vector
+     * Vector\Module\AbstractObject->persist
+     * @return bool
+     */
+    abstract public function delete(): bool;
 
 }

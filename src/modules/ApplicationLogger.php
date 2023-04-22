@@ -44,7 +44,7 @@ class ApplicationLogger {
                     ['type' => 's', 'value' => $content]
             ]);
             return $execResult['success'];
-        } else { return @file_put_contents($this->filepath, $content); }
+        } else { return @file_put_contents($this->filepath, $content, FILE_APPEND | LOCK_EX); }
     }
 
 }

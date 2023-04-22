@@ -29,7 +29,7 @@ By default Vector store transients data as md5 named files inside `` src/var/cac
 You can change the default behaviour and save transients on the database by setting `` define('DATABASE_TRANSIENTS', true); `` in `` config.php ``.  
 Be sure to create the transients table.
 ```
-CREATE TABLE `<dbname>`.`transients` (
+CREATE TABLE `vector_db`.`transients` (
     `ID` INT NOT NULL AUTO_INCREMENT , 
     `trs_key` VARCHAR(50) NOT NULL , 
     `trs_value` TEXT NOT NULL , 

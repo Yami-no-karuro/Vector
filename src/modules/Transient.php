@@ -1,18 +1,5 @@
 <?php
 
-/*
-Transients MySql Table
-----
-CREATE TABLE `<dbname>`.`transients` (
-    `ID` INT NOT NULL AUTO_INCREMENT , 
-    `trs_key` VARCHAR(50) NOT NULL , 
-    `trs_value` TEXT NOT NULL , 
-    `trs_ltmtime` INT NOT NULL , 
-    PRIMARY KEY (`ID`)
-) ENGINE = InnoDB; 
-----
-*/
-
 namespace Vector\Module;
 
 use Vector\Module\SqlConnection;

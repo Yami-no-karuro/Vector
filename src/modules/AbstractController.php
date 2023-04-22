@@ -4,6 +4,7 @@ namespace Vector\Module;
 
 use Vector\Router;
 use Vector\Module\ApplicationLogger;
+use Vector\Module\SqlConnection;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -16,8 +17,9 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractController {
 
     protected Router $router;
-    protected Environment $template;
+    protected SqlConnection $sql;
     protected ApplicationLogger $applicationLogger;
+    protected Environment $template;
 
     /**
      * @package Vector
@@ -26,6 +28,7 @@ abstract class AbstractController {
     public function __construct(Request $request = null) 
     {
         $this->router = Router::getInstance($request);
+        $this->sql = SqlConnection::getInstance();
         $this->applicationLogger = new ApplicationLogger('controllers');
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->template = new Environment($loader, [

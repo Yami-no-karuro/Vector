@@ -112,7 +112,7 @@ class RateLimiter {
 	 */
 	protected function getSessionKey(string $key): string|false
 	{
-		$cache = $this->session->get('cache');
+	$cache = $this->session->get('cache');
 		return isset($cache[$key]) ? $cache[$key] : false;
 	}
 

@@ -5,11 +5,13 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
+/**
+ * @param mixed $data
+ * @return void
+ */
 function dump(mixed $data): void
 {
     echo '<pre>';
     var_dump($data);
     echo '</pre>';
 }
-
-// ...

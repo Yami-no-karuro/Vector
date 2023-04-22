@@ -25,18 +25,4 @@ abstract class AbstractObject {
         $this->applicationLogger = new ApplicationLogger('objects');
     }
 
-    /**
-     * @package Vector
-     * Vector\Module\AbstractObject->persist
-     * @return self
-     */
-    abstract public function persist(): self;
-
-    /**
-     * @package Vector
-     * Vector\Module\AbstractObject->persist
-     * @return bool
-     */
-    abstract public function delete(): bool;
-
 }

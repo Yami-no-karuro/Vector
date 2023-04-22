@@ -29,7 +29,7 @@ class DefaultController extends AbstractController {
      * @return Response
      */
     public function defaultAction(Request $request): Response
-    {   
+    {
 
         /** Limit requests on this route to 120 per minute per IP address */
         $rateLimiter = new RateLimiter($request, 'default-route-rate');

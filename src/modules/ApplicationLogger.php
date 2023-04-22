@@ -2,6 +2,8 @@
 
 namespace Vector\Module;
 
+use Vector\Module\SqlConnection;
+
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
     die(); 
@@ -9,7 +11,9 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class ApplicationLogger {
 
-    protected string $filepath;
+    protected string $type;
+    protected ?string $filepath;
+    protected ?SqlConnection $sql;
 
     /**
      * @package Vector
@@ -18,7 +22,10 @@ class ApplicationLogger {
      */
     public function __construct(string $type) 
     {
-        $this->filepath = __DIR__ . '/../var/logs/' . $type . '.log.txt';
+        $this->type = $type;
+        if (true === DATABASE_LOGS) {
+            $this->sql = SqlConnection::getInstance();
+        } else { $this->filepath = __DIR__ . '/../var/logs/' . $this->type . '.log.txt'; }
     }
 
     /**
@@ -29,7 +36,15 @@ class ApplicationLogger {
      */
     public function writeLog(string $content): bool 
     {
-        return @file_put_contents($this->filepath, $content);
+        if (true === DATABASE_LOGS) {
+            $execResult = $this->sql->exec("INSERT INTO `logs` 
+                (`ID`, `type`, `content`) 
+                VALUES (NULL, ?, ?)", [
+                    ['type' => 's', 'value' => $this->type],
+                    ['type' => 's', 'value' => $content]
+            ]);
+            return $execResult['success'];
+        } else { return @file_put_contents($this->filepath, $content); }
     }
 
 }

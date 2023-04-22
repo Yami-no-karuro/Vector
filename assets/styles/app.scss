@@ -2,6 +2,23 @@
 
 body {
     background-color: $bg-defaul;
+    main {
+        padding: 3.5rem 5%;
+        section.title {
+            text-align: center;
+            color: $cl-default;
+            h1 {
+                font-size: 42px;
+                line-height: 2.5rem;
+                font-weight: 500;
+            }
+            h4 {
+                font-size: 22px;
+                line-height: 2.5rem;
+                font-weight: 500;
+            }
+        }
+    }
     * {
         box-sizing: border-box;
         margin: 0;

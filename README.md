@@ -9,6 +9,7 @@ Run `` docker-compose up -d `` to initialize the container.
 Once the container is up and running attach to the php terminal and run `` composer install ``.  
 Visit localhost and you should see the Vector default page.  
 If you run into permissions problems be sure that the `` src/var `` is owned by `` www-data ``.  
+To achieve that attach to the php terminal and run `` chown -R www-data ./src/var/ ``.  
 
 ### Encore Setup
 In the project root run `` npm install `` to install node dependencies.  

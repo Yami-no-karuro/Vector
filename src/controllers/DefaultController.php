@@ -5,7 +5,6 @@ namespace Vector\Controller;
 use Vector\Module\AbstractController;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
-use Vector\Module\Transient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +25,7 @@ class DefaultController extends AbstractController {
         $this->router->registerRoute(['GET'], '^/?$', function(Request $request): Response 
         {
 
+            /** Limit requests on this route to 120 per minute per IP address */
             $rateLimiter = new RateLimiter($request, 'default-route-rate');
             try {
                 $rateLimiter->limitRequestsInMinutes(120, 1);
@@ -33,29 +33,17 @@ class DefaultController extends AbstractController {
                 return new Response(null, Response::HTTP_TOO_MANY_REQUESTS);
             }
 
-            $transient = new Transient('example');
-            if ($transient->isValid(0)) {
-                $data = $transient->getContent();
-            } else { 
-                $data = $this->exampleFuntion();
-                $transient->setContent($data);
-            }
-
+            /** Render view and save the result in $html */
             $html = $this->template->render('default.html.twig', [
                 'title' => 'Vector',
                 'description' => 'A simple HttpFoundation framework for PHP.'
             ]);
 
+            /** Return the Response */
             return new Response($html, Response::HTTP_OK);
 
         });
 
-    }
-
-    /** Let's pretend this function has to do a lot of work to retrive some data.. */
-    protected function exampleFuntion(): array 
-    {
-        return ['some' => 'data'];
     }
     
 }

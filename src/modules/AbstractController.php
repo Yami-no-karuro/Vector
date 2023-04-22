@@ -3,6 +3,7 @@
 namespace Vector\Module;
 
 use Vector\Router;
+use Vector\Module\ApplicationLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -16,6 +17,7 @@ abstract class AbstractController {
 
     protected Router $router;
     protected Environment $template;
+    protected ApplicationLogger $applicationLogger;
 
     /**
      * @package Vector

@@ -6,6 +6,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+COPY ./* /var/www/html
+
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
 RUN chown -R www-data:www-data /var/www/html

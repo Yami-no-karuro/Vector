@@ -44,6 +44,6 @@ abstract class AbstractController {
      * Vector\Module\AbstractController->init
      * @return void
      */
-    abstract protected function init();
+    abstract protected function init(): void;
 
 }

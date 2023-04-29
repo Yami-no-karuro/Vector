@@ -30,7 +30,7 @@ class Transient {
             $this->sql = SqlConnection::getInstance();
             $transient = $this->sql->getResults("SELECT `trs_value`, `trs_ltmtime` 
                 FROM `transients` 
-                WHERE `trs_key` = ?", [
+                WHERE `trs_key` = ? LIMIT 1", [
                     ['type' => 's', 'value' => $this->transient]
             ]);
             if ($transient['success'] AND !empty($transient['data'])) {

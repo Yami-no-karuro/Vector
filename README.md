@@ -50,3 +50,16 @@ CREATE TABLE `vector_db`.`logs` (
     PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB; 
 ```
+
+## Routes
+By default Vector store route data as md5 named files inside `` src/var/cache/routes ``.  
+You can change the default behaviour and save route data on the database by setting `` define('DATABASE_ROUTES', true); `` in `` config.php ``.  
+Be sure to create the logs table.  
+```
+CREATE TABLE `vector_db`.`routes` (
+    `ID` INT NOT NULL AUTO_INCREMENT , 
+    `path` VARCHAR(125) NOT NULL , 
+    `controller` VARCHAR(85) NOT NULL , 
+    PRIMARY KEY (`ID`)
+) ENGINE = InnoDB; 
+```

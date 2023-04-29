@@ -2,6 +2,7 @@
 
 namespace Vector;
 
+use Vector\Module\SqlConnection;
 use Symfony\Component\HttpFoundation\Request;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -32,11 +33,24 @@ class Kernel {
     public function boot(): void
     {
         $path = parse_url($this->request->getRequestUri())['path'];
-        $cacheFile = __DIR__ . '/var/cache/router/' . md5($path);
-        if (file_exists($cacheFile)) {
-            $cacheData = unserialize(@file_get_contents($cacheFile));
-            if ($cacheData['path'] === $path) {
-                $controller = new $cacheData['controller']($this->request);
+        if (true === DATABASE_ROUTES) {
+            $sql = SqlConnection::getInstance();
+            $cache = $sql->getResults("SELECT `path`, `controller` FROM `routes` WHERE `path` = ? LIMIT 1", [
+                ['type' => 's', 'value' => $path]
+            ]);
+            if ($cache['success'] AND !empty($cache['data'])) {
+                $cacheData = $cache['data'];
+                if ($cacheData['path'] === $path) {
+                    $controller = new $cacheData['controller']($this->request);
+                }
+            }
+        } else {
+            $cacheFile = __DIR__ . '/var/cache/router/' . md5($path);
+            if (file_exists($cacheFile)) {
+                $cacheData = unserialize(@file_get_contents($cacheFile));
+                if ($cacheData['path'] === $path) {
+                    $controller = new $cacheData['controller']($this->request);
+                }
             }
         }
         $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');

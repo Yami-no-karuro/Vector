@@ -13,6 +13,6 @@ define('DB_NAME', 'vector_db');
 
 # Envoirment
 define('DEFAULT_TIMEZONE', 'Europe/Rome');
-define('DATABASE_TRANSIENTS', false);
-define('DATABASE_LOGS', false);
-define('DATABASE_ROUTES', false);
+define('DATABASE_TRANSIENTS', true);
+define('DATABASE_LOGS', true);
+define('DATABASE_ROUTES', true);

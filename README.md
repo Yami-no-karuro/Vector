@@ -26,7 +26,7 @@ See `` package.json `` to explore encore available scripts.
 
 ## Transients
 By default Vector store transients data as md5 named files inside `` src/var/cache/transients ``.  
-You can change the default behaviour and save transients on the database by setting `` define('DATABASE_TRANSIENTS', true); `` in `` config.php ``.  
+You can change the default behaviour (usually not recommended) and save transients on the database by setting `` define('DATABASE_TRANSIENTS', true); `` in `` config.php ``.  
 Be sure to create the transients table.
 ```
 CREATE TABLE `vector_db`.`transients` (
@@ -40,7 +40,7 @@ CREATE TABLE `vector_db`.`transients` (
 
 ## Logs
 By default Vector store logs data in a log_type.log.txt file inside `` src/var/logs ``.  
-You can change the default behaviour and save logs on the database by setting `` define('DATABASE_LOGS', true); `` in `` config.php ``.  
+You can change the default behaviour (usually not recommended) and save logs on the database by setting `` define('DATABASE_LOGS', true); `` in `` config.php ``.  
 Be sure to create the logs table.  
 ```
 CREATE TABLE `vector_db`.`logs` (
@@ -53,7 +53,7 @@ CREATE TABLE `vector_db`.`logs` (
 
 ## Routes
 By default Vector store route data as md5 named files inside `` src/var/cache/routes ``.  
-You can change the default behaviour and save route data on the database by setting `` define('DATABASE_ROUTES', true); `` in `` config.php ``.  
+You can change the default behaviour (usually not recommended) and save route data on the database by setting `` define('DATABASE_ROUTES', true); `` in `` config.php ``.  
 Be sure to create the logs table.  
 ```
 CREATE TABLE `vector_db`.`routes` (

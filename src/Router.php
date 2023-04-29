@@ -59,6 +59,13 @@ class Router {
         $matches = null;
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!preg_match_all($regex, $path, $matches)) { return; }
+        if (is_array($callback)) {
+            $cacheFile = __DIR__ . '/var/cache/router/' . md5($path);
+            if (!file_exists($cacheFile)) {
+                $cacheData = [ 'path' => $path, 'controller' => get_class($callback[0]) ];
+                @file_put_contents($cacheFile, serialize($cacheData), LOCK_EX);
+            }
+        }
         $params = array();
         if (!empty($matches)) {
             foreach ($matches as $k => $v) { 

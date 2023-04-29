@@ -13,8 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Kernel {
 
-    protected RecursiveDirectoryIterator $dir;
-    protected RecursiveIteratorIterator $iterator;
     protected Request $request;
 
     /**
@@ -23,11 +21,8 @@ class Kernel {
      */
     public function __construct()
     {
-        $this->dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
-        $this->iterator = new RecursiveIteratorIterator($this->dir);
         $this->request = Request::createFromGlobals();
     }
-
 
     /**
      * @package Vector
@@ -36,7 +31,17 @@ class Kernel {
      */
     public function boot(): void
     {
-        foreach ($this->iterator as $file) {
+        $path = parse_url($this->request->getRequestUri())['path'];
+        $cacheFile = __DIR__ . '/var/cache/router/' . md5($path);
+        if (file_exists($cacheFile)) {
+            $cacheData = unserialize(@file_get_contents($cacheFile));
+            if ($cacheData['path'] === $path) {
+                $controller = new $cacheData['controller']($this->request);
+            }
+        }
+        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
+        $iterator = new RecursiveIteratorIterator($dir);
+        foreach ($iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match('%\.php$%', $fname)) { 
                 require_once ($file->getPathname());
@@ -44,6 +49,20 @@ class Kernel {
                 new $controller($this->request); 
             }
         }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Bootstrap->loadConfig()
+     * @return void
+     */
+    public function loadGlobals(): void 
+    {
+        global $params;
+        $params = [
+            'foo' => 'bar',
+            'bar' => 'foo'
+        ];
     }
     
 }

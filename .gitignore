@@ -6,9 +6,13 @@
 /src/var/cache/twig/*
 !/src/var/cache/twig/.gitkeep
 
-# cache - router
+# cache - transients
 /src/var/cache/transients/*
 !/src/var/cache/transients/.gitkeep
+
+# cache - transients
+/src/var/cache/router/*
+!/src/var/cache/router/.gitkeep
 
 # logs
 /src/var/logs/*

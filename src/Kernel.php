@@ -35,8 +35,8 @@ class Kernel {
         /** Loads the global $params variable */
         $this->loadGlobals();
         
-        /** Try to boot from existing cache */
-        $this->tryCacheBoot();
+        /** Boot from cache */
+        $this->cacheBoot();
 
         /**
          * @var RecursiveDirectoryIterator $dir
@@ -58,10 +58,10 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->tryCacheBoot()
+     * Vector\Bootstrap->cacheBoot()
      * @return void
      */
-    protected function tryCacheBoot() 
+    protected function cacheBoot() 
     {
 
         /** 
@@ -139,10 +139,11 @@ class Kernel {
     protected function loadGlobals(): void 
     {
         global $params;
-        $params = [
-            'foo' => 'bar',
-            'bar' => 'foo'
-        ];
+        $paramFilepath = __DIR__ . '/config/params.json';
+        if (file_exists($paramFilepath)) {
+            $content = json_decode(@file_get_contents($paramFilepath));
+            $params = $content;
+        }
     }
     
 }

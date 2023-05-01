@@ -139,7 +139,7 @@ class Kernel {
     protected function loadGlobals(): void 
     {
         global $params;
-        $paramFilepath = __DIR__ . '/config/params.json';
+        $paramFilepath = __DIR__ . '/globals/params.json';
         if (file_exists($paramFilepath)) {
             $content = json_decode(@file_get_contents($paramFilepath));
             $params = $content;

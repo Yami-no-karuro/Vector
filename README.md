@@ -57,9 +57,12 @@ You can change the default behaviour (usually not recommended) and save route da
 Be sure to create the logs table.  
 ```
 CREATE TABLE `vector_db`.`routes` (
-    `ID` INT NOT NULL AUTO_INCREMENT , 
-    `path` VARCHAR(125) NOT NULL , 
-    `controller` VARCHAR(85) NOT NULL , 
-    PRIMARY KEY (`ID`)
-) ENGINE = InnoDB; 
+    `ID` INT NOT NULL AUTO_INCREMENT ,
+    `path` VARCHAR(125) NOT NULL ,
+    `regex` VARCHAR(185) NOT NULL ,
+    `methods` TEXT NOT NULL ,
+    `controller` VARCHAR(85) NOT NULL ,
+    `callback` VARCHAR(50) NOT NULL ,
+    PRIMARY KEY (`ID`, `path`)
+) ENGINE = InnoDB;
 ```

@@ -25,7 +25,7 @@ abstract class AbstractController {
      * @package Vector
      * __construct()
      */
-    public function __construct(Request $request = null) 
+    public function __construct(Request $request = null, bool $directCall = false) 
     {
         $this->router = Router::getInstance($request);
         $this->sql = SqlConnection::getInstance();
@@ -35,7 +35,7 @@ abstract class AbstractController {
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true
         ]);
-        $this->init();
+        if (!$directCall) { $this->init(); }
     }
 
     

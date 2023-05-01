@@ -10,11 +10,11 @@ Download and extract the source code.
 Run `` echo `id -u`:`id -g` `` to retrieve your local user and group id.  
 If the echo result is different from `` 1000:1000 `` open the `` Dockerfile `` and override `` usermod `` and `` groupmod `` values.  
 Run `` docker-compose up -d `` to initialize the container.  
-Once the container is up run `` docker-compose exec php composer install ``.  
+Once the container is up run `` docker compose exec php composer install ``.  
 
 ### Notes
 If you run into permissions problems be sure that the `` src/var `` is owned by `` www-data ``.  
-If you are on Docker attach to the php terminal and than run `` chown -R www-data ./src/var/ ``.  
+If you are on Docker run `` docker compose exec php chown -R www-data ./src/var/ ``.  
 
 ### Encore Setup
 Run `` npm install `` to install node dependencies.  

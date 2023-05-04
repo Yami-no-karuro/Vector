@@ -23,11 +23,21 @@ abstract class AbstractController {
 
     /**
      * @package Vector
+     * @param Request $request
+     * @param string $path
+     * @param bool $direct
      * __construct()
      */
-    public function __construct(Request $request = null, bool $directCall = false) 
+    public function __construct(Request $request = null, string $path, bool $direct = false) 
     {
-        $this->router = Router::getInstance($request);
+
+        /** 
+         * @var SqlConnection $sql
+         * @var ApplicationLogger $applicationLogger
+         * @var FilesystemLoader $loader
+         * @var Envoirment $template
+         * Loads controller dependencies
+         */
         $this->sql = SqlConnection::getInstance();
         $this->applicationLogger = new ApplicationLogger('controllers');
         $loader = new FilesystemLoader(__DIR__ . '/../templates');
@@ -35,7 +45,13 @@ abstract class AbstractController {
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true
         ]);
-        if (!$directCall) { $this->init(); }
+
+        /** If the controller is initialized directly we don't need to register routes */
+        if (!$direct) {
+            $this->router = Router::getInstance($request, $path); 
+            $this->init(); 
+        }
+
     }
 
     

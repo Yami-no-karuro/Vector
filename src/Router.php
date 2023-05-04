@@ -13,27 +13,32 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Router {
 
     private static mixed $instance = null;
+    
     protected Request $request;
+    protected string $path;
 
     /**
      * @package Vector
      * @param Request $request
+     * @param string $path
      * __construct()
      */
-    private function __construct(Request $request) 
+    private function __construct(Request $request, string $path) 
     {
         $this->request = $request;
+        $this->path = $path;
     }
    
     /**
      * @package Vector
      * Vector\Router::getInstance()
      * @param Request $request
+     * @param string $path
      * @return Router
      */
-    public static function getInstance(Request $request): Router 
+    public static function getInstance(Request $request, string $path): Router 
     {
-        if (self::$instance == null) { self::$instance = new Router($request); }
+        if (self::$instance == null) { self::$instance = new Router($request, $path); }
         return self::$instance;
     }
 
@@ -47,18 +52,6 @@ class Router {
      */
     public function registerRoute(array $httpMethods, string $route, callable $callback): void 
     {
-        
-        /** 
-         * @var mixed $path
-         * Retrive the correct request path
-         */
-        $path = parse_url($this->request->getRequestUri())['path'];
-        $scriptName = dirname(dirname($this->request->getScriptName()));
-        $scriptName = str_replace('\\', '/', $scriptName);
-        $len = strlen($scriptName);
-        if ($len > 0 && $scriptName !== '/') { 
-            $path = substr($path, $len); 
-        }
 
         /**
          * @var array|null $matches
@@ -71,7 +64,7 @@ class Router {
         $matches = null;
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
-        if (!preg_match_all($regex, $path, $matches)) { return; }
+        if (!preg_match_all($regex, $this->path, $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) { 
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
@@ -79,7 +72,7 @@ class Router {
         }
 
         /** Cache route data for the next request */
-        $this->cacheRouteData($callback, $path, $regex, $httpMethods);
+        $this->cacheRouteData($callback, $this->path, $regex, $httpMethods);
 
         /**
          * @var Vector\Controller $controller

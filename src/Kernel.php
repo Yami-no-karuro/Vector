@@ -15,6 +15,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel {
 
     protected Request $request;
+    protected string $path;
 
     /**
      * @package Vector
@@ -22,7 +23,19 @@ class Kernel {
      */
     public function __construct()
     {
+
+        /** @var Request $request */
         $this->request = Request::createFromGlobals();
+        
+        /** @var string $path */
+        $this->path = parse_url($this->request->getRequestUri())['path'];
+        $scriptName = dirname(dirname($this->request->getScriptName()));
+        $scriptName = str_replace('\\', '/', $scriptName);
+        $len = strlen($scriptName);
+        if ($len > 0 && $scriptName !== '/') {
+            $this->path = substr($this->path, $len);
+        }
+
     }
 
     /**
@@ -49,8 +62,8 @@ class Kernel {
             $fname = $file->getFilename();
             if (preg_match('%\.php$%', $fname)) { 
                 require_once ($file->getPathname());
-                $controller = 'Vector\\Controller\\' . basename($fname, '.php'); 
-                new $controller($this->request); 
+                $controller = 'Vector\\Controller\\' . basename($fname, '.php');
+                new $controller($this->request, $this->path, false);
             }
         }
 
@@ -65,34 +78,24 @@ class Kernel {
     {
 
         /** 
-         * @var mixed $path
-         * Retrive the correct request path
-         */
-        $path = parse_url($this->request->getRequestUri())['path'];
-        $scriptName = dirname(dirname($this->request->getScriptName()));
-        $scriptName = str_replace('\\', '/', $scriptName);
-        $len = strlen($scriptName);
-        if ($len > 0 && $scriptName !== '/') { 
-            $path = substr($path, $len); 
-        }
-
-        /** 
          * @var array|null $cacheData
          * Try to load route data from cache
          */
-        $cacheData = null;
         if (true === DATABASE_ROUTES) {
             $sql = SqlConnection::getInstance();
             $cache = $sql->getResults("SELECT `path`, `regex`, `methods`, `controller`, `callback` 
                 FROM `routes` WHERE `path` = ? LIMIT 1", [
-                    ['type' => 's', 'value' => $path]
+                    ['type' => 's', 'value' => $this->path]
             ]);
-            if ($cache['success'] AND !empty($cache['data'])) { $cacheData = $cache['data']; }
+            if ($cache['success'] AND !empty($cache['data'])) { 
+                $cacheData = $cache['data']; 
+            } else { return; }
         } else {
-            $cacheFile = __DIR__ . '/var/cache/router/' . md5($path);
-            if (file_exists($cacheFile)) { $cacheData = unserialize(@file_get_contents($cacheFile)); }
+            $cacheFile = __DIR__ . '/var/cache/router/' . md5($this->path);
+            if (file_exists($cacheFile)) { 
+                $cacheData = unserialize(@file_get_contents($cacheFile)); 
+            } else { return; }
         }
-        if (null === $cacheData) { return; }
         
         /** 
          * @var array $httpMethods
@@ -111,7 +114,7 @@ class Kernel {
         $matches = null;
         $params = [];
         if (!in_array($this->request->getMethod(), $httpMethods)) { return; }
-        if (!preg_match_all($cacheData['regex'], $path, $matches)) { return; }
+        if (!preg_match_all($cacheData['regex'], $this->path, $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) { 
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
@@ -123,7 +126,7 @@ class Kernel {
          * @var callable $callback
          * Execute controller callback, send the response and die
          */
-        $controller = new $cacheData['controller']($this->request, true);
+        $controller = new $cacheData['controller']($this->request, $this->path, true);
         $response = call_user_func_array([$controller, $cacheData['callback']], [$this->request, $params]);
         $response->prepare($this->request);
         $response->send();

@@ -49,7 +49,7 @@ class Kernel {
         $this->loadGlobals();
         
         /** Boot from cache */
-        $this->cacheBoot();
+        $this->directBoot();
 
         /**
          * @var RecursiveDirectoryIterator $dir
@@ -71,10 +71,10 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->cacheBoot()
+     * Vector\Bootstrap->directBoot()
      * @return void
      */
-    protected function cacheBoot() 
+    protected function directBoot() 
     {
 
         /** 
@@ -116,7 +116,7 @@ class Kernel {
         if (!in_array($this->request->getMethod(), $httpMethods)) { return; }
         if (!preg_match_all($cacheData['regex'], $this->path, $matches)) { return; }
         if (!empty($matches)) {
-            foreach ($matches as $key => $value) { 
+            foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
             }
         }

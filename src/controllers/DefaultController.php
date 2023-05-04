@@ -70,6 +70,7 @@ class DefaultController extends AbstractController {
 
         /** Return the Response object */
         return new JsonResponse($data, Response::HTTP_OK);
+        
     }
     
 }

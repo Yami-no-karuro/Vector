@@ -63,7 +63,7 @@ class Kernel {
             if (preg_match('%\.php$%', $fname)) { 
                 require_once ($file->getPathname());
                 $controller = 'Vector\\Controller\\' . basename($fname, '.php');
-                new $controller($this->request, $this->path, false);
+                new $controller($this->request, $this->path);
             }
         }
 

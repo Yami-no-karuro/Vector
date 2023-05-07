@@ -40,8 +40,7 @@ abstract class AbstractController {
          */
         $this->sql = SqlConnection::getInstance();
         $this->applicationLogger = new ApplicationLogger('controllers');
-        $loader = new FilesystemLoader(__DIR__ . '/../templates');
-        $this->template = new Environment($loader, [
+        $this->template = new Environment(new FilesystemLoader(__DIR__ . '/../templates'), [
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true
         ]);

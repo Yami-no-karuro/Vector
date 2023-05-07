@@ -17,7 +17,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class DefaultController extends AbstractController {
 
-    protected function init(): void 
+    protected function init(): void
     {
         $this->router->registerRoute(['GET'], '^/?$', [$this, 'defaultAction']);
         $this->router->registerRoute(['GET'], '^/json/?$', [$this, 'jsonAction']);

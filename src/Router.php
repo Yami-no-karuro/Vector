@@ -60,13 +60,13 @@ class Router {
          * Match request method against route regex and allowed requests methods,
          * retrive matched params if any were passed on the request
          */
-        if (!in_array($this->request->getMethod(), (array) $httpMethods)) { return; }
         $matches = null;
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
+        if (!in_array($this->request->getMethod(), (array) $httpMethods)) { return; }
         if (!preg_match_all($regex, $this->path, $matches)) { return; }
         if (!empty($matches)) {
-            foreach ($matches as $key => $value) { 
+            foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
             }
         }

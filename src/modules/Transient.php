@@ -27,6 +27,12 @@ class Transient {
     {
         $this->transient = $transient;
         if (true === DATABASE_TRANSIENTS) {
+
+            /**
+             * @var Transient $transient
+             * If database transients are enabled try to retrive 
+             * data directly from the database
+             */
             $this->sql = SqlConnection::getInstance();
             $transient = $this->sql->getResults("SELECT `trs_value`, `trs_ltmtime` 
                 FROM `transients` 
@@ -37,6 +43,7 @@ class Transient {
                 $this->content = $transient['data']['trs_value'];
                 $this->lsmTime = $transient['data']['trs_ltmtime'];
             }
+
         } else {
             $this->filepath = __DIR__ . '/../var/cache/transients/' . md5($transient);
             $this->content = @file_get_contents($this->filepath, true);
@@ -77,6 +84,12 @@ class Transient {
     {
         $srlData = serialize($data);
         if (true === DATABASE_TRANSIENTS) {
+            
+            /**
+             * @var bool $execResult
+             * If database transients are enabled try to insert or update 
+             * transient data directly on database
+             */
             if (!$this->content) {
                 $execResult = $this->sql->exec("INSERT INTO `transients` 
                     (`ID`, `trs_key`, `trs_value`, `trs_ltmtime`) 
@@ -106,10 +119,17 @@ class Transient {
     public function delete(): bool
     {
         if (true === DATABASE_TRANSIENTS) {
+
+            /**
+             * @var bool $execResult
+             * If database transients are enabled try delete 
+             * transient data directly from the database
+             */
             $execResult = $this->sql->exec("DELETE FROM `transients` WHERE `trs_key` = ?", [
                 ['type' => 's', 'value' => $this->transient]
             ]);
             return $execResult['success'];
+
         } else { return @unlink($this->filepath); }
     }
 

@@ -4,6 +4,7 @@ namespace Vector\Module;
 
 use Vector\Module\SqlConnection;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\ApplicationLogger\SqlLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -13,7 +14,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractObject {
 
     protected SqlConnection $sql;
-    protected FileSystemLogger $applicationLogger;
+    protected FileSystemLogger|SqlLogger $applicationLogger;
 
     /**
      * @package Vector
@@ -22,7 +23,9 @@ abstract class AbstractObject {
     public function __construct()
     {
         $this->sql = SqlConnection::getInstance();
-        $this->applicationLogger = new FileSystemLogger('objects');
+        if (true === DATABASE_LOGS) {
+            $this->applicationLogger = new SqlLogger('commands');
+        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
     }
 
 }

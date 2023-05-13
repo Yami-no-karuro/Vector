@@ -3,6 +3,7 @@
 namespace Vector\Module;
 
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\ApplicationLogger\SqlLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -14,7 +15,7 @@ abstract class AbstractCommand {
     protected string $console;
     protected array $args;
     protected array $argsSchema = ['command'];
-    protected FileSystemLogger $applicationLogger;
+    protected FileSystemLogger|SqlLogger $applicationLogger;
 
     /**
      * @package Vector
@@ -22,7 +23,9 @@ abstract class AbstractCommand {
      */
     public function __construct(array $argv)
     {
-        $this->applicationLogger = new FileSystemLogger('commands');
+        if (true === DATABASE_LOGS) {
+            $this->applicationLogger = new SqlLogger('commands');
+        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
         $this->console = array_shift($argv);
         $this->args = $argv;
     }

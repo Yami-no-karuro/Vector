@@ -4,6 +4,7 @@ namespace Vector\Module;
 
 use Vector\Router;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\SqlConnection;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
@@ -18,7 +19,7 @@ abstract class AbstractController {
 
     protected Router $router;
     protected SqlConnection $sql;
-    protected FileSystemLogger $applicationLogger;
+    protected FileSystemLogger|SqlLogger $applicationLogger;
     protected Environment $template;
 
     /**
@@ -31,7 +32,9 @@ abstract class AbstractController {
     public function __construct(Request $request = null, string $path, bool $direct = false) 
     {
         $this->sql = SqlConnection::getInstance();
-        $this->applicationLogger = new FileSystemLogger('controllers');
+        if (true === DATABASE_LOGS) {
+            $this->applicationLogger = new SqlLogger('commands');
+        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
         $this->template = new Environment(new FilesystemLoader(__DIR__ . '/../templates'), [
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true

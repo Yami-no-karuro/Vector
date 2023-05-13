@@ -47,7 +47,7 @@ class Kernel {
     public function boot(): void
     {
         /** Loads the global $params variable */
-        $this->loadGlobals();
+        $this->loadConfig();
         
         /** Boot from cache */
         $this->directBoot();
@@ -120,16 +120,22 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->loadGlobals()
+     * Vector\Bootstrap->loadConfig()
      * @return void
      */
-    protected function loadGlobals(): void 
+    protected function loadConfig(): void 
     {
-        global $params;
-        $paramFilepath = __DIR__ . '/globals/params.json';
-        if (file_exists($paramFilepath)) {
-            $content = json_decode(@file_get_contents($paramFilepath));
-            $params = $content;
+        global $globals;
+        $path = __DIR__ . '/../config/globals.json';
+        if (file_exists($path)) {
+            $data = json_decode(@file_get_contents($path));
+            $globals = $data;
+        }
+        global $parameters;
+        $path = __DIR__ . '/../config/parameters.json';
+        if (file_exists($path)) {
+            $data = json_decode(@file_get_contents($path));
+            $parameters = $data;
         }
     }
     

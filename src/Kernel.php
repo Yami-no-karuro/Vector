@@ -2,7 +2,8 @@
 
 namespace Vector;
 
-use Vector\Module\SqlConnection;
+use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Symfony\Component\HttpFoundation\Request;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -78,32 +79,15 @@ class Kernel {
     {
 
         /** 
-         * @var array|null $cacheData
+         * @var FileSystemTransient|SqlTransient $transient
          * Try to load route data from cache
          */
-        if (true === DATABASE_ROUTES) {
-            $sql = SqlConnection::getInstance();
-            $cache = $sql->getResults("SELECT `path`, `regex`, `methods`, `controller`, `callback` 
-                FROM `routes` WHERE `path` = ? LIMIT 1", [
-                    ['type' => 's', 'value' => $this->path]
-            ]);
-            if ($cache['success'] AND !empty($cache['data'])) { 
-                $cacheData = $cache['data']; 
-            } else { return; }
-        } else {
-            $cacheFile = __DIR__ . '/var/cache/router/' . md5($this->path);
-            if (file_exists($cacheFile)) { 
-                $cacheData = unserialize(@file_get_contents($cacheFile)); 
-            } else { return; }
-        }
-        
-        /** 
-         * @var array $httpMethods
-         * Retrive allowed http methods for current route, needs to be unserialized when saved on database
-         */
-        if (true === DATABASE_ROUTES) { 
-            $httpMethods = unserialize($cacheData['methods']);
-        } else { $httpMethods = $cacheData['methods']; }
+        if (true === DATABASE_TRANSIENTS) {
+            $transient = new SqlTransient('route{' . $this->path . '}');
+        } else { $transient = new FileSystemTransient('route{' . $this->path . '}'); }
+        if (!$transient->isValid(900)) { return; }
+        $cacheData = $transient->getData();
+        $httpMethods = unserialize($cacheData['methods']);
 
         /**
          * @var array|null $matches

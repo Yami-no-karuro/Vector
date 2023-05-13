@@ -15,4 +15,3 @@ define('DB_NAME', 'vector_db');
 define('DEFAULT_TIMEZONE', 'Europe/Rome');
 define('DATABASE_TRANSIENTS', false);
 define('DATABASE_LOGS', false);
-define('DATABASE_ROUTES', false);

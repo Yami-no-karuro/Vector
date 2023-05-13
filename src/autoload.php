@@ -8,15 +8,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
 spl_autoload_register(function($class) {
     $pathArr = explode('\\', $class);
     $classname = $pathArr[count($pathArr) - 1];
-    if (file_exists(__DIR__ . '/controllers/' . $classname . '.php')) {
-        require_once(__DIR__ . '/controllers/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/modules/' . $classname . '.php')) {
-        require_once(__DIR__ . '/modules/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/objects/' . $classname . '.php')) {
-        require_once(__DIR__ . '/objects/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/events/' . $classname . '.php')) {
-        require_once(__DIR__ . '/events/' . $classname . '.php');
-    } else if (file_exists(__DIR__ . '/commands/' . $classname . '.php')) {
-        require_once(__DIR__ . '/commands/' . $classname . '.php');
+    $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src');
+    $iterator = new RecursiveIteratorIterator($dir);
+    foreach ($iterator as $file) {
+        if (str_contains($file->getFilename(), $classname)) {
+            require_once($file->getPathname());
+        }
     }
 });

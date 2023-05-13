@@ -31,9 +31,9 @@ Be sure to create the transients table.
 ```
 CREATE TABLE `vector_db`.`transients` (
     `ID` INT NOT NULL AUTO_INCREMENT , 
-    `trs_key` VARCHAR(50) NOT NULL , 
-    `trs_value` TEXT NOT NULL , 
-    `trs_ltmtime` INT(11) NOT NULL , 
+    `name` VARCHAR(50) NOT NULL , 
+    `data` TEXT NOT NULL , 
+    `time` INT(11) NOT NULL , 
     PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB; 
 ```

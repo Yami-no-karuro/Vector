@@ -5,7 +5,7 @@ namespace Vector\Controller;
 use Vector\Module\AbstractController;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
-use Vector\Module\Transient;
+use Vector\Module\Transient\FileSystemTransient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,12 +60,12 @@ class DefaultController extends AbstractController {
     {
 
         /** Check if any cached data is available, data is considered valid under 900s */
-        $transient = new Transient('json-response');
+        $transient = new FileSystemTransient('json-response');
         if ($transient->isValid(900)) {
-            $data = $transient->getContent();
+            $data = $transient->getData();
         } else {
             $data = [['foo' => 'bar'], ['fizz' => 'buzz']];
-            $transient->setContent($data);
+            $transient->setData($data);
         }
 
         /** Return the Response object */

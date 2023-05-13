@@ -2,7 +2,7 @@
 
 namespace Vector\Module;
 
-use Vector\Module\ApplicationLogger;
+use Vector\Module\ApplicationLogger\FileSystemLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -14,7 +14,7 @@ abstract class AbstractCommand {
     protected string $console;
     protected array $args;
     protected array $argsSchema = ['command'];
-    protected ApplicationLogger $applicationLogger;
+    protected FileSystemLogger $applicationLogger;
 
     /**
      * @package Vector
@@ -22,7 +22,7 @@ abstract class AbstractCommand {
      */
     public function __construct(array $argv)
     {
-        $this->applicationLogger = new ApplicationLogger('commands');
+        $this->applicationLogger = new FileSystemLogger('commands');
         $this->console = array_shift($argv);
         $this->args = $argv;
     }

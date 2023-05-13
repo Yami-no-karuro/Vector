@@ -1,0 +1,28 @@
+<?php
+
+namespace Vector\Module\ApplicationLogger;
+
+if (!defined('NO_DIRECT_ACCESS')) { 
+    header('HTTP/1.1 403 Forbidden');
+    die(); 
+}
+
+abstract class AbstractLogger {
+
+    /**
+     * @package Vector
+     * @param string $type
+     * __construct()
+     */
+    public function __construct(protected string $type) 
+    {}
+
+    /**
+     * @package Vector
+     * Vector\Module\ApplicationLogger\AbstractLogger->write()
+	 * @param string $content
+     * @return bool
+     */
+    abstract public function write(string $content): bool ;
+
+}

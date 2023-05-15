@@ -33,8 +33,8 @@ abstract class AbstractController {
     {
         $this->sql = SqlConnection::getInstance();
         if (true === DATABASE_LOGS) {
-            $this->applicationLogger = new SqlLogger('commands');
-        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
+            $this->applicationLogger = new SqlLogger('controller');
+        } else { $this->applicationLogger = new FileSystemLogger('controller'); }
         $this->template = new Environment(new FilesystemLoader(__DIR__ . '/../templates'), [
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true

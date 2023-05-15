@@ -24,8 +24,8 @@ abstract class AbstractObject {
     {
         $this->sql = SqlConnection::getInstance();
         if (true === DATABASE_LOGS) {
-            $this->applicationLogger = new SqlLogger('commands');
-        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
+            $this->applicationLogger = new SqlLogger('object');
+        } else { $this->applicationLogger = new FileSystemLogger('object'); }
     }
 
 }

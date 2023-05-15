@@ -24,8 +24,8 @@ abstract class AbstractCommand {
     public function __construct(array $argv)
     {
         if (true === DATABASE_LOGS) {
-            $this->applicationLogger = new SqlLogger('commands');
-        } else { $this->applicationLogger = new FileSystemLogger('commands'); }
+            $this->applicationLogger = new SqlLogger('command');
+        } else { $this->applicationLogger = new FileSystemLogger('command'); }
         $this->console = array_shift($argv);
         $this->args = $argv;
     }

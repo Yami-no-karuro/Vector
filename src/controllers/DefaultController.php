@@ -2,6 +2,7 @@
 
 namespace Vector\Controller;
 
+use Vector\Router;
 use Vector\Module\AbstractController;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
@@ -17,10 +18,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class DefaultController extends AbstractController {
 
-    protected function init(): void
+    protected function init(Request $request, string $path): void
     {
-        $this->router->registerRoute(['GET'], '^/?$', [$this, 'defaultAction']);
-        $this->router->registerRoute(['GET'], '^/json/?$', [$this, 'jsonAction']);
+        Router::route(['GET'], '^/?$', [$this, 'defaultAction'], $request, $path);
+        Router::route(['GET'], '^/json/?$', [$this, 'jsonAction'], $request, $path);
     }
 
     /**

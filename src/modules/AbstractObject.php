@@ -22,10 +22,15 @@ abstract class AbstractObject {
      */
     public function __construct()
     {
+
+        /** @var SqlConnection $sql */
         $this->sql = SqlConnection::getInstance();
+
+        /** @var SqlLogger|FileSystemLogger $applicationLogger */
         if (true === DATABASE_LOGS) {
             $this->applicationLogger = new SqlLogger('object');
         } else { $this->applicationLogger = new FileSystemLogger('object'); }
+
     }
 
 }

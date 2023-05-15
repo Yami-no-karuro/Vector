@@ -31,26 +31,38 @@ abstract class AbstractController {
      */
     public function __construct(Request $request = null, string $path, bool $direct = false) 
     {
+
+        /** @var SqlConnection $sql */
         $this->sql = SqlConnection::getInstance();
+        
+        /** @var SqlLogger|FileSystemLogger $applicationLogger */
         if (true === DATABASE_LOGS) {
             $this->applicationLogger = new SqlLogger('controller');
         } else { $this->applicationLogger = new FileSystemLogger('controller'); }
-        $this->template = new Environment(new FilesystemLoader(__DIR__ . '/../templates'), [
+        
+        /**
+         * @var Envoirment $template
+         * @var FilesystemLoader
+         */
+        $filesystemLoader = new FilesystemLoader(__DIR__ . '/../templates');
+        $this->template = new Environment($filesystemLoader, [
             'cache'       => __DIR__ . '/../var/cache/twig',
             'auto_reload' => true
         ]);
-        if (!$direct) {
-            $this->router = Router::getInstance($request, $path); 
-            $this->init(); 
-        }
+
+        /** If called directly Controller doest not have to register Routes */
+        if (!$direct) { $this->init($request, $path); }
+
     }
 
     
     /**
      * @package Vector
      * Vector\Module\AbstractController->init
+     * @param Request $request
+     * @param string $path
      * @return void
      */
-    abstract protected function init(): void;
+    abstract protected function init(Request $request, string $path): void;
 
 }

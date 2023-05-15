@@ -23,19 +23,27 @@ abstract class AbstractCommand {
      */
     public function __construct(array $argv)
     {
+
+        /** @var SqlLogger|FileSystemLogger $applicationLogger */
         if (true === DATABASE_LOGS) {
             $this->applicationLogger = new SqlLogger('command');
         } else { $this->applicationLogger = new FileSystemLogger('command'); }
+        
+        /**
+         * @var string $console
+         * @var array $args
+         */
         $this->console = array_shift($argv);
         $this->args = $argv;
+
     }
 
     /**
      * @package Vector
-     * Vector\Module\AbstractCommand->getCommand
+     * Vector\Module\AbstractCommand->getConsole
      * @return string
      */
-    public function getCommand(): string
+    public function getConsole(): string
     {
         return $this->console;
     }

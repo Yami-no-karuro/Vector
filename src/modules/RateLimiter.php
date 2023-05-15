@@ -24,12 +24,19 @@ class RateLimiter {
 	 */
 	public function __construct(Request $request, string $prefix = 'rate') 
 	{
+
+		/**
+		 * @var string $prefix
+		 * @var Session $session
+		 */
 		$this->prefix = md5($prefix . $request->getClientIp());
 	    $this->session = new Session();
-	    if (!$this->session->has('cache')) { $this->session->set('cache', []); }
+	    
+		if (!$this->session->has('cache')) { $this->session->set('cache', []); }
 	    if ($this->session->has('expiries')) {
 	        $this->session->set('expiries', []);
 	    } else { $this->expireSessionKeys(); }
+		
 	}
 
 	/**

@@ -13,45 +13,17 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router {
 
-    private static mixed $instance = null;
-    
-    protected Request $request;
-    protected string $path;
-
     /**
      * @package Vector
-     * @param Request $request
-     * @param string $path
-     * __construct()
-     */
-    private function __construct(Request $request, string $path) 
-    {
-        $this->request = $request;
-        $this->path = $path;
-    }
-   
-    /**
-     * @package Vector
-     * Vector\Router::getInstance()
-     * @param Request $request
-     * @param string $path
-     * @return Router
-     */
-    public static function getInstance(Request $request, string $path): Router 
-    {
-        if (self::$instance == null) { self::$instance = new Router($request, $path); }
-        return self::$instance;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Router->registerRoute()
+     * Vector\Router->route()
      * @param array $httpMethods
      * @param string $route
      * @param callable $callback
+     * @param Request $request
+     * @param string $path
      * @return void
      */
-    public function registerRoute(array $httpMethods, string $route, callable $callback): void 
+    public static function route(array $httpMethods, string $route, callable $callback, Request $request, string $path): void
     {
 
         /**
@@ -64,8 +36,8 @@ class Router {
         $matches = null;
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
-        if (!in_array($this->request->getMethod(), (array) $httpMethods)) { return; }
-        if (!preg_match_all($regex, $this->path, $matches)) { return; }
+        if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
+        if (!preg_match_all($regex, $path, $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
@@ -77,10 +49,10 @@ class Router {
          * Cache route data
          */
         if (true === DATABASE_TRANSIENTS) {
-            $transient = new SqlTransient('route{' . $this->path . '}');
-        } else { $transient = new FileSystemTransient('route{' . $this->path . '}'); }
+            $transient = new SqlTransient('route{' . $path . '}');
+        } else { $transient = new FileSystemTransient('route{' . $path . '}'); }
         $transient->setData([
-            'path' => $this->path,
+            'path' => $path,
             'regex' => $regex,
             'methods' => serialize($httpMethods),
             'controller' => get_class($callback[0]),
@@ -92,8 +64,8 @@ class Router {
          * @var callable $callback
          * Execute controller callback, send the response and die
          */
-        $response = $callback($this->request, $params);
-        $response->prepare($this->request);
+        $response = $callback($request, $params);
+        $response->prepare($request);
         $response->send();
         die();
 

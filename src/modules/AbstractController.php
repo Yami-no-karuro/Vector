@@ -44,9 +44,9 @@ abstract class AbstractController {
          * @var Envoirment $template
          * @var FilesystemLoader
          */
-        $filesystemLoader = new FilesystemLoader(__DIR__ . '/../templates');
+        $filesystemLoader = new FilesystemLoader(__DIR__ . '/../../templates');
         $this->template = new Environment($filesystemLoader, [
-            'cache'       => __DIR__ . '/../var/cache/twig',
+            'cache'       => __DIR__ . '/../../var/cache/twig',
             'auto_reload' => true
         ]);
 

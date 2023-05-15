@@ -21,7 +21,7 @@ class FileSystemLogger extends AbstractLogger {
     public function __construct(string $type)
     {
         parent::__construct($type);
-        $this->path = __DIR__ . '/../../var/logs/' . $this->type . '.log.txt';
+        $this->path = __DIR__ . '/../../../var/logs/' . $this->type . '.log.txt';
     }
 
     /**

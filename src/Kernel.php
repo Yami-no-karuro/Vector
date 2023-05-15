@@ -41,7 +41,7 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->boot()
+     * Vector\Kernel->boot()
      * @return void
      */
     public function boot(): void
@@ -50,7 +50,7 @@ class Kernel {
         $this->loadConfig();
         
         /** Boot from cache */
-        $this->directBoot();
+        $this->tryCacheBoot();
 
         /**
          * @var RecursiveDirectoryIterator $dir
@@ -72,10 +72,10 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->directBoot()
+     * Vector\Kernel->tryCacheBoot()
      * @return void
      */
-    protected function directBoot() 
+    protected function tryCacheBoot() 
     {
 
         /** 
@@ -85,7 +85,7 @@ class Kernel {
         if (true === DATABASE_TRANSIENTS) {
             $transient = new SqlTransient('route{' . $this->path . '}');
         } else { $transient = new FileSystemTransient('route{' . $this->path . '}'); }
-        if (!$transient->isValid(900)) { return; }
+        if (!$transient->isValid(3600)) { return; }
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
 
@@ -120,23 +120,28 @@ class Kernel {
 
     /**
      * @package Vector
-     * Vector\Bootstrap->loadConfig()
+     * Vector\Kernel->loadConfig()
      * @return void
      */
     protected function loadConfig(): void 
     {
-        global $globals;
-        $path = __DIR__ . '/../config/globals.json';
-        if (file_exists($path)) {
+
+        /** @var SqlTransient|FileSystemTransient $transient */
+        if (true === DATABASE_TRANSIENTS) {
+            $transient = new SqlTransient('global-config');
+        } else { $transient = new FileSystemTransient('global-config'); }
+        if ($transient->isValid(3600)) {
+            $data = $transient->getData();
+        } else {
+            $path = __DIR__ . '/../config/config.json';
             $data = json_decode(@file_get_contents($path));
-            $globals = $data;
+            $transient->setData($data);
         }
-        global $parameters;
-        $path = __DIR__ . '/../config/parameters.json';
-        if (file_exists($path)) {
-            $data = json_decode(@file_get_contents($path));
-            $parameters = $data;
-        }
+
+        /** @var object $config */ 
+        global $config;
+        $config = $data;
+
     }
     
 }

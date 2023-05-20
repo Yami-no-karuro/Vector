@@ -16,10 +16,8 @@ abstract class RestController extends AbstractController {
 
     /**
      * @package Vector
-     * @param Request $request
-     * @param string $path
-     * @param bool $direct
      * __construct()
+     * @param bool $direct
      */
     public function __construct(bool $direct = false) 
     {

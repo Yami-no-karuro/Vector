@@ -3,7 +3,6 @@
 namespace Vector\Module;
 
 use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Vector\Module\ApplicationLogger\SqlLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
@@ -15,7 +14,7 @@ abstract class AbstractCommand {
     protected string $console;
     protected array $args;
     protected array $argsSchema = ['command'];
-    protected FileSystemLogger|SqlLogger $applicationLogger;
+    protected FileSystemLogger $applicationLogger;
 
     /**
      * @package Vector
@@ -24,15 +23,12 @@ abstract class AbstractCommand {
     public function __construct(array $argv)
     {
 
-        /** @var SqlLogger|FileSystemLogger $applicationLogger */
-        if (true === DATABASE_LOGS) {
-            $this->applicationLogger = new SqlLogger('command');
-        } else { $this->applicationLogger = new FileSystemLogger('command'); }
-        
-        /**
+        /** 
+         * @var FileSystemLogger $applicationLogger 
          * @var string $console
          * @var array $args
          */
+        $this->applicationLogger = new FileSystemLogger('command');
         $this->console = array_shift($argv);
         $this->args = $argv;
 
@@ -40,7 +36,7 @@ abstract class AbstractCommand {
 
     /**
      * @package Vector
-     * Vector\Module\AbstractCommand->getConsole
+     * Vector\Module\AbstractCommand->getConsole()
      * @return string
      */
     public function getConsole(): string
@@ -50,7 +46,7 @@ abstract class AbstractCommand {
 
     /**
      * @package Vector
-     * Vector\Module\AbstractCommand->getArgs
+     * Vector\Module\AbstractCommand->getArgs()
      * @return array
      */
     public function getArgs(): array
@@ -66,7 +62,7 @@ abstract class AbstractCommand {
 
     /**
      * @package Vector
-     * Vector\Module\AbstractCommand->exec
+     * Vector\Module\AbstractCommand->exec()
      * @return int
      */
     abstract public function exec(): int;

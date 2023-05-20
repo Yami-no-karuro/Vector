@@ -2,12 +2,14 @@
 
 namespace Vector\Module;
 
+use Exception;
+
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
     die(); 
 }
 
-class SqlConnectionException extends \Exception {}
+class SqlConnectionException extends Exception {}
 class SqlConnection {
 
     protected \mysqli $mysqlitunnel;

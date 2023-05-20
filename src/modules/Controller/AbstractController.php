@@ -33,7 +33,7 @@ abstract class AbstractController {
     
     /**
      * @package Vector
-     * Vector\Module\AbstractController->init
+     * Vector\Module\AbstractController->register()
      * @return void
      */
     abstract protected function register(): void;

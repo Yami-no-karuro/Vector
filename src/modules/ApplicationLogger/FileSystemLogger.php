@@ -32,7 +32,8 @@ class FileSystemLogger extends AbstractLogger {
      */
     public function write(string $content): bool 
     {
-        return @file_put_contents($this->path, $content . PHP_EOL, FILE_APPEND | LOCK_EX);
+        $log = date('Y/m/d h:m:s') . ' - ' . $content . ' ' . PHP_EOL;
+        return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 
 }

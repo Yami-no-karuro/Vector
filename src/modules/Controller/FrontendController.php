@@ -1,8 +1,8 @@
 <?php
 
-namespace Vector\Module;
+namespace Vector\Module\Controller;
 
-use Vector\Module\AbstractController;
+use Vector\Module\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module;
+namespace Vector\Module\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 

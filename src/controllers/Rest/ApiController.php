@@ -3,7 +3,7 @@
 namespace Vector\Controller;
 
 use Vector\Router;
-use Vector\Module\RestController;
+use Vector\Module\Controller\RestController;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
 use Symfony\Component\HttpFoundation\Request;

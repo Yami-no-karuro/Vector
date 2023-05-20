@@ -20,8 +20,15 @@ class SqlConnection {
      * __construct()
      */
     private function __construct() {
+
+        global $config;
         try {
-            $this->mysqlitunnel = new \mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+            $this->mysqlitunnel = new \mysqli(
+                $config->database->db_host, 
+                $config->database->db_user, 
+                $config->database->db_password, 
+                $config->database->db_name
+            );
         } catch (\Exception) { 
             throw new SqlConnectionException;
         }

@@ -14,11 +14,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class DefaultController extends FrontendController {
+class TemplateController extends FrontendController {
 
     protected function register(): void
     {
-        Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
+        Router::route(['GET'], '^/?$', [$this, 'templateAction']);
     }
 
     /**
@@ -27,11 +27,11 @@ class DefaultController extends FrontendController {
      * @param Request
      * @return Response
      */
-    public function defaultAction(Request $request): Response
+    public function templateAction(Request $request): Response
     {
 
         /** Limit requests on this route to 120 per minute per IP address */
-        $rateLimiter = new RateLimiter($request, 'default-route-rate');
+        $rateLimiter = new RateLimiter($request, 'template-route-rate');
         try {
             $rateLimiter->limitRequestsInMinutes(120, 1);
         } catch (RateExceededException) {

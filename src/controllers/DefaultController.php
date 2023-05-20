@@ -3,7 +3,7 @@
 namespace Vector\Controller;
 
 use Vector\Router;
-use Vector\Module\AbstractController;
+use Vector\Module\FrontendController;
 use Vector\Module\RateLimiter;
 use Vector\Module\RateExceededException;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +14,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die(); 
 }
 
-class DefaultController extends AbstractController {
+class DefaultController extends FrontendController {
 
-    protected function init(Request $request, string $path): void
+    protected function register(): void
     {
-        Router::route(['GET'], '^/?$', [$this, 'defaultAction'], $request, $path);
+        Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
     }
 
     /**

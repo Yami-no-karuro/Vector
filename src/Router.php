@@ -3,7 +3,6 @@
 namespace Vector;
 
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Transient\SqlTransient;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
@@ -19,12 +18,13 @@ class Router {
      * @param array $httpMethods
      * @param string $route
      * @param callable $callback
-     * @param Request $request
-     * @param string $path
      * @return void
      */
-    public static function route(array $httpMethods, string $route, callable $callback, Request $request, string $path): void
+    public static function route(array $httpMethods, string $route, callable $callback): void
     {
+
+        /** @var Request $request */
+        global $request;
 
         /**
          * @var array|null $matches
@@ -37,7 +37,7 @@ class Router {
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
-        if (!preg_match_all($regex, $path, $matches)) { return; }
+        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
@@ -45,14 +45,12 @@ class Router {
         }
 
         /** 
-         * @var FileSystemTransient|SqlTransient $transient
+         * @var FileSystemTransient $transient
          * Cache route data
          */
-        if (true === DATABASE_TRANSIENTS) {
-            $transient = new SqlTransient('route{' . $path . '}');
-        } else { $transient = new FileSystemTransient('route{' . $path . '}'); }
+        $transient = new FileSystemTransient('route{' . $request->getPathInfo() . '}');
         $transient->setData([
-            'path' => $path,
+            'path' => $request->getPathInfo(),
             'regex' => $regex,
             'methods' => serialize($httpMethods),
             'controller' => get_class($callback[0]),

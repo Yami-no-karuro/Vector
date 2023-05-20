@@ -4,13 +4,14 @@ namespace Vector\Module;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
     die(); 
 }
 
-class RateExceededException extends \Exception {}
+class RateExceededException extends Exception {}
 class RateLimiter {
 
 	protected string $prefix;

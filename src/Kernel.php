@@ -3,7 +3,6 @@
 namespace Vector;
 
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Transient\SqlTransient;
 use Symfony\Component\HttpFoundation\Request;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -16,7 +15,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel {
 
     protected Request $request;
-    protected string $path;
 
     /**
      * @package Vector
@@ -24,19 +22,9 @@ class Kernel {
      */
     public function __construct()
     {
-
-        /** @var Request $request */
-        $this->request = Request::createFromGlobals();
-        
-        /** @var string $path */
-        $this->path = parse_url($this->request->getRequestUri())['path'];
-        $scriptName = dirname(dirname($this->request->getScriptName()));
-        $scriptName = str_replace('\\', '/', $scriptName);
-        $len = strlen($scriptName);
-        if ($len > 0 && $scriptName !== '/') {
-            $this->path = substr($this->path, $len);
-        }
-
+        global $request;
+        $request = Request::createFromGlobals();
+        $this->request = $request;
     }
 
     /**
@@ -46,45 +34,30 @@ class Kernel {
      */
     public function boot(): void
     {
-        /** Loads the global $params variable */
+        /** Loads the global configuration */
         $this->loadConfig();
         
-        /** Boot from cache */
-        $this->tryCacheBoot();
+        /** Try to Boot from cache */
+        $this->directBoot();
 
-        /**
-         * @var RecursiveDirectoryIterator $dir
-         * @var RecursiveIteratorIterator $iterator
-         * Recursively initialize controllers, parse request trough the Router instance
-         */
-        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
-        $iterator = new RecursiveIteratorIterator($dir);
-        foreach ($iterator as $file) {
-            $fname = $file->getFilename();
-            if (preg_match('%\.php$%', $fname)) { 
-                require_once ($file->getPathname());
-                $controller = 'Vector\\Controller\\' . basename($fname, '.php');
-                new $controller($this->request, $this->path);
-            }
-        }
+        /** Fallback boot, if cache is not warmed up yep */
+        $this->registerBoot();
 
     }
 
     /**
      * @package Vector
-     * Vector\Kernel->tryCacheBoot()
+     * Vector\Kernel->directBoot()
      * @return void
      */
-    protected function tryCacheBoot() 
+    protected function directBoot(): void
     {
 
         /** 
-         * @var FileSystemTransient|SqlTransient $transient
+         * @var FileSystemTransient $transient
          * Try to load route data from cache
-         */
-        if (true === DATABASE_TRANSIENTS) {
-            $transient = new SqlTransient('route{' . $this->path . '}');
-        } else { $transient = new FileSystemTransient('route{' . $this->path . '}'); }
+         */    
+        $transient = new FileSystemTransient('route{' . $this->request->getPathInfo() . '}');
         if (!$transient->isValid(3600)) { return; }
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
@@ -98,7 +71,7 @@ class Kernel {
         $matches = null;
         $params = [];
         if (!in_array($this->request->getMethod(), $httpMethods)) { return; }
-        if (!preg_match_all($cacheData['regex'], $this->path, $matches)) { return; }
+        if (!preg_match_all($cacheData['regex'], $this->request->getPathInfo(), $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
@@ -110,11 +83,37 @@ class Kernel {
          * @var callable $callback
          * Execute controller callback, send the response and die
          */
-        $controller = new $cacheData['controller']($this->request, $this->path, true);
+        $controller = new $cacheData['controller'](true);
         $response = call_user_func_array([$controller, $cacheData['callback']], [$this->request, $params]);
         $response->prepare($this->request);
         $response->send();
         die();
+
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel->registerBoot()
+     * @return void
+     */
+    protected function registerBoot(): void
+    {
+
+        /**
+         * @var RecursiveDirectoryIterator $dir
+         * @var RecursiveIteratorIterator $iterator
+         * Recursively initialize controllers, parse request trough the Router instance
+         */
+        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
+        $iterator = new RecursiveIteratorIterator($dir);
+        foreach ($iterator as $file) {
+            $fname = $file->getFilename();
+            if (preg_match('%\.php$%', $fname)) { 
+                require_once ($file->getPathname());
+                $controller = 'Vector\\Controller\\' . basename($fname, '.php');
+                new $controller();
+            }
+        }
 
     }
 
@@ -126,10 +125,12 @@ class Kernel {
     protected function loadConfig(): void 
     {
 
-        /** @var SqlTransient|FileSystemTransient $transient */
-        if (true === DATABASE_TRANSIENTS) {
-            $transient = new SqlTransient('global-config');
-        } else { $transient = new FileSystemTransient('global-config'); }
+        /** 
+         * @var FileSystemTransient $transient 
+         * @var object $config
+         */
+        global $config;
+        $transient = new FileSystemTransient('global-config');
         if ($transient->isValid(3600)) {
             $data = $transient->getData();
         } else {
@@ -137,9 +138,6 @@ class Kernel {
             $data = json_decode(@file_get_contents($path));
             $transient->setData($data);
         }
-
-        /** @var object $config */ 
-        global $config;
         $config = $data;
 
     }

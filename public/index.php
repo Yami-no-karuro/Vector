@@ -26,7 +26,7 @@ global $request;
 $response = new Response(null, Response::HTTP_NOT_FOUND);
 $response->prepare($request);
 $response->send();
-die(); 
+die();
 
 
 

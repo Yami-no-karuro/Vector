@@ -26,13 +26,13 @@ class FileSystemLogger extends AbstractLogger {
 
     /**
      * @package Vector
-     * Vector\Module\ApplicationLogger\FileSystemLogger->writeLog()
+     * Vector\Module\ApplicationLogger\FileSystemLogger->write()
 	 * @param string $content
      * @return bool
      */
     public function write(string $content): bool 
     {
-        $log = date('Y/m/d h:m:s') . ' - ' . $content . ' ' . PHP_EOL;
+        $log = date('Y/m/d - h:m:s') . ' - ' . $content . ' ' . PHP_EOL;
         return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 

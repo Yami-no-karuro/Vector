@@ -2,17 +2,16 @@
 
 namespace Vector\Module;
 
-use Exception;
+use mysqli;
 
 if (!defined('NO_DIRECT_ACCESS')) { 
     header('HTTP/1.1 403 Forbidden');
     die(); 
 }
 
-class SqlConnectionException extends Exception {}
 class SqlConnection {
 
-    protected \mysqli $mysqlitunnel;
+    protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
 
     /**
@@ -22,16 +21,12 @@ class SqlConnection {
     private function __construct() {
 
         global $config;
-        try {
-            $this->mysqlitunnel = new \mysqli(
-                $config->database->db_host, 
-                $config->database->db_user, 
-                $config->database->db_password, 
-                $config->database->db_name
-            );
-        } catch (\Exception) { 
-            throw new SqlConnectionException;
-        }
+        $this->mysqlitunnel = new mysqli(
+            $config->database->db_host, 
+            $config->database->db_user, 
+            $config->database->db_password, 
+            $config->database->db_name
+        );
     }
 
     /**

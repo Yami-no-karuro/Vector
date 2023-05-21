@@ -32,7 +32,6 @@ class RateLimiter {
 		 */
 		$this->prefix = md5($prefix . $request->getClientIp());
 	    $this->session = new Session();
-	    
 		if (!$this->session->has('cache')) { $this->session->set('cache', []); }
 	    if ($this->session->has('expiries')) {
 	        $this->session->set('expiries', []);

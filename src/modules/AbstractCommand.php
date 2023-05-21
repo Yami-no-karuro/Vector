@@ -54,7 +54,7 @@ abstract class AbstractCommand {
         $args = [];
         foreach ($this->args as $key => $value) {
             if (!isset($this->argsSchema[$key])) {
-                $args['flags'][] = $value;
+                $args['params'][] = $value;
             } else { $args[$this->argsSchema[$key]] = $value; }
         }
         return $args;

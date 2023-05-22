@@ -4,12 +4,13 @@ namespace Vector\Module;
 
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-abstract class AbstractCommand {
+abstract class AbstractCommand
+{
 
     protected string $console;
     protected array $args;
@@ -31,7 +32,6 @@ abstract class AbstractCommand {
         $this->applicationLogger = new FileSystemLogger('command');
         $this->console = array_shift($argv);
         $this->args = $argv;
-
     }
 
     /**
@@ -55,7 +55,9 @@ abstract class AbstractCommand {
         foreach ($this->args as $key => $value) {
             if (!isset($this->argsSchema[$key])) {
                 $args['params'][] = $value;
-            } else { $args[$this->argsSchema[$key]] = $value; }
+            } else {
+                $args[$this->argsSchema[$key]] = $value;
+            }
         }
         return $args;
     }
@@ -66,5 +68,4 @@ abstract class AbstractCommand {
      * @return int
      */
     abstract public function exec(): int;
-
 }

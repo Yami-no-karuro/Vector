@@ -9,12 +9,13 @@ use Vector\Module\RateExceededException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class TemplateController extends FrontendController {
+class TemplateController extends FrontendController
+{
 
     protected function register(): void
     {
@@ -46,7 +47,5 @@ class TemplateController extends FrontendController {
 
         /** Return the Response object */
         return new Response($html, Response::HTTP_OK);
-        
     }
-    
 }

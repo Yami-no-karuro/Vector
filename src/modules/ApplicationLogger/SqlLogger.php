@@ -28,7 +28,7 @@ class SqlLogger extends AbstractLogger {
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\SqlLogger->write()
-	 * @param string $content
+  	 * @param string $content
      * @return bool
      */
     public function write(string $content): bool 

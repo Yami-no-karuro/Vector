@@ -130,7 +130,7 @@ class Kernel {
          * @var object $config
          */
         global $config;
-        $transient = new FileSystemTransient('global-config');
+        $transient = new FileSystemTransient('config');
         if ($transient->isValid(3600)) {
             $data = $transient->getData();
         } else {

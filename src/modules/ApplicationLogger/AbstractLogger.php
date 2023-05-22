@@ -20,9 +20,9 @@ abstract class AbstractLogger {
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\AbstractLogger->write()
-	 * @param string $content
+  	 * @param string $content
      * @return bool
      */
-    abstract public function write(string $content): bool ;
+    abstract public function write(string $content): bool;
 
 }

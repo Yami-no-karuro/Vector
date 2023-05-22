@@ -70,8 +70,8 @@ class SqlConnection {
         }
         $result = [
             'success' => false,
-            'data'    => [
-                'inserted_id'   => $cleanSql->insert_id,
+            'data' => [
+                'inserted_id' => $cleanSql->insert_id,
                 'affected_rows' => $cleanSql->affected_rows
             ]
         ];

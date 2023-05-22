@@ -27,7 +27,7 @@ class FileSystemLogger extends AbstractLogger {
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\FileSystemLogger->write()
-	 * @param string $content
+  	 * @param string $content
      * @return bool
      */
     public function write(string $content): bool 

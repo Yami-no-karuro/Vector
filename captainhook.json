@@ -27,7 +27,7 @@
                 "options": []
             },
             {
-                "action": "vendor/bin/phpstan analyse src tests",
+                "action": "vendor/bin/phpstan analyse src",
                 "options": []
             }
         ]

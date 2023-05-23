@@ -9,8 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class SqlConnection
-{
+class SqlConnection {
 
     protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
@@ -21,7 +20,6 @@ class SqlConnection
      */
     private function __construct()
     {
-
         global $config;
         $this->mysqlitunnel = new mysqli(
             $config->database->db_host,
@@ -47,9 +45,7 @@ class SqlConnection
      */
     public static function getInstance(): SqlConnection
     {
-        if (self::$instance == null) {
-            self::$instance = new SqlConnection();
-        }
+        if (self::$instance == null) { self::$instance = new SqlConnection(); }
         return self::$instance;
     }
 
@@ -79,9 +75,7 @@ class SqlConnection
                 'affected_rows' => $cleanSql->affected_rows
             ]
         ];
-        if (!$cleanSql->execute()) {
-            return $result;
-        }
+        if (!$cleanSql->execute()) { return $result; }
         $result['success'] = true;
         return $result;
     }
@@ -105,9 +99,7 @@ class SqlConnection
             }
             $cleanSql->bind_param($types, ...$values);
         }
-        if (!$cleanSql->execute()) {
-            return ['success' => false, 'data' => NULL];
-        }
+        if (!$cleanSql->execute()) { return ['success' => false, 'data' => NULL]; }
         $result = $cleanSql->get_result();
         $results = ['success' => true, 'data' => []];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {

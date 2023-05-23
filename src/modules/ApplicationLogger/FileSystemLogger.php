@@ -15,8 +15,8 @@ class FileSystemLogger extends AbstractLogger {
 
     /**
      * @package Vector
-     * @param string $type
      * __construct()
+     * @param string $type
      */
     public function __construct(string $type)
     {

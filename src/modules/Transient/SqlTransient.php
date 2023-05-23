@@ -18,8 +18,8 @@ class SqlTransient extends AbstractTransient {
 
     /**
      * @package Vector
-     * @param string $name
      * __construct()
+     * @param string $name
      */
     public function __construct(string $name)
     {

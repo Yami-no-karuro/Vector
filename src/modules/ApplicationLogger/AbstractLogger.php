@@ -11,8 +11,8 @@ abstract class AbstractLogger {
 
     /**
      * @package Vector
-     * @param string $type
      * __construct()
+     * @param string $type
      */
     public function __construct(protected string $type) 
     {}

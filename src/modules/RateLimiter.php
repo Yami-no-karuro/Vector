@@ -11,12 +11,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 	die();
 }
 
-class RateExceededException extends Exception
-{
-}
-
-class RateLimiter
-{
+class RateExceededException extends Exception {}
+class RateLimiter {
 
 	protected string $prefix;
 	protected Session $session;
@@ -36,14 +32,10 @@ class RateLimiter
 		 */
 		$this->prefix = md5($prefix . $request->getClientIp());
 		$this->session = new Session();
-		if (!$this->session->has('cache')) {
-			$this->session->set('cache', []);
-		}
+		if (!$this->session->has('cache')) { $this->session->set('cache', []); }
 		if ($this->session->has('expiries')) {
 			$this->session->set('expiries', []);
-		} else {
-			$this->expireSessionKeys();
-		}
+		} else { $this->expireSessionKeys(); }
 	}
 
 	/**
@@ -59,18 +51,12 @@ class RateLimiter
 		$requests = 0;
 		foreach ($this->getKeys($minutes) as $key) {
 			$requestsInCurrentMinute = $this->getSessionKey($key);
-			if (false !== $requestsInCurrentMinute) {
-				$requests += $requestsInCurrentMinute;
-			}
+			if (false !== $requestsInCurrentMinute) { $requests += $requestsInCurrentMinute; }
 		}
 		if (false === $requestsInCurrentMinute) {
 			$this->setSessionKey($key, 1, ($minutes * 60 + 1));
-		} else {
-			$this->increment($key, 1);
-		}
-		if ($requests > $allowedRequests) {
-			throw new RateExceededException;
-		}
+		} else { $this->increment($key, 1); }
+		if ($requests > $allowedRequests) { throw new RateExceededException; }
 	}
 
 	/**
@@ -101,9 +87,7 @@ class RateLimiter
 		$count = 0;
 		if ($this->session->has('cache')) {
 			$cache = $this->session->get('cache');
-			if (isset($cache[$key])) {
-				$count = $cache[$key];
-			}
+			if (isset($cache[$key])) { $count = $cache[$key]; }
 		}
 		$cache[$key] = $count + $inc;
 		$this->session->set('cache', $cache);
@@ -146,9 +130,7 @@ class RateLimiter
 	 */
 	protected function expireSessionKeys(): void
 	{
-		if (!$this->session->has('expiries')) {
-			return;
-		}
+		if (!$this->session->has('expiries')) { return; }
 		foreach ($this->session->get('expiries') as $key => $value) {
 			if (time() > $value) {
 				$cache = $this->session->get('cache');

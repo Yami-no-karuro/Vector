@@ -1,6 +1,8 @@
 # vendor
 /vendor/*
 !/vendor/.gitkeep
+/tools/php-cs-fixer/vendor/*
+!/tools/php-cs-fixer/vendor/.gitkeep
 
 # cache - twig
 /var/cache/twig/*

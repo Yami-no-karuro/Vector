@@ -25,6 +25,10 @@
             {
                 "action": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src",
                 "options": []
+            },
+            {
+                "action": "vendor/bin/phpstan analyse src tests",
+                "options": []
             }
         ]
     },

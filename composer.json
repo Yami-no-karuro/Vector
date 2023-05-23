@@ -2,7 +2,8 @@
     "require": {
         "twig/twig": "^3.5",
         "symfony/http-foundation": "^6.2",
-        "captainhook/captainhook": "^5.16"
+        "captainhook/captainhook": "^5.16",
+        "phpstan/phpstan": "^1.10"
     },
     "config": {
         "allow-plugins": {

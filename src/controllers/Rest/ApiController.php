@@ -10,13 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class ApiController extends RestController {
-
+class ApiController extends RestController
+{
     protected function register(): void
     {
         Router::route(['GET'], '^/api?$', [$this, 'apiAction']);
@@ -41,7 +41,7 @@ class ApiController extends RestController {
 
         /** Return the JsonResponse object */
         return new JsonResponse(['success' => true], Response::HTTP_OK);
-        
+
     }
-    
+
 }

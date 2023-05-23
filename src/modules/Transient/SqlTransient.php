@@ -5,13 +5,13 @@ namespace Vector\Module\Transient;
 use Vector\Module\Transient\AbstractTransient;
 use Vector\Module\SqlConnection;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class SqlTransient extends AbstractTransient {
-
+class SqlTransient extends AbstractTransient
+{
     protected SqlConnection $sql;
     protected mixed $data = null;
     protected null|int $time = null;
@@ -30,7 +30,7 @@ class SqlTransient extends AbstractTransient {
             WHERE `name` = ? LIMIT 1", [
                 ['type' => 's', 'value' => $this->name]
         ]);
-        if ($transient['success'] AND !empty($transient['data'])) {
+        if ($transient['success'] and !empty($transient['data'])) {
             $this->data = $transient['data']['data'];
             $this->time = $transient['data']['time'];
         }
@@ -38,13 +38,15 @@ class SqlTransient extends AbstractTransient {
 
     /**
      * @package Vector
-     * Vector\Module\Transient\SqlTransient->isValid() 
+     * Vector\Module\Transient\SqlTransient->isValid()
      * @param int $seconds
      * @return bool
      */
     public function isValid(int $seconds): bool
     {
-        if (!$this->data) { return false; }
+        if (!$this->data) {
+            return false;
+        }
         return (time() - $this->time) > $seconds ? false : true;
     }
 
@@ -53,19 +55,21 @@ class SqlTransient extends AbstractTransient {
      * Vector\Module\Transient\SqlTransient->getData()
      * @return mixed
      */
-    public function getData(): mixed 
+    public function getData(): mixed
     {
-        if (!$this->data) { return null; }
+        if (!$this->data) {
+            return null;
+        }
         return unserialize($this->data);
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\SqlTransient->setData()
-  	 * @param mixed $data
+     * @param mixed $data
      * @return bool
      */
-    public function setData(mixed $data): bool 
+    public function setData(mixed $data): bool
     {
         if (!$this->data) {
             $execResult = $this->sql->exec("INSERT INTO `transients` 

@@ -4,13 +4,13 @@ namespace Vector\Module\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-abstract class AbstractController {
-
+abstract class AbstractController
+{
     protected Request $request;
 
     /**
@@ -18,7 +18,7 @@ abstract class AbstractController {
      * __construct()
      * @param bool $direct
      */
-    public function __construct(bool $direct = false) 
+    public function __construct(bool $direct = false)
     {
 
         /** @var Request $request */
@@ -26,11 +26,13 @@ abstract class AbstractController {
         $this->request = $request;
 
         /** Routes are not registered when called from Kernel::directBoot() */
-        if (!$direct) { $this->register(); }
+        if (!$direct) {
+            $this->register();
+        }
 
     }
 
-    
+
     /**
      * @package Vector
      * Vector\Module\AbstractController->register()

@@ -5,13 +5,13 @@ namespace Vector\Module;
 use Vector\Module\SqlConnection;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-abstract class AbstractObject {
-
+abstract class AbstractObject
+{
     protected SqlConnection $sql;
     protected FileSystemLogger $applicationLogger;
 
@@ -22,7 +22,7 @@ abstract class AbstractObject {
     public function __construct()
     {
 
-        /** 
+        /**
          * @var SqlConnection $sql
          * @var FileSystemLogger $applicationLogger
          */

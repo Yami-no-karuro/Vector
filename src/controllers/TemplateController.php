@@ -16,7 +16,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class TemplateController extends FrontendController
 {
-
     protected function register(): void
     {
         Router::route(['GET'], '^/?$', [$this, 'templateAction']);

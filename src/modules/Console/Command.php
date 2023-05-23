@@ -9,8 +9,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Command {
-
+class Command
+{
     protected string $command;
     protected string $console;
     protected array $args;
@@ -22,7 +22,7 @@ class Command {
      * __construct()
      * @param string $command
      * @param array $argv
-     * @param Closure $callback 
+     * @param Closure $callback
      */
     public function __construct(string $command, array $argv, Closure $callback)
     {
@@ -32,8 +32,10 @@ class Command {
         $this->args = [];
         foreach ($argv as $key => $value) {
             if (isset($this->argsSchema[$key])) {
-                $this->args[$this->argsSchema[$key]] = $value; 
-            } else { $this->args['args'][] = $value; }
+                $this->args[$this->argsSchema[$key]] = $value;
+            } else {
+                $this->args['args'][] = $value;
+            }
         }
         $this->callback = $callback;
     }
@@ -42,7 +44,7 @@ class Command {
      * @package Vector
      * Vector\Module\Console\Command->getConsole()
      * @return string
-     */    
+     */
     public function getConsole(): string
     {
         return $this->console;
@@ -52,7 +54,7 @@ class Command {
      * @package Vector
      * Vector\Module\Console\Command->getCommand()
      * @return string
-     */    
+     */
     public function getCommand(): string
     {
         return $this->command;
@@ -75,10 +77,12 @@ class Command {
      */
     public function execute(): int
     {
-        if ($this->command !== $this->args['command']) { return 1; }
+        if ($this->command !== $this->args['command']) {
+            return 1;
+        }
         $callback = $this->callback;
         if (is_callable($callback)) {
-            return $callback($this->args); 
+            return $callback($this->args);
         }
     }
 

@@ -5,13 +5,13 @@ namespace Vector\Module\ApplicationLogger;
 use Vector\Module\ApplicationLogger\AbstractLogger;
 use Vector\Module\SqlConnection;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class SqlLogger extends AbstractLogger {
-
+class SqlLogger extends AbstractLogger
+{
     protected SqlConnection $sql;
 
     /**
@@ -28,10 +28,10 @@ class SqlLogger extends AbstractLogger {
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\SqlLogger->write()
-  	 * @param string $content
+     * @param string $content
      * @return bool
      */
-    public function write(string $content): bool 
+    public function write(string $content): bool
     {
         $execResult = $this->sql->exec("INSERT INTO `logs` 
             (`ID`, `type`, `time`, `content`) 

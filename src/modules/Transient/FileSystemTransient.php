@@ -4,13 +4,13 @@ namespace Vector\Module\Transient;
 
 use Vector\Module\Transient\AbstractTransient;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class FileSystemTransient extends AbstractTransient {
-
+class FileSystemTransient extends AbstractTransient
+{
     protected string $path;
     protected mixed $data = null;
     protected null|int $time = null;
@@ -30,13 +30,15 @@ class FileSystemTransient extends AbstractTransient {
 
     /**
      * @package Vector
-     * Vector\Module\Transient\FileSystemTransient->isValid() 
+     * Vector\Module\Transient\FileSystemTransient->isValid()
      * @param int $seconds
      * @return bool
      */
     public function isValid(int $seconds): bool
     {
-        if (!$this->data) { return false; }
+        if (!$this->data) {
+            return false;
+        }
         return (time() - $this->time) > $seconds ? false : true;
     }
 
@@ -45,19 +47,21 @@ class FileSystemTransient extends AbstractTransient {
      * Vector\Module\Transient\FileSystemTransient->getData()
      * @return mixed
      */
-    public function getData(): mixed 
+    public function getData(): mixed
     {
-        if (!$this->data) { return null; }
+        if (!$this->data) {
+            return null;
+        }
         return unserialize($this->data);
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\FileSystemTransient->setData()
-  	 * @param mixed $data
+     * @param mixed $data
      * @return bool
      */
-    public function setData(mixed $data): bool 
+    public function setData(mixed $data): bool
     {
         return @file_put_contents($this->path, serialize($data), LOCK_EX);
     }

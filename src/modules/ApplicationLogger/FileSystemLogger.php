@@ -4,13 +4,13 @@ namespace Vector\Module\ApplicationLogger;
 
 use Vector\Module\ApplicationLogger\AbstractLogger;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class FileSystemLogger extends AbstractLogger {
-
+class FileSystemLogger extends AbstractLogger
+{
     protected string $path;
 
     /**
@@ -27,10 +27,10 @@ class FileSystemLogger extends AbstractLogger {
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\FileSystemLogger->write()
-  	 * @param string $content
+     * @param string $content
      * @return bool
      */
-    public function write(string $content): bool 
+    public function write(string $content): bool
     {
         $log = date('Y/m/d - h:m:s') . ' - ' . $content . ' ' . PHP_EOL;
         return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);

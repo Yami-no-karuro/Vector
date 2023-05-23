@@ -2,25 +2,26 @@
 
 namespace Vector\Module\ApplicationLogger;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-abstract class AbstractLogger {
-
+abstract class AbstractLogger
+{
     /**
      * @package Vector
      * __construct()
      * @param string $type
      */
-    public function __construct(protected string $type) 
-    {}
+    public function __construct(protected string $type)
+    {
+    }
 
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\AbstractLogger->write()
-  	 * @param string $content
+     * @param string $content
      * @return bool
      */
     abstract public function write(string $content): bool;

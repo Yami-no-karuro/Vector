@@ -5,13 +5,13 @@ namespace Vector;
 use Vector\Module\Transient\FileSystemTransient;
 use Symfony\Component\HttpFoundation\Request;
 
-if (!defined('NO_DIRECT_ACCESS')) { 
+if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
-    die(); 
+    die();
 }
 
-class Router {
-
+class Router
+{
     /**
      * @package Vector
      * Vector\Router->route()
@@ -36,15 +36,21 @@ class Router {
         $matches = null;
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
-        if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
-        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) { return; }
+        if (!in_array($request->getMethod(), (array) $httpMethods)) {
+            return;
+        }
+        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) {
+            return;
+        }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
-                if (!is_numeric($key) && !isset($value[1])) { $params[$key] = $value[0]; } 
+                if (!is_numeric($key) && !isset($value[1])) {
+                    $params[$key] = $value[0];
+                }
             }
         }
 
-        /** 
+        /**
          * @var FileSystemTransient $transient
          * Cache route data
          */

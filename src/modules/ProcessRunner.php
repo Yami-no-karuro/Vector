@@ -7,9 +7,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class ProcessRunner 
+class ProcessRunner
 {
-
     protected $process;
     private static mixed $instance = null;
 
@@ -21,7 +20,7 @@ class ProcessRunner
     public static function getInstance(): ProcessRunner
     {
         if (self::$instance == null) {
-            self::$instance = new SqlConnection();
+            self::$instance = new ProcessRunner();
         }
         return self::$instance;
     }
@@ -32,7 +31,7 @@ class ProcessRunner
      * @param string $command
      * @return ?array
      */
-    public function runCommand(string $command): ?array 
+    public function runCommand(string $command): ?array
     {
         $this->process = proc_open($command, [
             0 => ['pipe', 'r'],

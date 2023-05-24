@@ -13,7 +13,7 @@ class FileSystemTransient extends AbstractTransient
 {
     protected string $path;
     protected mixed $data = null;
-    protected null|int $time = null;
+    protected ?int $time = null;
 
     /**
      * @package Vector

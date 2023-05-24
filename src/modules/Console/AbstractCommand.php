@@ -2,32 +2,26 @@
 
 namespace Vector\Module\Console;
 
-use Closure;
-
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class Command
+abstract class AbstractCommand
 {
-    protected string $command;
+    
+    protected ?string $command;
     protected string $console;
     protected array $args;
     protected array $argsSchema = ['command'];
-    protected Closure $callback;
 
     /**
      * @package Vector
      * __construct()
-     * @param string $command
      * @param array $argv
-     * @param Closure $callback
      */
-    public function __construct(string $command, array $argv, Closure $callback)
+    public function __construct(array $argv)
     {
-
-        $this->command = $command;
         $this->console = array_shift($argv);
         $this->args = [];
         foreach ($argv as $key => $value) {
@@ -37,7 +31,6 @@ class Command
                 $this->args['args'][] = $value;
             }
         }
-        $this->callback = $callback;
     }
 
     /**
@@ -75,15 +68,13 @@ class Command
      * Vector\Module\Console\Command->execute()
      * @return int
      */
-    public function execute(): int
-    {
-        if ($this->command !== $this->args['command']) {
-            return 1;
-        }
-        $callback = $this->callback;
-        if (is_callable($callback)) {
-            return $callback($this->args);
-        }
-    }
+    abstract public function execute(): int;
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Command->setCommand()
+     * @return void
+     */
+    abstract public function setCommand(): void;
 
 }

@@ -14,7 +14,7 @@ class SqlTransient extends AbstractTransient
 {
     protected SqlConnection $sql;
     protected mixed $data = null;
-    protected null|int $time = null;
+    protected ?int $time = null;
 
     /**
      * @package Vector

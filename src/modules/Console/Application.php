@@ -2,8 +2,9 @@
 
 namespace Vector\Module\Console;
 
-use Vector\Module\Console\Command;
-use Closure;
+use Vector\Module\Console\AbstractCommand;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -12,8 +13,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
+    
     protected array $argv;
-    protected array $commands = [];
 
     /**
      * @package Vector
@@ -26,24 +27,34 @@ class Application
 
     /**
      * @package Vector
-     * Vector\Module\Console\Application->registerCommand()
-     * @param string $command
-     * @param Closure $callback
-     * @return void
-     */
-    public function registerCommand(string $command, Closure $callback): void
-    {
-        array_push($this->commands, new Command($command, $this->argv, $callback));
-    }
-
-    /**
-     * @package Vector
      * Vector\Module\Console\Application->run()
      * @return void
      */
     public function run(): void
     {
-        foreach ($this->commands as $command) {
+        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../../commands');
+        $iterator = new RecursiveIteratorIterator($dir);
+        foreach ($iterator as $file) {
+            $fname = $file->getFilename();
+            if (preg_match('%\.php$%', $fname)) {
+                $commandClass = 'Vector\\Command\\' . basename($fname, '.php');
+                $command = new $commandClass($this->argv);
+                $command->setCommand();
+                $this->registerCommand($command);
+            }
+        }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->registerCommand()
+     * @param AbstractCommand $command
+     * @return void
+     */
+    protected function registerCommand(AbstractCommand $command): void
+    {
+        $args = $command->getArgs();
+        if ($args['command'] === $command->getCommand()) {
             $command->execute();
         }
     }

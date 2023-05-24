@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractCommand
 {
-    
     protected ?string $command;
     protected string $console;
     protected array $args;

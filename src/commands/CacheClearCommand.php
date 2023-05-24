@@ -12,11 +12,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class CacheCommand extends AbstractCommand
+class CacheClearCommand extends AbstractCommand
 {
     /**
      * @package Vector
-     * Vector\Command\ClearCacheCommand->execute()
+     * Vector\Command\CacheClearCommand->execute()
      * @return int
      */
     public function execute(): int
@@ -37,7 +37,7 @@ class CacheCommand extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\CacheCommand->setCommand()
+     * Vector\Command\CacheClearCommand->setCommand()
      * @return void
      */
     public function setCommand(): void

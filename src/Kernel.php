@@ -57,7 +57,7 @@ class Kernel
          * @var FileSystemTransient $transient
          * Try to load route data from cache
          */
-        $transient = new FileSystemTransient('vct-route{' . $this->request->getPathInfo() . '}');
+        $transient = new FileSystemTransient('vct-route-{' . $this->request->getPathInfo() . '}');
         if (!$transient->isValid(3600)) {
             return;
         }

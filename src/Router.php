@@ -54,7 +54,7 @@ class Router
          * @var FileSystemTransient $transient
          * Cache route data
          */
-        $transient = new FileSystemTransient('vct-route{' . $request->getPathInfo() . '}');
+        $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
         $transient->setData([
             'path' => $request->getPathInfo(),
             'regex' => $regex,

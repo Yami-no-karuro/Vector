@@ -2,7 +2,7 @@
 
 namespace Vector\Module\Console;
 
-use Vector\Module\Console\AbstractCommand;
+use Vector\Module\Transient\FileSystemTransient;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -13,7 +13,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-    protected array $argv;
+
+    protected FileSystemTransient $transient;
+    protected string $console;
+    protected string $command;
+    protected ?array $args;
 
     /**
      * @package Vector
@@ -21,7 +25,40 @@ class Application
      */
     public function __construct(array $argv)
     {
-        $this->argv = $argv;
+        $this->console = array_shift($argv);
+        $this->command = array_shift($argv);
+        $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
+        $this->args = $argv;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->getConsole()
+     * @return string
+     */
+    public function getConsole(): string
+    {
+        return $this->console;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->getCommand()
+     * @return ?string
+     */
+    public function getCommand(): string
+    {
+        return $this->command;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->getArgs()
+     * @return ?array
+     */
+    public function getArgs(): ?array
+    {
+        return $this->args;
     }
 
     /**
@@ -31,30 +68,42 @@ class Application
      */
     public function run(): void
     {
+        $this->directRun();
         $dir = new RecursiveDirectoryIterator(__DIR__ . '/../../commands');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match('%\.php$%', $fname)) {
-                $commandClass = 'Vector\\Command\\' . basename($fname, '.php');
-                $command = new $commandClass($this->argv);
-                $command->setCommand();
-                $this->registerCommand($command);
+                $class = 'Vector\\Command\\' . basename($fname, '.php');
+                $command = new $class($this->args);
+                if ($command->getCommandName() === $this->command) {
+                    $this->transient->setData([
+                        'command' => $this->command, 
+                        'handler' => $class
+                    ]);
+                    $command->execute();
+                    exit(0);
+                }
             }
         }
+
     }
 
     /**
      * @package Vector
-     * Vector\Module\Console\Application->registerCommand()
-     * @param AbstractCommand $command
+     * Vector\Module\Console\Application->directRun()
      * @return void
      */
-    protected function registerCommand(AbstractCommand $command): void
+    protected function directRun(): void
     {
-        $args = $command->getArgs();
-        if ($args['command'] === $command->getCommand()) {
-            $command->execute();
+        if ($this->transient->isValid(3600)) {
+            $cache = $this->transient->getData();
+            $class = $cache['handler'];
+            $command = new $class($this->args);
+            if ($command->getCommandName() === $cache['command']) {
+                $command->execute();
+                exit(0);
+            }
         }
     }
 

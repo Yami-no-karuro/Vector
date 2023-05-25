@@ -12,11 +12,12 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class CacheClearCommand extends AbstractCommand
+class CClearCommand extends AbstractCommand
 {
+    
     /**
      * @package Vector
-     * Vector\Command\CacheClearCommand->execute()
+     * Vector\Command\CClearCommand->execute()
      * @return int
      */
     public function execute(): int
@@ -37,12 +38,12 @@ class CacheClearCommand extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\CacheClearCommand->setCommand()
+     * Vector\Command\CClearCommand->getCommandName()
      * @return void
      */
-    public function setCommand(): void
+    public function getCommandName(): string
     {
-        $this->command = 'cache:clear';
+        return 'cache:clear';
     }
 
 }

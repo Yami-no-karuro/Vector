@@ -14,7 +14,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CClearCommand extends AbstractCommand
 {
-    
     /**
      * @package Vector
      * Vector\Command\CClearCommand->execute()

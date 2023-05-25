@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-
     protected FileSystemTransient $transient;
     protected string $console;
     protected string $command;
@@ -78,7 +77,7 @@ class Application
                 $command = new $class($this->args);
                 if ($command->getCommandName() === $this->command) {
                     $this->transient->setData([
-                        'command' => $this->command, 
+                        'command' => $this->command,
                         'handler' => $class
                     ]);
                     $command->execute();

@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractLogger
 {
-
     protected string $domain;
 
     /**
@@ -17,7 +16,8 @@ abstract class AbstractLogger
      * __construct()
      * @param string $domain
      */
-    public function __construct(string $domain) {
+    public function __construct(string $domain)
+    {
         $this->domain = $domain;
     }
 

@@ -15,7 +15,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class InstallCommand extends AbstractCommand
 {
-
     protected SqlConnection $sql;
 
     /**

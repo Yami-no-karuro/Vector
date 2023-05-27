@@ -9,14 +9,14 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractTransient
 {
-    
     /**
      * @package Vector
      * __construct()
      * @param string $name
      */
     public function __construct(protected string $name)
-    {}
+    {
+    }
 
     /**
      * @package Vector

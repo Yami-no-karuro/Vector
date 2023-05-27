@@ -15,7 +15,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CacheCommand extends AbstractCommand
 {
-
     protected SqlConnection $sql;
 
     /**

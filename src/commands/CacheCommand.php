@@ -3,6 +3,7 @@
 namespace Vector\Command;
 
 use Vector\Module\Console\AbstractCommand;
+use Vector\Module\SqlConnection;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -14,6 +15,20 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CacheCommand extends AbstractCommand
 {
+
+    protected SqlConnection $sql;
+
+    /**
+     * @package Vector
+     * __construct()
+     * @param array $args
+     */
+    public function __construct(?array $args)
+    {
+        parent::__construct($args);
+        $this->sql = SqlConnection::getInstance();
+    }
+
     /**
      * @package Vector
      * Vector\Command\CacheCommand->execute()
@@ -21,6 +36,7 @@ class CacheCommand extends AbstractCommand
      */
     public function execute(): int
     {
+        $this->sql->exec('DELETE FROM `transients`');
         $dir = __DIR__ . '/../../var/cache/';
         if (file_exists($dir) and is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);

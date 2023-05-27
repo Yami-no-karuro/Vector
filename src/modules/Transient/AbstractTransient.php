@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractTransient
 {
-
     protected string $name;
 
     /**

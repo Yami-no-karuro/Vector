@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class RedisConnection
 {
-
     protected Client $client;
     private static mixed $instance = null;
 

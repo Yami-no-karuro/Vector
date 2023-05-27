@@ -4,5 +4,10 @@
         "db_user": "vector_usr",
         "db_password": "vector_pwd",
         "db_name": "vector_db"
+    },
+    "redis": {
+        "scheme": "tcp",
+        "host": "redis",
+        "port": "6379"
     }
 }

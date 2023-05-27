@@ -31,6 +31,28 @@ services:
     networks:
       - vector-network
 
+  redis:
+    image: redis:latest
+    container_name: vector-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - vector-redis:/data
+    networks:
+      - vector-network
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: vector-redis-commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=redis
+    ports:
+      - "8081:8081"
+    networks:
+      - vector-network
+
   mariadb:
     image: mariadb:latest
     container_name: vector-mariadb
@@ -67,3 +89,4 @@ networks:
 
 volumes:
   vector-database:
+  vector-redis:

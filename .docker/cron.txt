@@ -1,1 +1,1 @@
-*/5 * * * * root echo 'Hello, World!'
+*/15 * * * * root /var/www/html/bin/console vector:clear-cache

@@ -4,9 +4,6 @@ namespace Vector\Controller;
 
 use Vector\Router;
 use Vector\Module\Controller\RestController;
-use Vector\Module\RateLimiter;
-use Vector\Module\RateExceededException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -25,23 +22,11 @@ class ApiController extends RestController
     /**
      * Route '/api'
      * Api endpoint
-     * @param Request
      * @return JsonResponse
      */
-    public function apiAction(Request $request): JsonResponse
+    public function apiAction(): JsonResponse
     {
-
-        /** Limit requests on this route to 120 per minute per IP address */
-        $rateLimiter = new RateLimiter($request, 'api-route-rate');
-        try {
-            $rateLimiter->limitRequestsInMinutes(120, 1);
-        } catch (RateExceededException) {
-            return new Response(null, Response::HTTP_TOO_MANY_REQUESTS);
-        }
-
-        /** Return the JsonResponse object */
         return new JsonResponse(['success' => true], Response::HTTP_OK);
-
     }
 
 }

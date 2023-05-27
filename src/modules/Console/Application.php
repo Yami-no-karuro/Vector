@@ -67,6 +67,7 @@ class Application
      */
     public function run(): void
     {
+        $this->loadConfig();
         $this->directRun();
         $dir = new RecursiveDirectoryIterator(__DIR__ . '/../../commands');
         $iterator = new RecursiveIteratorIterator($dir);
@@ -104,6 +105,31 @@ class Application
                 exit(0);
             }
         }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->loadConfig()
+     * @return void
+     */
+    protected function loadConfig(): void
+    {
+
+        /**
+         * @var FileSystemTransient $transient
+         * @var object $config
+         */
+        global $config;
+        $transient = new FileSystemTransient('vct-config');
+        if ($transient->isValid(3600)) {
+            $data = $transient->getData();
+        } else {
+            $path = __DIR__ . '/../../../config/config.json';
+            $data = json_decode(@file_get_contents($path));
+            $transient->setData($data);
+        }
+        $config = $data;
+
     }
 
 }

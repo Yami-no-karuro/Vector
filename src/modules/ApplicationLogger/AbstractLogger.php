@@ -9,21 +9,24 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractLogger
 {
+
+    protected string $domain;
+
     /**
      * @package Vector
      * __construct()
-     * @param string $type
+     * @param string $domain
      */
-    public function __construct(protected string $type)
-    {
+    public function __construct(string $domain) {
+        $this->domain = $domain;
     }
 
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\AbstractLogger->write()
-     * @param string $content
+     * @param string $log
      * @return bool
      */
-    abstract public function write(string $content): bool;
+    abstract public function write(string $log): bool;
 
 }

@@ -11,28 +11,29 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemLogger extends AbstractLogger
 {
+    
     protected string $path;
 
     /**
      * @package Vector
      * __construct()
-     * @param string $type
+     * @param string $domain
      */
-    public function __construct(string $type)
+    public function __construct(string $domain)
     {
-        parent::__construct($type);
-        $this->path = __DIR__ . '/../../../var/logs/' . $this->type . '.log.txt';
+        parent::__construct($domain);
+        $this->path = __DIR__ . '/../../../var/logs/' . $this->domain . '.log.txt';
     }
 
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\FileSystemLogger->write()
-     * @param string $content
+     * @param string $log
      * @return bool
      */
-    public function write(string $content): bool
+    public function write(string $log): bool
     {
-        $log = date('Y/m/d - h:m:s') . ' - ' . $content . ' ' . PHP_EOL;
+        $log = time() . ' - ' . $log . ' ' . PHP_EOL;
         return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 

@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlLogger extends AbstractLogger
 {
+
     protected SqlConnection $sql;
 
     /**
@@ -28,17 +29,17 @@ class SqlLogger extends AbstractLogger
     /**
      * @package Vector
      * Vector\Module\ApplicationLogger\SqlLogger->write()
-     * @param string $content
+     * @param string $log
      * @return bool
      */
-    public function write(string $content): bool
+    public function write(string $log): bool
     {
         $execResult = $this->sql->exec("INSERT INTO `logs` 
-            (`ID`, `type`, `time`, `content`) 
+            (`ID`, `domain`, `time`, `log`) 
             VALUES (NULL, ?, ?, ?)", [
-                ['type' => 's', 'value' => $this->type],
-                ['type' => 's', 'value' => date('Y/m/d - h:m:s')],
-                ['type' => 's', 'value' => $content]
+                ['type' => 's', 'value' => $this->domain],
+                ['type' => 's', 'value' => time()],
+                ['type' => 's', 'value' => $log]
         ]);
         return $execResult['success'];
     }

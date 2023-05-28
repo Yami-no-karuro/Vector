@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class InstallCommand extends AbstractCommand
+class Install extends AbstractCommand
 {
     protected SqlClient $sql;
 
@@ -30,7 +30,7 @@ class InstallCommand extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\InstallCommand->execute()
+     * Vector\Command\Install->execute()
      * @return int
      */
     public function execute(): int
@@ -52,7 +52,7 @@ class InstallCommand extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\InstallCommand->getCommandName()
+     * Vector\Command\Install->getCommandName()
      * @return void
      */
     public function getCommandName(): string

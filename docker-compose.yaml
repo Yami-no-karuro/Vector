@@ -42,6 +42,7 @@ services:
     networks:
       - vector-network
 
+  # --- DEV ---
   redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: vector-redis-commander
@@ -70,6 +71,7 @@ services:
     networks:
       - vector-network
 
+  # --- DEV ---
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: vector-phpmyadmin

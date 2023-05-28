@@ -1,1 +1,1 @@
-*/15 * * * * root /var/www/html/bin/console vector:clear-cache
+* * * * * root /var/www/html/bin/console vector:scheduler-consume

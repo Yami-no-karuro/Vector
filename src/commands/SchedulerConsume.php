@@ -37,7 +37,7 @@ class SchedulerConsume extends AbstractCommand
             foreach ($tasks['data'] as $task) {
                 $params = unserialize($task['params']);
                 $callback = unserialize($task['callback']);
-                $callable = function() {};
+                $callable = function () {};
                 eval('$callable = ' . $callback . ';');
                 $callable(...$params);
                 $this->sql->exec("DELETE FROM `scheduled_tasks` WHERE `ID` = ?", [

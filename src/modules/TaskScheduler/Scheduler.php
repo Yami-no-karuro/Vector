@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Scheduler
 {
-
     protected SqlClient $sql;
     private static mixed $instance = null;
 
@@ -25,7 +24,7 @@ class Scheduler
     {
         $this->sql = SqlClient::getInstance();
     }
-    
+
     /**
      * @package Vector
      * Vector\Module\TaskScheduler\Scheduler::getInstance()
@@ -42,7 +41,7 @@ class Scheduler
     /**
      * @package Vector
      * Vector\Module\TaskScheduler\Scheduler->schedule()
-     * @param Closure $closure 
+     * @param Closure $closure
      * @param array $params
      * @return bool
      */

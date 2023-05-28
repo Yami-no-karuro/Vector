@@ -11,9 +11,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Serializer 
+class Serializer
 {
-
     /**
      * @package Vector
      * Vector\Module\TaskScheduler\Serializer::serialize()

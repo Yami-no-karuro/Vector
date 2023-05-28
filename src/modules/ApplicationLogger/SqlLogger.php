@@ -3,7 +3,7 @@
 namespace Vector\Module\ApplicationLogger;
 
 use Vector\Module\ApplicationLogger\AbstractLogger;
-use Vector\Module\SqlConnection;
+use Vector\Module\SqlClient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlLogger extends AbstractLogger
 {
-    protected SqlConnection $sql;
+    protected SqlClient $sql;
 
     /**
      * @package Vector
@@ -22,7 +22,7 @@ class SqlLogger extends AbstractLogger
     public function __construct(string $type)
     {
         parent::__construct($type);
-        $this->sql = SqlConnection::getInstance();
+        $this->sql = SqlClient::getInstance();
     }
 
     /**

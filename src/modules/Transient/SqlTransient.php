@@ -3,7 +3,7 @@
 namespace Vector\Module\Transient;
 
 use Vector\Module\Transient\AbstractTransient;
-use Vector\Module\SqlConnection;
+use Vector\Module\SqlClient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlTransient extends AbstractTransient
 {
-    protected SqlConnection $sql;
+    protected SqlClient $sql;
     protected mixed $data = null;
     protected ?int $time = null;
 
@@ -24,7 +24,7 @@ class SqlTransient extends AbstractTransient
     public function __construct(string $name)
     {
         parent::__construct($name);
-        $this->sql = SqlConnection::getInstance();
+        $this->sql = SqlClient::getInstance();
         $transient = $this->sql->getResults("SELECT `data`, `time` 
             FROM `transients` 
             WHERE `name` = ? LIMIT 1", [

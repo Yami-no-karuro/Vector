@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class RedisConnection
+class RedisClient
 {
     protected Client $client;
     private static mixed $instance = null;
@@ -39,20 +39,20 @@ class RedisConnection
 
     /**
      * @package Vector
-     * Vector\Module\RedisConnection::getInstance()
-     * @return RedisConnection
+     * Vector\Module\RedisClient::getInstance()
+     * @return RedisClient
      */
-    public static function getInstance(): RedisConnection
+    public static function getInstance(): RedisClient
     {
         if (self::$instance == null) {
-            self::$instance = new RedisConnection();
+            self::$instance = new RedisClient();
         }
         return self::$instance;
     }
 
     /**
      * @package Vector
-     * Vector\Module\RedisConnection->set()
+     * Vector\Module\RedisClient->set()
      * @param string $key
      * @param string $value
      * @param int $ttl
@@ -65,7 +65,7 @@ class RedisConnection
 
     /**
      * @package Vector
-     * Vector\Module\RedisConnection->set()
+     * Vector\Module\RedisClient->set()
      * @param string $key
      * @return ?string
      */
@@ -76,7 +76,7 @@ class RedisConnection
 
     /**
      * @package Vector
-     * Vector\Module\RedisConnection->delete()
+     * Vector\Module\RedisClient->delete()
      * @param string $key
      * @return void
      */
@@ -87,7 +87,7 @@ class RedisConnection
 
     /**
      * @package Vector
-     * Vector\Module\RedisConnection->exists()
+     * Vector\Module\RedisClient->exists()
      * @param string $key
      * @return bool
      */

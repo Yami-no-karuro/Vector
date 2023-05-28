@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class SqlConnection
+class SqlClient
 {
     protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
@@ -40,20 +40,20 @@ class SqlConnection
 
     /**
      * @package Vector
-     * Vector\Module\SqlConnection::getInstance()
-     * @return SqlConnection
+     * Vector\Module\SqlClient::getInstance()
+     * @return SqlClient
      */
-    public static function getInstance(): SqlConnection
+    public static function getInstance(): SqlClient
     {
         if (self::$instance == null) {
-            self::$instance = new SqlConnection();
+            self::$instance = new SqlClient();
         }
         return self::$instance;
     }
 
     /**
      * @package Vector
-     * Vector\Module\SqlConnection->exec()
+     * Vector\Module\SqlClient->exec()
      * @param string $sql
      * @param array $params
      * @return array
@@ -86,7 +86,7 @@ class SqlConnection
 
     /**
      * @package Vector
-     * Vector\Module\SqlConnection->getResults()
+     * Vector\Module\SqlClient->getResults()
      * @param string $sql
      * @param array $params
      * @return array

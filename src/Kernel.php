@@ -3,9 +3,12 @@
 namespace Vector;
 
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Symfony\Component\HttpFoundation\Request;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\HttpFoundation\Response;
+
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -15,6 +18,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel
 {
     protected Request $request;
+    protected FileSystemLogger $logger;
 
     /**
      * @package Vector
@@ -25,6 +29,7 @@ class Kernel
         global $request;
         $request = Request::createFromGlobals();
         $this->request = $request;
+        $this->logger = new FileSystemLogger('core');
     }
 
     /**
@@ -34,15 +39,10 @@ class Kernel
      */
     public function boot(): void
     {
-        /** Loads the global configuration */
+        $this->registerShutdownFunctions();
         $this->loadConfig();
-
-        /** Try to Boot from cache */
         $this->directBoot();
-
-        /** Fallback boot, if cache is not warmed up yep */
         $this->registerBoot();
-
     }
 
     /**
@@ -148,6 +148,45 @@ class Kernel
         }
         $config = $data;
 
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel->errorShutdown()
+     * @return void
+     */
+    protected function registerShutdownFunctions(): void
+    {
+        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+            $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
+            $this->logger->write($errorMessage);
+            $this->errorShutdown();
+        });
+        set_exception_handler(function($exception) {
+            $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
+            $this->logger->write($exceptionMessage);
+            $this->errorShutdown();
+        });
+        register_shutdown_function(function() {
+            $lastError = error_get_last();
+            if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+                $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
+                $this->logger->write($errorMessage);
+                $this->errorShutdown();
+            }
+        });
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel->errorShutdown()
+     * @return void
+     */
+    protected function errorShutdown(): void
+    {
+        $response = new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        $response->prepare($this->request);
+        $response->send();
     }
 
 }

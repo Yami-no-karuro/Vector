@@ -4,9 +4,11 @@ namespace Vector\Command;
 
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
+use Vector\Module\ApplicationLogger\FileSystemLogger;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -16,6 +18,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Install extends AbstractCommand
 {
     protected SqlClient $sql;
+    protected FileSystemLogger $logger;
 
     /**
      * @package Vector
@@ -26,6 +29,7 @@ class Install extends AbstractCommand
     {
         parent::__construct($args);
         $this->sql = SqlClient::getInstance();
+        $this->logger = new FileSystemLogger('command');
     }
 
     /**
@@ -42,8 +46,13 @@ class Install extends AbstractCommand
             foreach ($iterator as $file) {
                 $fname = $file->getFilename();
                 if (preg_match('%\.sql$%', $fname)) {
-                    $query = @file_get_contents($file->getPathname());
-                    $this->sql->exec($query);
+                    try {
+                        $query = file_get_contents($file->getPathname());
+                        $this->sql->exec($query);
+                    } catch (Exception $e) {
+                        $this->logger->write($e);
+                        return 1;
+                    }
                 }
             }
         }

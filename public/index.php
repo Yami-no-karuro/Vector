@@ -29,4 +29,12 @@ $response->send();
 die();
 
 
+/*
+
+set_error_handler(function() {
+    ini_set('display_errors', 'off');
+    header('HTTP/1.1 500 Internal Server Error');
+});
+
+*/
 

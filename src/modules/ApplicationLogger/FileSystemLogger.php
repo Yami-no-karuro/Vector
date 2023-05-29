@@ -32,7 +32,7 @@ class FileSystemLogger extends AbstractLogger
      */
     public function write(string $log): bool
     {
-        $log = time() . ' - ' . $log . ' ' . PHP_EOL;
+        $log = '[' . date('Y-m-d h:m:s') . '] ' . $log . ' ' . PHP_EOL;
         return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 

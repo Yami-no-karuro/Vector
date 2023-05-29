@@ -81,8 +81,8 @@ class Application
                         'command' => $this->command,
                         'handler' => $class
                     ]);
-                    $command->execute();
-                    exit(0);
+                    $exitCode = $command->execute();
+                    exit($exitCode);
                 }
             }
         }
@@ -101,8 +101,8 @@ class Application
             $class = $cache['handler'];
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
-                $command->execute();
-                exit(0);
+                $exitCode = $command->execute();
+                exit($exitCode);
             }
         }
     }

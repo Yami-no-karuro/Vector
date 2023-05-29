@@ -9,7 +9,6 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\HttpFoundation\Response;
 
-
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
@@ -157,17 +156,17 @@ class Kernel
      */
     protected function registerShutdownFunctions(): void
     {
-        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
             $this->logger->write($errorMessage);
             $this->errorShutdown();
         });
-        set_exception_handler(function($exception) {
+        set_exception_handler(function ($exception) {
             $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
             $this->logger->write($exceptionMessage);
             $this->errorShutdown();
         });
-        register_shutdown_function(function() {
+        register_shutdown_function(function () {
             $lastError = error_get_last();
             if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
                 $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';

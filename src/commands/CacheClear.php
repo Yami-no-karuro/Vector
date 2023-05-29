@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class ClearCache extends AbstractCommand
+class CacheClear extends AbstractCommand
 {
     protected SqlClient $sql;
 
@@ -30,7 +30,7 @@ class ClearCache extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\ClearCache->execute()
+     * Vector\Command\CacheClear->execute()
      * @return int
      */
     public function execute(): int
@@ -52,12 +52,12 @@ class ClearCache extends AbstractCommand
 
     /**
      * @package Vector
-     * Vector\Command\ClearCache->getCommandName()
+     * Vector\Command\CacheClear->getCommandName()
      * @return void
      */
     public function getCommandName(): string
     {
-        return 'vector:clear-cache';
+        return 'vector:cache-clear';
     }
 
 }

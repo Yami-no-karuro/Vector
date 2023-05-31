@@ -167,7 +167,7 @@ class Kernel
          * @param int $errline
          * Error handler
          */
-        set_error_handler(function($errno, $errstr, $errfile, $errline) use ($config) {
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($config) {
             if (true === $config->debug) {
                 $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
                 $this->logger->write($errorMessage);
@@ -175,11 +175,11 @@ class Kernel
             $this->errorShutdown();
         });
 
-        /** 
-         * @param Exception $exception 
+        /**
+         * @param Exception $exception
          * Exception handler
          */
-        set_exception_handler(function($exception) use ($config) {
+        set_exception_handler(function ($exception) use ($config) {
             if (true === $config->debug) {
                 $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
                 $this->logger->write($exceptionMessage);
@@ -188,7 +188,7 @@ class Kernel
         });
 
         /** Shutdown handler */
-        register_shutdown_function(function() use ($config) {
+        register_shutdown_function(function () use ($config) {
             $lastError = error_get_last();
             if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
                 if (true === $config->debug) {

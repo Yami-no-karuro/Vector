@@ -31,6 +31,8 @@ services:
     networks:
       - vector-network
 
+  # Uncomment to install the Redis container.
+  # See Dockerfile.
   # redis:
   #   image: redis:latest
   #   container_name: vector-redis
@@ -42,6 +44,8 @@ services:
   #   networks:
   #     - vector-network
 
+  # Uncomment to install the Redis Commander container.
+  # See Dockerfile.
   # redis-commander:
   #   image: rediscommander/redis-commander:latest
   #   container_name: vector-redis-commander
@@ -89,4 +93,7 @@ networks:
 
 volumes:
   vector-database:
+
+  # Uncomment to create the Redis volume.
+  # See Dockerfile.
   # vector-redis:

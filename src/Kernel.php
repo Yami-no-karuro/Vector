@@ -5,9 +5,9 @@ namespace Vector;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -38,8 +38,8 @@ class Kernel
      */
     public function boot(): void
     {
-        $this->registerShutdownFunctions();
         $this->loadConfig();
+        $this->registerShutdownFunctions();
         $this->directBoot();
         $this->registerBoot();
     }
@@ -57,7 +57,7 @@ class Kernel
          * Try to load route data from cache
          */
         $transient = new FileSystemTransient('vct-route-{' . $this->request->getPathInfo() . '}');
-        if (!$transient->isValid(3600)) {
+        if (!$transient->isValid(HOUR_IN_SECONDS)) {
             return;
         }
         $cacheData = $transient->getData();
@@ -138,7 +138,7 @@ class Kernel
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
-        if ($transient->isValid(3600)) {
+        if ($transient->isValid(HOUR_IN_SECONDS)) {
             $data = $transient->getData();
         } else {
             $path = __DIR__ . '/../config/config.json';
@@ -156,24 +156,49 @@ class Kernel
      */
     protected function registerShutdownFunctions(): void
     {
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-            $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
-            $this->logger->write($errorMessage);
+
+        /** @var object $config */
+        global $config;
+
+        /**
+         * @param int $errno
+         * @param string $errstr
+         * @param string $errfile
+         * @param int $errline
+         * Error handler
+         */
+        set_error_handler(function($errno, $errstr, $errfile, $errline) use ($config) {
+            if (true === $config->debug) {
+                $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
+                $this->logger->write($errorMessage);
+            }
             $this->errorShutdown();
         });
-        set_exception_handler(function ($exception) {
-            $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-            $this->logger->write($exceptionMessage);
+
+        /** 
+         * @param Exception $exception 
+         * Exception handler
+         */
+        set_exception_handler(function($exception) use ($config) {
+            if (true === $config->debug) {
+                $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
+                $this->logger->write($exceptionMessage);
+            }
             $this->errorShutdown();
         });
-        register_shutdown_function(function () {
+
+        /** Shutdown handler */
+        register_shutdown_function(function() use ($config) {
             $lastError = error_get_last();
             if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-                $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
-                $this->logger->write($errorMessage);
+                if (true === $config->debug) {
+                    $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
+                    $this->logger->write($errorMessage);
+                }
                 $this->errorShutdown();
             }
         });
+
     }
 
     /**

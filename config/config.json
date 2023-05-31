@@ -1,4 +1,5 @@
 {
+    "debug": true,
     "database": {
         "db_host": "mariadb",
         "db_user": "vector_usr",

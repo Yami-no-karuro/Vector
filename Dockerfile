@@ -4,10 +4,14 @@ RUN apt-get update && apt-get install -y libonig-dev libzip-dev libjpeg-dev libp
 RUN docker-php-ext-install pdo_mysql mysqli mbstring zip gd bcmath opcache exif pcntl intl xml curl
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Uncomment to install Redis PHP dependencies.
+# See docker-compose.yaml.
 # RUN pecl install redis && docker-php-ext-enable redis
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Uncomment to install and enable cron functionalities.
+# See ./.docker/cron.txt. 
 # COPY ./.docker/cron.txt /etc/cron.d/cron
 # RUN chmod 644 /etc/cron.d/cron
 # RUN crontab /etc/cron.d/cron

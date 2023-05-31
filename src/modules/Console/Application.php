@@ -96,7 +96,7 @@ class Application
      */
     protected function directRun(): void
     {
-        if ($this->transient->isValid(3600)) {
+        if ($this->transient->isValid(HOUR_IN_SECONDS)) {
             $cache = $this->transient->getData();
             $class = $cache['handler'];
             $command = new $class($this->args);
@@ -121,7 +121,7 @@ class Application
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
-        if ($transient->isValid(3600)) {
+        if ($transient->isValid(HOUR_IN_SECONDS)) {
             $data = $transient->getData();
         } else {
             $path = __DIR__ . '/../../../config/config.json';

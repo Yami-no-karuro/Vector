@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class ErrorHandler 
+class ErrorHandler
 {
     protected FileSystemLogger $logger;
 

@@ -157,7 +157,7 @@ class Kernel
     protected function registerShutdownFunctions(): void
     {
 
-        /** @var ErrorHandler $errorHandler */     
+        /** @var ErrorHandler $errorHandler */
         $errorHandler = new ErrorHandler();
         set_error_handler([$errorHandler, 'handleError']);
         set_exception_handler([$errorHandler, 'handleException']);

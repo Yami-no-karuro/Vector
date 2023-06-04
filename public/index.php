@@ -20,10 +20,5 @@ date_default_timezone_set(DEFAULT_TIMEZONE);
 $kernel = new Vector\Kernel();
 $kernel->boot();
 
-use Symfony\Component\HttpFoundation\Response;
-
-global $request;
-$response = new Response(null, Response::HTTP_NOT_FOUND);
-$response->prepare($request);
-$response->send();
+header('HTTP/1.1 404 Not Found');
 die();

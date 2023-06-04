@@ -11,11 +11,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class TemplateController extends FrontendController
+class DefaultController extends FrontendController
 {
     protected function register(): void
     {
-        Router::route(['GET'], '^/?$', [$this, 'templateAction']);
+        Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
     }
 
     /**
@@ -23,7 +23,7 @@ class TemplateController extends FrontendController
      * Twig template
      * @return Response
      */
-    public function templateAction(): Response
+    public function defaultAction(): Response
     {
         $html = $this->template->render('default.html.twig', [
             'title' => 'Vector',

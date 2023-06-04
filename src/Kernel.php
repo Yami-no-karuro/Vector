@@ -4,8 +4,8 @@ namespace Vector;
 
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -157,60 +157,12 @@ class Kernel
     protected function registerShutdownFunctions(): void
     {
 
-        /** @var object $config */
-        global $config;
+        /** @var ErrorHandler $errorHandler */
+        $errorHandler = new ErrorHandler();
+        set_error_handler([$errorHandler, 'handleError']);
+        set_exception_handler([$errorHandler, 'handleException']);
+        register_shutdown_function([$errorHandler, 'handleShutdown']);
 
-        /**
-         * @param int $errno
-         * @param string $errstr
-         * @param string $errfile
-         * @param int $errline
-         * Error handler
-         */
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($config) {
-            if (true === $config->debug) {
-                $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
-                $this->logger->write($errorMessage);
-            }
-            $this->errorShutdown();
-        });
-
-        /**
-         * @param Exception $exception
-         * Exception handler
-         */
-        set_exception_handler(function ($exception) use ($config) {
-            if (true === $config->debug) {
-                $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-                $this->logger->write($exceptionMessage);
-            }
-            $this->errorShutdown();
-        });
-
-        /** Shutdown handler */
-        register_shutdown_function(function () use ($config) {
-            $lastError = error_get_last();
-            if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-                if (true === $config->debug) {
-                    $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
-                    $this->logger->write($errorMessage);
-                }
-                $this->errorShutdown();
-            }
-        });
-
-    }
-
-    /**
-     * @package Vector
-     * Vector\Kernel->errorShutdown()
-     * @return void
-     */
-    protected function errorShutdown(): void
-    {
-        $response = new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
-        $response->prepare($this->request);
-        $response->send();
     }
 
 }

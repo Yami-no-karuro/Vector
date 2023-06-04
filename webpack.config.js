@@ -6,17 +6,10 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore.setOutputPath('public/assets/build/')
     .setPublicPath('/assets')
-    .addEntry('app', './assets/app.ts')
+    .addEntry('app', './assets/app.js')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
-    .configureBabel((config) => {
-        config.plugins.push('@babel/plugin-proposal-class-properties');
-    })
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = 3;
-    })
     .enableSassLoader()
     .enableTypeScriptLoader();
 

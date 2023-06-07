@@ -12,8 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class RestController extends AbstractController
 {
-    protected Request $request;
-
     /**
      * @package Vector
      * __construct()

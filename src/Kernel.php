@@ -25,8 +25,14 @@ class Kernel
      */
     public function __construct()
     {
+
+        /**
+         * @var Request $request
+         * The global request object is initialized here.
+         */
         global $request;
         $request = Request::createFromGlobals();
+
         $this->request = $request;
         $this->logger = new FileSystemLogger('core');
     }
@@ -66,8 +72,8 @@ class Kernel
         /**
          * @var array|null $matches
          * @var array $params
-         * Match request method against route regex and allowed requests methods,
-         * retrive matched params if any were passed on the request
+         * Match request against route regex and allowed requests methods,
+         * retrive matched params if any were passed on the request.
          */
         $matches = null;
         $params = [];
@@ -88,7 +94,7 @@ class Kernel
         /**
          * @var Vector\Controller $controller
          * @var callable $callback
-         * Execute controller callback, send the response and die
+         * Execute controller callback, send the response and die.
          */
         $controller = new $cacheData['controller'](true);
         $response = call_user_func_array([$controller, $cacheData['callback']], [$this->request, $params]);
@@ -109,7 +115,7 @@ class Kernel
         /**
          * @var RecursiveDirectoryIterator $dir
          * @var RecursiveIteratorIterator $iterator
-         * Recursively initialize controllers, parse request trough the Router instance
+         * Recursively initialize controllers, request will be parsed trough the Router instance.
          */
         $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
         $iterator = new RecursiveIteratorIterator($dir);
@@ -135,6 +141,7 @@ class Kernel
         /**
          * @var FileSystemTransient $transient
          * @var object $config
+         * Load configuration in cache.
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
@@ -157,7 +164,10 @@ class Kernel
     protected function registerShutdownFunctions(): void
     {
 
-        /** @var ErrorHandler $errorHandler */
+        /**
+         * @var ErrorHandler $errorHandler
+         * Errors, Exceptions and Shutdowns are delegated to the ErrorHandler class.
+         */
         $errorHandler = new ErrorHandler();
         set_error_handler([$errorHandler, 'handleError']);
         set_exception_handler([$errorHandler, 'handleException']);

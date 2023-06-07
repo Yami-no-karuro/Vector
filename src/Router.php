@@ -23,15 +23,18 @@ class Router
     public static function route(array $httpMethods, string $route, callable $callback): void
     {
 
-        /** @var Request $request */
+        /**
+         * @var Request $request
+         * Retrive the global request object initialized in the Kernel.
+         */
         global $request;
 
         /**
          * @var array|null $matches
          * @var array $params
          * @var string $regex
-         * Match request method against route regex and allowed requests methods,
-         * retrive matched params if any were passed on the request
+         * Match request against route regex and allowed requests methods,
+         * retrive matched params if any were passed on the request.
          */
         $matches = null;
         $params = [];
@@ -52,7 +55,7 @@ class Router
 
         /**
          * @var FileSystemTransient $transient
-         * Cache route data
+         * Cache route data for a future request.
          */
         $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
         $transient->setData([
@@ -66,7 +69,7 @@ class Router
         /**
          * @var Vector\Controller $controller
          * @var callable $callback
-         * Execute controller callback, send the response and die
+         * Execute controller callback, send the response and die.
          */
         $response = $callback($request, $params);
         $response->prepare($request);

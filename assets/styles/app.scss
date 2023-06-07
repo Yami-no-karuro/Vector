@@ -1,12 +1,12 @@
 @import 'variables.scss';
 
 body {
-    background-color: $bg-defaul;
+    background-color: $dark-grey;
     main {
         padding: 3.5rem 5%;
         section.title {
             text-align: center;
-            color: $cl-default;
+            color: $white;
             h1 {
                 font-size: 42px;
                 line-height: 2.5rem;

@@ -8,9 +8,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# COPY ./.docker/cron.txt /etc/cron.d/cron
-# RUN chmod 644 /etc/cron.d/cron
-# RUN crontab /etc/cron.d/cron
+COPY ./.docker/cron.txt /etc/cron.d/cron
+RUN chmod 644 /etc/cron.d/cron
+RUN crontab /etc/cron.d/cron
 
 COPY ./* /var/www/html
 

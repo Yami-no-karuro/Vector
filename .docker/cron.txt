@@ -1,1 +1,1 @@
-* * * * * root /var/www/html/bin/console vector:scheduler-consume
+* * * * * root echo 'Hello, World!'

@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router
 {
-    
     /**
      * @package Vector
      * Vector\Router->route()
@@ -24,7 +23,7 @@ class Router
     public static function route(array $httpMethods, string $route, callable $callback): void
     {
 
-        /** 
+        /**
          * @var Request $request
          * Retrive the global request object initialized in the Kernel.
          */

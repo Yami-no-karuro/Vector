@@ -164,8 +164,8 @@ class Kernel
     protected function registerShutdownFunctions(): void
     {
 
-        /** 
-         * @var ErrorHandler $errorHandler 
+        /**
+         * @var ErrorHandler $errorHandler
          * Errors, Exceptions and Shutdowns are delegated to the ErrorHandler class.
          */
         $errorHandler = new ErrorHandler();

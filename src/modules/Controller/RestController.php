@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class RestController extends AbstractController
 {
-
     /**
      * @package Vector
      * __construct()

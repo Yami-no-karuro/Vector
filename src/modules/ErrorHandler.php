@@ -91,7 +91,7 @@ class ErrorHandler
     protected function outputErrorBox(string $message): void
     {
         ob_start(); ?>
-            <div class="error debug-error">
+            <div style="padding: 25px;margin: 5px auto;background-color: #fff;border: 2px solid #af0000;position: relative;z-index: 1000;">
                 <?php echo $message; ?>
             </div>
         <?php echo ob_get_clean();

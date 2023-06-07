@@ -2,25 +2,14 @@ version: "3"
 
 services:
 
-  apache:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: vector-apache
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    volumes:
-      - .:/var/www/html
-    networks:
-      - vector-network
-
-  php:
+  php-apache:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: vector-php
     restart: unless-stopped
+    ports:
+      - "8080:80"
     volumes:
       - .:/var/www/html
     environment:
@@ -30,32 +19,6 @@ services:
       - COMPOSER_ALLOW_SUPERUSER=1
     networks:
       - vector-network
-
-  # Uncomment to install the Redis container.
-  # See Dockerfile.
-  # redis:
-  #   image: redis:latest
-  #   container_name: vector-redis
-  #   restart: unless-stopped
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - vector-redis:/data
-  #   networks:
-  #     - vector-network
-
-  # Uncomment to install the Redis Commander container.
-  # See Dockerfile.
-  # redis-commander:
-  #   image: rediscommander/redis-commander:latest
-  #   container_name: vector-redis-commander
-  #   restart: unless-stopped
-  #   environment:
-  #     - REDIS_HOSTS=redis
-  #   ports:
-  #     - "8081:8081"
-  #   networks:
-  #     - vector-network
 
   mariadb:
     image: mariadb:latest
@@ -73,7 +36,7 @@ services:
       - vector-database:/var/lib/mysql
     networks:
       - vector-network
-
+  
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: vector-phpmyadmin
@@ -88,12 +51,31 @@ services:
     networks:
       - vector-network
 
+  # redis:
+  #   image: redis:latest
+  #   container_name: vector-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - vector-redis:/data
+  #   networks:
+  #     - vector-network
+
+  # redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   container_name: vector-redis-commander
+  #   restart: unless-stopped
+  #   environment:
+  #     - REDIS_HOSTS=redis
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - vector-network
+
 networks:
   vector-network:
 
 volumes:
   vector-database:
-
-  # Uncomment to create the Redis volume.
-  # See Dockerfile.
   # vector-redis:

@@ -21,15 +21,16 @@ abstract class AbstractController
     public function __construct(bool $direct = false)
     {
 
-        /** @var Request $request */
+        /** 
+         * @var Request $request
+         * Retrive the global request object initialized in the Kernel.
+         */
         global $request;
-        $this->request = $request;
 
-        /** Routes are not registered when called from Kernel::directBoot() */
+        $this->request = $request;
         if (!$direct) {
             $this->register();
         }
-
     }
 
 

@@ -24,7 +24,7 @@ class ErrorHandler
 
     /**
      * @package Vector
-     * Vector\Module\ErrorHandler::handleError()
+     * Vector\Module\ErrorHandler->handleError()
      * @param int $errno
      * @param string $errstr
      * @param string $errfile
@@ -34,43 +34,67 @@ class ErrorHandler
     public function handleError(int $errno, string $errstr, string $errfile, int $errline): void
     {
         global $config;
-        if (true === $config->debug_log) {
+        if (true === $config->debug) {
             $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
-            $this->logger->write($errorMessage);
+            $this->outputErrorBox($errorMessage);
+            if (true === $config->debug_log) {
+                $this->logger->write($errorMessage);
+            }
         }
     }
 
     /**
      * @package Vector
-     * Vector\Module\ErrorHandler::handleException()
+     * Vector\Module\ErrorHandler->handleException()
      * @param mixed $exception
      * @return void
      */
     public function handleException(mixed $exception): void
     {
         global $config;
-        if (true === $config->debug_log) {
+        if (true === $config->debug) {
             $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-            $this->logger->write($exceptionMessage);
+            $this->outputErrorBox($exceptionMessage);
+            if (true === $config->debug_log) {
+                $this->logger->write($exceptionMessage);
+            }
         }
     }
 
     /**
      * @package Vector
-     * Vector\Module\ErrorHandler::handleShutdown()
+     * Vector\Module\ErrorHandler->handleShutdown()
      * @return void
      */
     public function handleShutdown(): void
     {
         global $config;
-        if (true === $config->debug_log) {
+        if (true === $config->debug) {
             $lastError = error_get_last();
             if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
                 $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
-                $this->logger->write($errorMessage);
-                die();
+                $this->outputErrorBox($errorMessage);
+                if (true === $config->debug_log) {
+                    $this->logger->write($errorMessage);
+                }
             }
         }
+        die();
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\ErrorHandler->outputErrorBox()
+     * @param string $message
+     * @return void
+     */
+    protected function outputErrorBox(string $message): void
+    {
+        ob_start(); ?>
+            <div class="error debug-error">
+                <?php echo $message; ?>
+            </div>
+        <?php echo ob_get_clean();
     }
 
 }

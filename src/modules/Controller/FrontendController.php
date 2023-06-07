@@ -3,7 +3,6 @@
 namespace Vector\Module\Controller;
 
 use Vector\Module\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
@@ -14,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class FrontendController extends AbstractController
 {
-    protected Request $request;
     protected Environment $template;
 
     /**
@@ -27,6 +25,7 @@ abstract class FrontendController extends AbstractController
         /**
          * @var Envoirment $template
          * @var FilesystemLoader
+         * Load the twig Envoirment.
          */
         $filesystemLoader = new FilesystemLoader(__DIR__ . '/../../../templates');
         $this->template = new Environment($filesystemLoader, [

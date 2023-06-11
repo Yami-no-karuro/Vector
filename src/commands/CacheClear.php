@@ -2,6 +2,7 @@
 
 namespace Vector\Command;
 
+use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
@@ -45,7 +46,7 @@ class CacheClear extends AbstractCommand
             $this->logger->write($e);
             return 1;
         }
-        $dir = __DIR__ . '/../../var/cache/';
+        $dir = Kernel::getProjectRoot() . 'var/cache/';
         if (file_exists($dir) and is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($cacheDir, RecursiveIteratorIterator::CHILD_FIRST);

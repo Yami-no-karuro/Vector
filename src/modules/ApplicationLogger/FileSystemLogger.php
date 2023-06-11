@@ -2,6 +2,7 @@
 
 namespace Vector\Module\ApplicationLogger;
 
+use Vector\Kernel;
 use Vector\Module\ApplicationLogger\AbstractLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -11,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemLogger extends AbstractLogger
 {
+
     protected string $path;
 
     /**
@@ -21,7 +23,7 @@ class FileSystemLogger extends AbstractLogger
     public function __construct(string $domain)
     {
         parent::__construct($domain);
-        $this->path = __DIR__ . '/../../../var/logs/' . $this->domain . '.log.txt';
+        $this->path = Kernel::getProjectRoot() . 'var/logs/' . $this->domain . '.log.txt';
     }
 
     /**
@@ -32,7 +34,8 @@ class FileSystemLogger extends AbstractLogger
      */
     public function write(string $log): bool
     {
-        $log = '[' . date('Y-m-d h:m:s') . '] ' . $log . ' ' . PHP_EOL;
+        $prefix = '[' . date('Y-m-d h:m:s') . ']';
+        $log = $prefix . ' ' . $log . ' ' . PHP_EOL;
         return @file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 

@@ -5,8 +5,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
+require_once(__DIR__ . '/Kernel.php');
 require_once(__DIR__ . '/modules/Transient/AbstractTransient.php');
 require_once(__DIR__ . '/modules/Transient/FileSystemTransient.php');
+
+use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 
 spl_autoload_register(function ($class) {
@@ -18,7 +21,7 @@ spl_autoload_register(function ($class) {
     }
     $pathArr = explode('\\', $class);
     $classname = $pathArr[count($pathArr) - 1];
-    $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src');
+    $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . '/src');
     $iterator = new RecursiveIteratorIterator($dir);
     foreach ($iterator as $file) {
         if (str_contains($file->getFilename(), $classname)) {

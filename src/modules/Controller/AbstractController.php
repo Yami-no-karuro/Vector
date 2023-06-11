@@ -26,7 +26,6 @@ abstract class AbstractController
          * Retrive the global request object initialized in the Kernel.
          */
         global $request;
-
         $this->request = $request;
         if (!$direct) {
             $this->register();

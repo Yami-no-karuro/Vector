@@ -34,12 +34,12 @@ class ErrorHandler
     public function handleError(int $errno, string $errstr, string $errfile, int $errline): void
     {
         global $config;
+        $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
         if (true === $config->debug) {
-            $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
             $this->outputErrorBox($errorMessage);
-            if (true === $config->debug_log) {
-                $this->logger->write($errorMessage);
-            }
+        }
+        if (true === $config->debug_log) {
+            $this->logger->write($errorMessage);
         }
     }
 
@@ -52,12 +52,12 @@ class ErrorHandler
     public function handleException(mixed $exception): void
     {
         global $config;
+        $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
         if (true === $config->debug) {
-            $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
             $this->outputErrorBox($exceptionMessage);
-            if (true === $config->debug_log) {
-                $this->logger->write($exceptionMessage);
-            }
+        }
+        if (true === $config->debug_log) {
+            $this->logger->write($exceptionMessage);
         }
     }
 
@@ -69,17 +69,18 @@ class ErrorHandler
     public function handleShutdown(): void
     {
         global $config;
-        if (true === $config->debug) {
-            $lastError = error_get_last();
-            if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-                $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
+
+        $lastError = error_get_last();
+        if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+            $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
+            if (true === $config->debug) {
                 $this->outputErrorBox($errorMessage);
-                if (true === $config->debug_log) {
-                    $this->logger->write($errorMessage);
-                }
             }
+            if (true === $config->debug_log) {
+                $this->logger->write($errorMessage);
+            }
+            die();
         }
-        die();
     }
 
     /**

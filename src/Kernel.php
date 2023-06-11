@@ -149,7 +149,7 @@ class Kernel
             $data = $transient->getData();
         } else {
             $path = self::getProjectRoot() . 'config/config.json';
-            $data = json_decode(@file_get_contents($path));
+            $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
         $config = $data;

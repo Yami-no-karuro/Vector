@@ -24,8 +24,8 @@ class FileSystemTransient extends AbstractTransient
     {
         parent::__construct($name);
         $this->path = __DIR__ . '/../../../var/cache/transients/' . md5($this->name);
-        $this->data = @file_get_contents($this->path, true);
-        $this->time = @filemtime($this->path);
+        $this->data = file_get_contents($this->path, true);
+        $this->time = filemtime($this->path);
     }
 
     /**
@@ -63,7 +63,7 @@ class FileSystemTransient extends AbstractTransient
      */
     public function setData(mixed $data): bool
     {
-        return @file_put_contents($this->path, serialize($data), LOCK_EX);
+        return file_put_contents($this->path, serialize($data), LOCK_EX);
     }
 
     /**
@@ -73,7 +73,7 @@ class FileSystemTransient extends AbstractTransient
      */
     public function delete(): bool
     {
-        return @unlink($this->path);
+        return unlink($this->path);
     }
 
 }

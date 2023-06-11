@@ -126,7 +126,7 @@ class Application
             $data = $transient->getData();
         } else {
             $path = Kernel::getProjectRoot() . 'config/config.json';
-            $data = json_decode(@file_get_contents($path));
+            $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
         $config = $data;

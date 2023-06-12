@@ -2,6 +2,7 @@
 
 namespace Vector\Module\Controller;
 
+use Vector\Kernel;
 use Vector\Module\Controller\AbstractController;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -29,7 +30,7 @@ abstract class FrontendController extends AbstractController
          */
         $filesystemLoader = new FilesystemLoader(__DIR__ . '/../../../templates');
         $this->template = new Environment($filesystemLoader, [
-            'cache'       => __DIR__ . '/../../../var/cache/twig',
+            'cache'       => Kernel::getProjectRoot() . '/var/cache/twig',
             'auto_reload' => true
         ]);
 

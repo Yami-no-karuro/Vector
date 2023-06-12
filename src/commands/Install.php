@@ -2,9 +2,11 @@
 
 namespace Vector\Command;
 
+use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\Console\Application;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -39,7 +41,7 @@ class Install extends AbstractCommand
      */
     public function execute(): int
     {
-        $dir = __DIR__ . '/../../var/sql/';
+        $dir = Kernel::getProjectRoot() . 'var/sql/';
         if (file_exists($dir) and is_dir($dir)) {
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($sqlDir, RecursiveIteratorIterator::CHILD_FIRST);
@@ -50,6 +52,7 @@ class Install extends AbstractCommand
                         $query = file_get_contents($file->getPathname());
                         $this->sql->exec($query);
                     } catch (Exception $e) {
+                        Application::out($e);
                         $this->logger->write($e);
                         return 1;
                     }

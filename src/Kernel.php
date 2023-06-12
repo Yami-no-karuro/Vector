@@ -117,7 +117,7 @@ class Kernel
          * @var RecursiveIteratorIterator $iterator
          * Recursively initialize controllers, request will be parsed trough the Router instance.
          */
-        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../src/controllers');
+        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controllers');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
@@ -148,8 +148,8 @@ class Kernel
         if ($transient->isValid(HOUR_IN_SECONDS)) {
             $data = $transient->getData();
         } else {
-            $path = __DIR__ . '/../config/config.json';
-            $data = json_decode(@file_get_contents($path));
+            $path = self::getProjectRoot() . 'config/config.json';
+            $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
         $config = $data;
@@ -173,6 +173,19 @@ class Kernel
         set_exception_handler([$errorHandler, 'handleException']);
         register_shutdown_function([$errorHandler, 'handleShutdown']);
 
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel::getProjectRoot()
+     * @return string
+     */
+    public static function getProjectRoot(): string
+    {
+        if (str_contains(getcwd() . '/', 'public')) {
+            return getcwd() . '/../';
+        }
+        return getcwd() . '/';
     }
 
 }

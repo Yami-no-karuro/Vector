@@ -2,6 +2,7 @@
 
 namespace Vector\Module\Console;
 
+use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -69,7 +70,7 @@ class Application
     {
         $this->loadConfig();
         $this->directRun();
-        $dir = new RecursiveDirectoryIterator(__DIR__ . '/../../commands');
+        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/commands');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
@@ -124,12 +125,25 @@ class Application
         if ($transient->isValid(HOUR_IN_SECONDS)) {
             $data = $transient->getData();
         } else {
-            $path = __DIR__ . '/../../../config/config.json';
-            $data = json_decode(@file_get_contents($path));
+            $path = Kernel::getProjectRoot() . 'config/config.json';
+            $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
         $config = $data;
 
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application::output()
+     * @param string $message
+     * @return void
+     */
+    public static function out(string $message): void
+    {
+        echo PHP_EOL . '=== DEBUG ===' . PHP_EOL;
+        print_r($message);
+        echo PHP_EOL . '=== DEBUG ===' . PHP_EOL;
     }
 
 }

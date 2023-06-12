@@ -1,6 +1,6 @@
 {
-    "debug": true,
-    "debug_log": true,
+    "debug": false,
+    "debug_log": false,
     "database": {
         "db_host": "mariadb",
         "db_user": "vector_usr",

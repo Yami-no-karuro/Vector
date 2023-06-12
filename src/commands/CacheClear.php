@@ -2,9 +2,11 @@
 
 namespace Vector\Command;
 
+use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\Console\Application;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -42,10 +44,11 @@ class CacheClear extends AbstractCommand
         try {
             $this->sql->exec('DELETE FROM `transients`');
         } catch (Exception $e) {
+            Application::out($e);
             $this->logger->write($e);
             return 1;
         }
-        $dir = __DIR__ . '/../../var/cache/';
+        $dir = Kernel::getProjectRoot() . 'var/cache/';
         if (file_exists($dir) and is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($cacheDir, RecursiveIteratorIterator::CHILD_FIRST);
@@ -55,6 +58,7 @@ class CacheClear extends AbstractCommand
                     try {
                         $file->isDir() ? rmdir($file) : unlink($file);
                     } catch (Exception $e) {
+                        Application::out($e);
                         $this->logger->write($e);
                         return 1;
                     }

@@ -6,6 +6,7 @@ use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\Console\Application;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -43,6 +44,7 @@ class CacheClear extends AbstractCommand
         try {
             $this->sql->exec('DELETE FROM `transients`');
         } catch (Exception $e) {
+            Application::out($e);
             $this->logger->write($e);
             return 1;
         }
@@ -56,6 +58,7 @@ class CacheClear extends AbstractCommand
                     try {
                         $file->isDir() ? rmdir($file) : unlink($file);
                     } catch (Exception $e) {
+                        Application::out($e);
                         $this->logger->write($e);
                         return 1;
                     }

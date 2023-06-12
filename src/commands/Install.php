@@ -6,6 +6,7 @@ use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\Console\Application;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -51,6 +52,7 @@ class Install extends AbstractCommand
                         $query = file_get_contents($file->getPathname());
                         $this->sql->exec($query);
                     } catch (Exception $e) {
+                        Application::out($e);
                         $this->logger->write($e);
                         return 1;
                     }

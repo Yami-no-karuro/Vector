@@ -70,7 +70,7 @@ class ErrorHandler
          */
         global $config;
         $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-        
+
         if (true === $config->debug) {
             $this->outputErrorBox($exceptionMessage);
         }
@@ -86,7 +86,7 @@ class ErrorHandler
      */
     public function handleShutdown(): void
     {
-        
+
         /**
          * @var object $config
          * @var string $exceptionMessage
@@ -112,7 +112,7 @@ class ErrorHandler
             $response = new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
             $response->prepare($request);
             $response->send();
-            
+
         }
     }
 

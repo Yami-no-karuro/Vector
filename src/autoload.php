@@ -21,7 +21,7 @@ spl_autoload_register(function ($class) {
     }
     $pathArr = explode('\\', $class);
     $classname = $pathArr[count($pathArr) - 1];
-    $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . '/src');
+    $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src');
     $iterator = new RecursiveIteratorIterator($dir);
     foreach ($iterator as $file) {
         if (str_contains($file->getFilename(), $classname)) {

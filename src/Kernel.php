@@ -182,7 +182,10 @@ class Kernel
      */
     public static function getProjectRoot(): string
     {
-        return getcwd() . '/../';
+        if (str_contains(getcwd() . '/', 'public')) {
+            return getcwd() . '/../';
+        }
+        return getcwd() . '/';
     }
 
 }

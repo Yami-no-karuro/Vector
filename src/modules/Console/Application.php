@@ -70,7 +70,7 @@ class Application
     {
         $this->loadConfig();
         $this->directRun();
-        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'commands');
+        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/commands');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();

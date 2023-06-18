@@ -76,7 +76,7 @@ class WebToken
     protected static function generateHeaders(): string
     {
         global $config;
-        $headers = json_encode(['typ' => 'JWT', 'alg' => $config->auth->algo]);
+        $headers = json_encode(['type' => 'JWT', 'algo' => $config->auth->algo]);
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($headers));
     }
 

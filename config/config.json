@@ -11,5 +11,9 @@
         "scheme": "tcp",
         "host": "redis",
         "port": "6379"
+    },
+    "openssl": {
+        "encryption_cypher": "AES-256-CBC",
+        "passphrase": "vector"
     }
 }

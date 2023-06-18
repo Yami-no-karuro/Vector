@@ -22,3 +22,8 @@ See `` package.json `` to explore encore available scripts.
 ### Console Commands
 `` docker compose exec php bin/console vector:install ``  
 `` docker compose exec php bin/console vector:cache-clear ``  
+
+### OpenSSL Commands
+`` openssl genpkey -algorithm RSA -out var/keys/private.key -aes256 ``  
+`` openssl rsa -pubout -in var/keys/private.key -out var/keys/public.key ``  
+`` openssl rsa -in var/keys/private.key -check ``  

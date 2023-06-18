@@ -66,10 +66,10 @@ class Tokenizer
         $privateKey = openssl_pkey_get_private($privateKeyString, $config->openssl->passphrase);
         if ($privateKey === false) {
             $error = openssl_error_string();
-            throw new Exception('Error occurred reading private key: ' . $error);
+            throw new Exception($error);
         }
         if (false === (openssl_open($encryptedData, $refId, $encryptedKey, $privateKey, $config->openssl->encryption_cypher, $iv))) {
-            throw new Exception('Error occurred opening data');
+            throw new Exception('An error occurred trying to "openssl_open" encrypted data.');
         }
         return (int) $refId;
     }
@@ -89,10 +89,10 @@ class Tokenizer
         $publicKey = openssl_pkey_get_public($publicKeyString);
         if ($publicKey === false) {
             $error = openssl_error_string();
-            throw new Exception('Error occurred reading public key: ' . $error);
+            throw new Exception($error);
         }
         if (false === (openssl_seal($refId, $encryptedData, $envelopedKeys, [$publicKey], $config->openssl->encryption_cypher, $iv))) {
-            throw new Exception('Error occurred sealing data');
+            throw new Exception('An error occurred trying to "openss_seal" decrypted data.');
         }
         return [
             'encryptedData' => base64_encode($encryptedData),
@@ -114,10 +114,10 @@ class Tokenizer
         $privateKey = openssl_pkey_get_private($privateKeyString, $config->openssl->passphrase);
         if ($privateKey === false) {
             $error = openssl_error_string();
-            throw new Exception('Error occurred reading private key: ' . $error);
+            throw new Exception($error);
         }
         if (false === (openssl_sign($data, $signature, $privateKey, OPENSSL_ALGO_SHA256))) {
-            throw new Exception('Error occurred signing data');
+            throw new Exception('An error occurred trying to "openss_sign" data.');
         }
         return base64_encode($signature);
     }
@@ -135,7 +135,7 @@ class Tokenizer
         $publicKey = openssl_pkey_get_public($publicKeyString);
         if ($publicKey === false) {
             $error = openssl_error_string();
-            throw new Exception('Error occurred reading public key: ' . $error);
+            throw new Exception($error);
         }
         return openssl_verify($data, base64_decode($signature), $publicKey, OPENSSL_ALGO_SHA256) === 1;
     }

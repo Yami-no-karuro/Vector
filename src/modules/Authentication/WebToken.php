@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class WebToken
 {
-
     /**
      * @package Vector
      * Vector\Module\Authentication\WebToken::generateToken()

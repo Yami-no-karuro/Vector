@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Tokenizer
 {
-
     /**
      * @package Vector
      * Vector\Module\OpenSSL\TokenManager::generateToken()
@@ -122,7 +121,7 @@ class Tokenizer
         }
         return base64_encode($signature);
     }
-    
+
     /**
      * @package Vector
      * Vector\Module\OpenSSL\TokenManager::verifySignature()

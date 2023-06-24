@@ -45,7 +45,7 @@ class Kernel
             $response->send();
             die();
         }
-        
+
         $this->request = $request;
         $this->logger = new FileSystemLogger('core');
     }

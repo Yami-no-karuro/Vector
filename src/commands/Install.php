@@ -51,7 +51,7 @@ class Install extends AbstractCommand
             $iterator = new RecursiveIteratorIterator($sqlDir, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($iterator as $file) {
                 $fname = $file->getFilename();
-                if (preg_match('%\.sql$%', $fname)) {
+                if (preg_match("%\.sql$%", $fname)) {
                     try {
                         $query = file_get_contents($file->getPathname());
                         $this->sql->exec($query);

@@ -74,7 +74,7 @@ class Application
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
-            if (preg_match('%\.php$%', $fname)) {
+            if (preg_match("%\.php$%", $fname)) {
                 $class = 'Vector\\Command\\' . basename($fname, '.php');
                 $command = new $class($this->args);
                 if ($command->getCommandName() === $this->command) {

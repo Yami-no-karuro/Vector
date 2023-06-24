@@ -58,7 +58,7 @@ class CacheClear extends AbstractCommand
             $iterator = new RecursiveIteratorIterator($cacheDir, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($iterator as $file) {
                 $fname = $file->getFilename();
-                if (!preg_match('%\.gitkeep$%', $fname)) {
+                if (!preg_match("%\.gitkeep$%", $fname)) {
                     try {
                         $file->isDir() ? rmdir($file) : unlink($file);
                     } catch (Exception $e) {

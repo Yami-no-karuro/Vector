@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\Authentication;
+namespace Vector\Module\Security;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -11,7 +11,7 @@ class WebToken
 {
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::generateToken()
+     * Vector\Module\Security\WebToken::generateToken()
      * @param array $payload
      * @return string
      */
@@ -27,7 +27,7 @@ class WebToken
 
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::validateToken()
+     * Vector\Module\Security\WebToken::validateToken()
      * @param string $token
      * @return bool
      */
@@ -42,7 +42,7 @@ class WebToken
 
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::getPayload()
+     * Vector\Module\Security\WebToken::getPayload()
      * @param string $token
      * @return array
      */
@@ -56,7 +56,7 @@ class WebToken
 
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::getHeaders()
+     * Vector\Module\Security\WebToken::getHeaders()
      * @param string $token
      * @return array
      */
@@ -70,7 +70,7 @@ class WebToken
 
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::generateHeaders()
+     * Vector\Module\Security\WebToken::generateHeaders()
      * @return string
      */
     protected static function generateHeaders(): string
@@ -82,7 +82,7 @@ class WebToken
 
     /**
      * @package Vector
-     * Vector\Module\Authentication\WebToken::generatePayload()
+     * Vector\Module\Security\WebToken::generatePayload()
      * @param array $payload
      * @return string
      */

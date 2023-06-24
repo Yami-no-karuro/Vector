@@ -11,5 +11,9 @@
         "scheme": "tcp",
         "host": "redis",
         "port": "6379"
+    },
+    "auth": {
+        "algo": "HS256",
+        "key": "3a4d5866514a11ddff3e46aa8f70b481fb5aa2f639b7f4fef56a50635603f460"
     }
 }

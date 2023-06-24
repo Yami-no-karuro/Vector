@@ -136,14 +136,13 @@ class Application
     /**
      * @package Vector
      * Vector\Module\Console\Application::output()
-     * @param string $message
+     * @param mixed $message
      * @return void
      */
-    public static function out(string $message): void
+    public static function out(mixed $message): void
     {
-        echo PHP_EOL . '=== DEBUG ===' . PHP_EOL;
         print_r($message);
-        echo PHP_EOL . '=== DEBUG ===' . PHP_EOL;
+        echo PHP_EOL;
     }
 
 }

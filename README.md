@@ -22,3 +22,6 @@ See `` package.json `` to explore encore available scripts.
 ### Console Commands
 `` docker compose exec php bin/console vector:install ``  
 `` docker compose exec php bin/console vector:cache-clear ``  
+
+### Authentication Commands
+`` php -r "echo bin2hex(random_bytes(32)) . PHP_EOL;" ``  

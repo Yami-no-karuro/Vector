@@ -2,12 +2,15 @@
 
 namespace Vector;
 
+use Vector\Module\Security\Firewall;
+use Vector\Module\Security\SecurityException;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -29,9 +32,19 @@ class Kernel
         /**
          * @var Request $request
          * The global request object is initialized here.
+         * Request is passed through the application Firewall to be approved.
          */
         global $request;
         $request = Request::createFromGlobals();
+        $firewall = new Firewall();
+        try {
+            $firewall->checkRequest($request);
+        } catch (SecurityException) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $response->prepare($request);
+            $response->send();
+            die();
+        }
 
         $this->request = $request;
         $this->logger = new FileSystemLogger('core');
@@ -121,7 +134,7 @@ class Kernel
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
-            if (preg_match('%\.php$%', $fname)) {
+            if (preg_match("%\.php$%", $fname)) {
                 require_once($file->getPathname());
                 $controller = 'Vector\\Controller\\' . basename($fname, '.php');
                 new $controller();

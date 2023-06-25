@@ -32,21 +32,11 @@ class Kernel
         /**
          * @var Request $request
          * The global request object is initialized here.
-         * Request is passed through the application Firewall to be approved.
          */
         global $request;
         $request = Request::createFromGlobals();
-        $firewall = new Firewall();
-        try {
-            $firewall->checkRequest($request);
-        } catch (SecurityException) {
-            $response = new Response(null, Response::HTTP_BAD_REQUEST);
-            $response->prepare($request);
-            $response->send();
-            die();
-        }
-
         $this->request = $request;
+
         $this->logger = new FileSystemLogger('core');
     }
 
@@ -58,6 +48,7 @@ class Kernel
     public function boot(): void
     {
         $this->loadConfig();
+        $this->requestCheck();
         $this->registerShutdownFunctions();
         $this->directBoot();
         $this->registerBoot();
@@ -186,6 +177,30 @@ class Kernel
         set_exception_handler([$errorHandler, 'handleException']);
         register_shutdown_function([$errorHandler, 'handleShutdown']);
 
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel->requestCheck()
+     * @return void
+     */
+    protected function requestCheck(): void
+    {
+
+        /**
+         * @var Firewall $firewall
+         * Request is passed through application Firewall for basic validation.
+         */
+        $firewall = new Firewall();
+        try {
+            $firewall->checkRequest($this->request);
+        } catch (SecurityException) {
+            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $response->prepare($this->request);
+            $response->send();
+            die();
+        }
+        
     }
 
     /**

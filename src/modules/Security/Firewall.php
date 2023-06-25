@@ -3,6 +3,7 @@
 namespace Vector\Module\Security;
 
 use Vector\Kernel;
+use Vector\Module\Transient\FileSystemTransient;
 use Symfony\Component\HttpFoundation\Request;
 use Exception;
 
@@ -24,9 +25,16 @@ class Firewall
      */
     public function __construct()
     {
-        $patternSourcePath = Kernel::getProjectRoot() . '/var/source/firewall_patterns.txt';
-        $patternSource = file_get_contents($patternSourcePath);
-        $this->patterns = array_filter(explode("\n", $patternSource), 'trim');
+        $transient = new FileSystemTransient('vct-firewall-patterns');
+        if ($transient->isValid(HOUR_IN_SECONDS)) {
+            $this->patterns = $transient->getData();
+        } else {
+            $patternSourcePath = Kernel::getProjectRoot() . '/var/source/firewall_patterns.txt';
+            $patternSource = file_get_contents($patternSourcePath);
+            $patterns = array_filter(explode("\n", $patternSource), 'trim');
+            $transient->setData($patterns);
+            $this->patterns = $patterns;   
+        }
     }
 
     /**
@@ -37,10 +45,23 @@ class Firewall
      */
     public function checkRequest(Request $request): void
     {
-        $headers = $request->headers->all();
-        $this->checkData($headers);
-        $cookies = $request->cookies->all();
-        $this->checkData($cookies);
+        global $config;
+        if (true === $config->firewall->headers) {
+            $headers = $request->headers->all();
+            $this->checkData($headers);
+        }
+        if (true === $config->firewall->cookies) {
+            $cookies = $request->cookies->all();
+            $this->checkData($cookies);
+        }
+        if (true === $config->firewall->query) {
+            $query = $request->query->all();
+            $this->checkData($query);
+        }
+        if (true === $config->firewall->body) {
+            $body = $request->request->all();
+            $this->checkData($body);
+        }
     }
 
     /**

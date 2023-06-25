@@ -33,7 +33,7 @@ class Firewall
             $patternSource = file_get_contents($patternSourcePath);
             $patterns = array_filter(explode("\n", $patternSource), 'trim');
             $transient->setData($patterns);
-            $this->patterns = $patterns;   
+            $this->patterns = $patterns;
         }
     }
 

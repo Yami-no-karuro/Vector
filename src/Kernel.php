@@ -200,7 +200,7 @@ class Kernel
             $response->send();
             die();
         }
-        
+
     }
 
     /**

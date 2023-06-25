@@ -8,9 +8,9 @@ use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');

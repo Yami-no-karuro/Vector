@@ -82,6 +82,7 @@ class Application
                         'command' => $this->command,
                         'handler' => $class
                     ]);
+                    $this->vectorCliSignature();
                     $exitCode = $command->execute();
                     exit($exitCode);
                 }
@@ -102,10 +103,31 @@ class Application
             $class = $cache['handler'];
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
+                $this->vectorCliSignature();
                 $exitCode = $command->execute();
                 exit($exitCode);
             }
         }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->vectorCliSignature()
+     * @return void
+     */
+    protected function vectorCliSignature(): void
+    {
+        print_r('
+                _             
+/\   /\___  ___| |_ ___  _ __ 
+\ \ / / _ \/ __| __/ _ \| \'__|
+ \ V /  __/ (__| || (_) | |   
+  \_/ \___|\___|\__\___/|_|   
+                By Yami-no-karuro          
+        ');
+        echo PHP_EOL;
+        echo '---------------------------------';
+        echo PHP_EOL . PHP_EOL;
     }
 
     /**

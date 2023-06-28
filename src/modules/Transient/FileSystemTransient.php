@@ -25,8 +25,10 @@ class FileSystemTransient extends AbstractTransient
     {
         parent::__construct($name);
         $this->path = Kernel::getProjectRoot() . 'var/cache/transients/' . md5($this->name);
-        $this->data = file_get_contents($this->path, true);
-        $this->time = filemtime($this->path);
+        if (file_exists($this->path)) {
+            $this->data = file_get_contents($this->path, true);
+            $this->time = filemtime($this->path);
+        }
     }
 
     /**

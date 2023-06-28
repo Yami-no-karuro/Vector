@@ -76,6 +76,19 @@ class RedisClient
 
     /**
      * @package Vector
+     * Vector\Module\RedisClient->scan()
+     * @param mixed $cursor
+     * @param ?array $options
+     * @return array
+     */
+    public function scan(mixed $cursor = null, ?array $options = null): array
+    {
+        $scan = $this->client->scan($cursor, $options);
+        return ['cursor' => $scan[0], 'keys' => $scan[1]];
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\RedisClient->delete()
      * @param string $key
      * @return void
@@ -83,6 +96,16 @@ class RedisClient
     public function delete(string $key): void
     {
         $this->client->del($key);
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\RedisClient->flush()
+     * @return void
+     */
+    public function flush(): void
+    {
+        $this->client->flushall();
     }
 
     /**

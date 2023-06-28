@@ -7,7 +7,6 @@ use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\Console\Application;
-use Vector\Module\StopWatch;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -22,7 +21,6 @@ class CacheClear extends AbstractCommand
 {
     protected SqlClient $sql;
     protected FileSystemLogger $logger;
-    protected StopWatch $stopWatch;
 
     /**
      * @package Vector
@@ -34,7 +32,6 @@ class CacheClear extends AbstractCommand
         parent::__construct($args);
         $this->sql = SqlClient::getInstance();
         $this->logger = new FileSystemLogger('command');
-        $this->stopWatch = new StopWatch();
     }
 
     /**
@@ -44,7 +41,6 @@ class CacheClear extends AbstractCommand
      */
     public function execute(): int
     {
-        $this->stopWatch->start();
         try {
             $this->sql->exec('DELETE FROM `transients`');
         } catch (Exception $e) {
@@ -69,9 +65,7 @@ class CacheClear extends AbstractCommand
                 }
             }
         }
-        $this->stopWatch->stop();
         Application::out('Cache cleared successfully!');
-        Application::out('Executed for: ' . $this->stopWatch->getElapsed());
         return 0;
     }
 

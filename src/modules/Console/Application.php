@@ -4,6 +4,7 @@ namespace Vector\Module\Console;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\StopWatch;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -15,6 +16,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Application
 {
     protected FileSystemTransient $transient;
+    protected StopWatch $stopWatch;
     protected string $console;
     protected string $command;
     protected ?array $args;
@@ -28,6 +30,7 @@ class Application
         $this->console = array_shift($argv);
         $this->command = array_shift($argv);
         $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
+        $this->stopWatch = new StopWatch();
         $this->args = $argv;
     }
 
@@ -70,6 +73,7 @@ class Application
     {
         $this->loadConfig();
         $this->directRun();
+        $registeredCommands = [];
         $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/commands');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
@@ -77,18 +81,31 @@ class Application
             if (preg_match("%\.php$%", $fname)) {
                 $class = 'Vector\\Command\\' . basename($fname, '.php');
                 $command = new $class($this->args);
-                if ($command->getCommandName() === $this->command) {
+                $commandName = $command->getCommandName();
+                $registeredCommands[] = $commandName;
+                if ($commandName === $this->command) {
                     $this->transient->setData([
                         'command' => $this->command,
                         'handler' => $class
                     ]);
                     $this->vectorCliSignature();
+                    $this->stopWatch->start();
                     $exitCode = $command->execute();
+                    $this->stopWatch->stop();
+                    self::out('Exitcode: ' . $exitCode);
+                    self::out('Executed for: ' . $this->stopWatch->getElapsed());
+                    echo PHP_EOL;
                     exit($exitCode);
                 }
             }
         }
-
+        $this->vectorCliSignature();
+        self::out('Unable to find command: "' . $this->command . '"');
+        self::out('Available commands:');
+        foreach ($registeredCommands as $registeredCommand) {
+            self::out('"' . $registeredCommand . '"');
+        }
+        echo PHP_EOL;
     }
 
     /**
@@ -104,30 +121,15 @@ class Application
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
                 $this->vectorCliSignature();
+                $this->stopWatch->start();
                 $exitCode = $command->execute();
+                $this->stopWatch->stop();
+                self::out('Exitcode: ' . $exitCode);
+                self::out('Executed for: ' . $this->stopWatch->getElapsed());
+                echo PHP_EOL;
                 exit($exitCode);
             }
         }
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Console\Application->vectorCliSignature()
-     * @return void
-     */
-    protected function vectorCliSignature(): void
-    {
-        print_r('
-                _             
-/\   /\___  ___| |_ ___  _ __ 
-\ \ / / _ \/ __| __/ _ \| \'__|
- \ V /  __/ (__| || (_) | |   
-  \_/ \___|\___|\__\___/|_|   
-                By Yami-no-karuro          
-        ');
-        echo PHP_EOL;
-        echo '---------------------------------';
-        echo PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -153,6 +155,26 @@ class Application
         }
         $config = $data;
 
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application->vectorCliSignature()
+     * @return void
+     */
+    protected function vectorCliSignature(): void
+    {
+        print_r('
+                _             
+/\   /\___  ___| |_ ___  _ __ 
+\ \ / / _ \/ __| __/ _ \| \'__|
+ \ V /  __/ (__| || (_) | |   
+  \_/ \___|\___|\__\___/|_|   
+                By Yami-no-karuro          
+        ');
+        echo PHP_EOL;
+        echo '---------------------------------';
+        echo PHP_EOL . PHP_EOL;
     }
 
     /**

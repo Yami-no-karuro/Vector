@@ -28,7 +28,10 @@ class Application
     public function __construct(array $argv)
     {
         $this->console = array_shift($argv);
-        $this->command = array_shift($argv);
+        $this->command = '';
+        if (!empty($argv)) {
+            $this->command = array_shift($argv);
+        }
         $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
         $this->stopWatch = new StopWatch();
         $this->args = $argv;
@@ -88,7 +91,6 @@ class Application
                         'command' => $this->command,
                         'handler' => $class
                     ]);
-                    $this->vectorCliSignature();
                     $this->stopWatch->start();
                     $exitCode = $command->execute();
                     $this->stopWatch->stop();
@@ -120,7 +122,6 @@ class Application
             $class = $cache['handler'];
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
-                $this->vectorCliSignature();
                 $this->stopWatch->start();
                 $exitCode = $command->execute();
                 $this->stopWatch->stop();
@@ -146,7 +147,7 @@ class Application
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
-        if ($transient->isValid(HOUR_IN_SECONDS)) {
+        if ($transient->isValid()) {
             $data = $transient->getData();
         } else {
             $path = Kernel::getProjectRoot() . 'config/config.json';

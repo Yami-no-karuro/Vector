@@ -6,6 +6,7 @@ use Vector\Module\Security\Firewall;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\Event\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,10 +33,11 @@ class Kernel
         /**
          * @var Request $request
          * The global request object is initialized here.
+         * "onRequest" event is dispatched.
          */
         global $request;
         $request = Request::createFromGlobals();
-        $this->request = $request;
+        EventDispatcher::dispatch('KernelEvent', 'onRequest', [&$request]);
 
         $this->logger = new FileSystemLogger('core');
     }
@@ -48,7 +50,7 @@ class Kernel
     public function boot(): void
     {
         $this->loadConfig();
-        $this->requestCheck();
+        $this->requestFirewall();
         $this->registerShutdownFunctions();
         $this->directBoot();
         $this->registerBoot();
@@ -63,11 +65,13 @@ class Kernel
     {
 
         /**
+         * @var Request $request
          * @var FileSystemTransient $transient
          * Try to load route data from cache
          */
-        $transient = new FileSystemTransient('vct-route-{' . $this->request->getPathInfo() . '}');
-        if (!$transient->isValid(HOUR_IN_SECONDS)) {
+        global $request;
+        $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
+        if (!$transient->isValid()) {
             return;
         }
         $cacheData = $transient->getData();
@@ -81,10 +85,10 @@ class Kernel
          */
         $matches = null;
         $params = [];
-        if (!in_array($this->request->getMethod(), $httpMethods)) {
+        if (!in_array($request->getMethod(), $httpMethods)) {
             return;
         }
-        if (!preg_match_all($cacheData['regex'], $this->request->getPathInfo(), $matches)) {
+        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) {
             return;
         }
         if (!empty($matches)) {
@@ -97,12 +101,17 @@ class Kernel
 
         /**
          * @var Vector\Controller $controller
-         * @var callable $callback
+         * @var callable $method
          * Execute controller callback, send the response and die.
+         * "onControllerCallback" and "onResponse" events are dispatched.
          */
         $controller = new $cacheData['controller'](true);
-        $response = call_user_func_array([$controller, $cacheData['callback']], [$this->request, $params]);
-        $response->prepare($this->request);
+        $method = $cacheData['callback'];
+        EventDispatcher::dispatch('KernelEvent', 'onControllerCallback', [&$request, $controller, $method, &$params]);
+        $response = call_user_func_array([$controller, $method], [$request, $params]);
+        EventDispatcher::dispatch('KernelEvent', 'onResponse', [&$request, &$response]);
+        
+        $response->prepare($request);
         $response->send();
         die();
 
@@ -145,11 +154,11 @@ class Kernel
         /**
          * @var FileSystemTransient $transient
          * @var object $config
-         * Load configuration in cache.
+         * Loads global configuration.
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
-        if ($transient->isValid(HOUR_IN_SECONDS)) {
+        if ($transient->isValid()) {
             $data = $transient->getData();
         } else {
             $path = self::getProjectRoot() . 'config/config.json';
@@ -181,22 +190,24 @@ class Kernel
 
     /**
      * @package Vector
-     * Vector\Kernel->requestCheck()
+     * Vector\Kernel->requestFirewall()
      * @return void
      */
-    protected function requestCheck(): void
+    protected function requestFirewall(): void
     {
 
         /**
+         * @var Request $request
          * @var Firewall $firewall
          * Request is passed through application Firewall for basic validation.
          */
+        global $request;
         $firewall = new Firewall();
         try {
-            $firewall->checkRequest($this->request);
+            $firewall->checkRequest($request);
         } catch (SecurityException) {
             $response = new Response(null, Response::HTTP_BAD_REQUEST);
-            $response->prepare($this->request);
+            $response->prepare($request);
             $response->send();
             die();
         }

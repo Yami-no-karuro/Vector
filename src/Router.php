@@ -3,6 +3,7 @@
 namespace Vector;
 
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Event\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -54,24 +55,31 @@ class Router
         }
 
         /**
+         * @var object $controller
          * @var FileSystemTransient $transient
-         * Cache route data for a future request.
+         * Cache route data for future requests.
          */
+        $controller = get_class($callback[0]);
+        $method = $callback[1];
         $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
         $transient->setData([
             'path' => $request->getPathInfo(),
             'regex' => $regex,
             'methods' => serialize($httpMethods),
-            'controller' => get_class($callback[0]),
-            'callback' => $callback[1]
+            'controller' => $controller,
+            'callback' => $method
         ]);
 
         /**
          * @var Vector\Controller $controller
          * @var callable $callback
          * Execute controller callback, send the response and die.
+         * "onControllerCallback" and "onResponse" events are dispatched.
          */
+        EventDispatcher::dispatch('KernelEvent', 'onControllerCallback', [&$request, $controller, $method, &$params]);
         $response = $callback($request, $params);
+        EventDispatcher::dispatch('KernelEvent', 'onResponse', [&$request, &$response]);
+
         $response->prepare($request);
         $response->send();
         die();

@@ -26,7 +26,7 @@ class Firewall
     public function __construct()
     {
         $transient = new FileSystemTransient('vct-firewall-patterns');
-        if ($transient->isValid(HOUR_IN_SECONDS)) {
+        if ($transient->isValid()) {
             $this->patterns = $transient->getData();
         } else {
             $patternSourcePath = Kernel::getProjectRoot() . '/var/source/firewall_patterns.txt';

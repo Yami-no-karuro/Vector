@@ -37,10 +37,13 @@ class FileSystemTransient extends AbstractTransient
      * @param int $seconds
      * @return bool
      */
-    public function isValid(int $seconds): bool
+    public function isValid(int $seconds = 0): bool
     {
         if (!$this->data) {
             return false;
+        }
+        if (0 === $seconds) {
+            return true;
         }
         return (time() - $this->time) > $seconds ? false : true;
     }

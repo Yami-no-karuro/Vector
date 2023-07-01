@@ -15,7 +15,7 @@ use Vector\Module\Transient\FileSystemTransient;
 spl_autoload_register(function ($class) {
     $classId = strtolower(str_replace('\\', '-', $class));
     $transient = new FileSystemTransient('vct-autoload-{' . $classId . '}');
-    if ($transient->isValid(HOUR_IN_SECONDS)) {
+    if ($transient->isValid()) {
         require_once($transient->getData());
         return;
     }

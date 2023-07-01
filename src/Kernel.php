@@ -37,7 +37,7 @@ class Kernel
          */
         global $request;
         $request = Request::createFromGlobals();
-        EventDispatcher::dispatch('KernelEvent', 'onRequest', [&$request]);
+        EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
         $this->logger = new FileSystemLogger('core');
     }
@@ -107,9 +107,9 @@ class Kernel
          */
         $controller = new $cacheData['controller'](true);
         $method = $cacheData['callback'];
-        EventDispatcher::dispatch('KernelEvent', 'onControllerCallback', [&$request, $controller, $method, &$params]);
+        EventDispatcher::dispatch('KernelListener', 'onControllerCallback', [&$request, $controller, $method, &$params]);
         $response = call_user_func_array([$controller, $method], [$request, $params]);
-        EventDispatcher::dispatch('KernelEvent', 'onResponse', [&$request, &$response]);
+        EventDispatcher::dispatch('KernelListener', 'onResponse', [&$request, &$response]);
 
         $response->prepare($request);
         $response->send();

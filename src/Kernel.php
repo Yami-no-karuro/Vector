@@ -110,7 +110,7 @@ class Kernel
         EventDispatcher::dispatch('KernelEvent', 'onControllerCallback', [&$request, $controller, $method, &$params]);
         $response = call_user_func_array([$controller, $method], [$request, $params]);
         EventDispatcher::dispatch('KernelEvent', 'onResponse', [&$request, &$response]);
-        
+
         $response->prepare($request);
         $response->send();
         die();

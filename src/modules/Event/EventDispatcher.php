@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class EventDispatcher
 {
-
     /**
      * @package Vector
      * Vector\Module\Event::dispatch()
@@ -22,8 +21,8 @@ class EventDispatcher
     {
         $eventClass = 'Vector\\Event\\' . $eventClass;
         if (class_exists($eventClass)) {
-            $event = new $eventClass;
-            if (method_exists($event, $eventMethod) AND $event instanceof AbstractListener) {
+            $event = new $eventClass();
+            if (method_exists($event, $eventMethod) and $event instanceof AbstractListener) {
                 $event->$eventMethod(...$args);
             }
         }

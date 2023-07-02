@@ -32,7 +32,7 @@ class AuthToken
      */
     public function generate(): ?string
     {
-        $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ?", [
+        $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ? LIMIT 1", [
             ['type' => 'd', 'value' => $this->payload['userId']]
         ]);
         if (true === $result['success'] and !empty($data = $result['data'])) {

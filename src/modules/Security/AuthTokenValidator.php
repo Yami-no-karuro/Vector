@@ -42,7 +42,7 @@ class AuthTokenValidator
         if (false === $this->validatePayload($payload)) {
             return false;
         }
-        $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ?", [
+        $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ? LIMIT 1", [
             ['type' => 'd', 'value' => $payload['userId']]
         ]);
         if (true === $result['success'] and !empty($data = $result['data'])) {

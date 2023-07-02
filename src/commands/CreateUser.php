@@ -48,7 +48,7 @@ class CreateUser extends AbstractCommand
         Application::out('Lastname: (press Enter to leave empty)');
         $user['lastname'] = Application::in();
         Application::out('--------');
-        $duplicate = $this->sql->getResults("SELECT `ID` FROM `users` WHERE `email` = ?", [
+        $duplicate = $this->sql->getResults("SELECT `ID` FROM `users` WHERE `email` = ? LIMIT 1", [
             ['type' => 's', 'value' => trim($user['email'])]
         ]);
         if (true === $duplicate['success'] and !empty($duplicate['data'])) {

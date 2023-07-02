@@ -18,7 +18,7 @@ abstract class AbstractTransient
      */
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name = md5($name);
     }
 
     /**

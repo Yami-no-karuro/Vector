@@ -13,6 +13,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class AdminController extends FrontendController
 {
+
+
     protected function register(): void
     {
         Router::route(['GET'], '^/admin?$', [$this, 'adminViewAction']);
@@ -31,4 +33,5 @@ class AdminController extends FrontendController
         ]);
         return new Response($html, Response::HTTP_OK);
     }
+
 }

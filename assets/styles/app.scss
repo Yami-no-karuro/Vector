@@ -1,27 +1,10 @@
-@import 'variables.scss';
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "./keyframes.scss";
 
-body {
-    background-color: $dark-grey;
-    main {
-        padding: 3.5rem 5%;
-        section.title {
-            text-align: center;
-            color: $white;
-            h1 {
-                font-size: 42px;
-                line-height: 2.5rem;
-                font-weight: 500;
-            }
-            h4 {
-                font-size: 22px;
-                line-height: 2.5rem;
-                font-weight: 500;
-            }
-        }
-    }
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+.faded {
+  opacity: 0;
+  transform: translateY(5rem);
+  animation: fade-in-up;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
 }

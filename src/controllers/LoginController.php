@@ -19,8 +19,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class LoginController extends FrontendController
 {
-
-    protected const MAX_HOURLY_ATTEMPS = 5; 
+    protected const MAX_HOURLY_ATTEMPS = 5;
 
     protected function register(): void
     {
@@ -41,12 +40,12 @@ class LoginController extends FrontendController
          * @var SqlTransient $nonce
          * We set the login-nonce to handle brute force attacks.
          */
-        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent'); 
+        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
         $nonce = new SqlTransient('login-nonce-{' . $requestRef . '}');
         if (false === $nonce->isValid(HOUR_IN_SECONDS)) {
             $nonce->setData(0);
         }
-        
+
         /**
          * @var string $html
          * We retrive view raw html from the twig template engine.
@@ -74,11 +73,11 @@ class LoginController extends FrontendController
          * @var SqlTransient $nonce
          * We build the login-nonce to handle brute force attacks.
          */
-        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent'); 
+        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
         $nonce = new SqlTransient('login-nonce-{' . $requestRef . '}');
-        if (false === $nonce->isValid(HOUR_IN_SECONDS) OR 
+        if (false === $nonce->isValid(HOUR_IN_SECONDS) or
             ($attempts = (int) $nonce->getData()) >= self::MAX_HOURLY_ATTEMPS) {
-                return new RedirectResponse('/login', Response::HTTP_FOUND);
+            return new RedirectResponse('/login', Response::HTTP_FOUND);
         } else {
             $attempts = $attempts + 1;
             $nonce->setData($attempts);
@@ -97,7 +96,7 @@ class LoginController extends FrontendController
                 $result = $sql->getResults("SELECT `ID`, `password` FROM `users` WHERE `email` = ? LIMIT 1", [
                     ['type' => 's', 'value' => $email]
                 ]);
-                if (true === $result['success'] AND !empty($result['data'])) {
+                if (true === $result['success'] and !empty($result['data'])) {
                     $password = $result['data']['password'];
                     if (hash('sha256', $request->get('password', '')) === $password) {
                         $authToken = new AuthToken([

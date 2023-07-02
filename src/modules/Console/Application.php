@@ -180,7 +180,7 @@ class Application
 
     /**
      * @package Vector
-     * Vector\Module\Console\Application::output()
+     * Vector\Module\Console\Application::out()
      * @param mixed $message
      * @return void
      */
@@ -188,6 +188,18 @@ class Application
     {
         print_r($message);
         echo PHP_EOL;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Console\Application::in()
+     * @param mixed $message
+     * @return string
+     */
+    public static function in(): string
+    {
+        $handle = fopen ('php://stdin', 'r');
+        return fgets($handle);
     }
 
 }

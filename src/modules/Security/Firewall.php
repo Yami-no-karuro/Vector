@@ -39,39 +39,43 @@ class Firewall
 
     /**
      * @package Vector
-     * Vector\Module\Security\Firewall->checkRequest()
+     * Vector\Module\Security\Firewall->verifyRequest()
      * @param Request $request
      * @return void
      */
-    public function checkRequest(Request $request): void
+    public function verifyRequest(Request $request): void
     {
         global $config;
         if (true === $config->firewall->headers) {
-            $headers = $request->headers->all();
-            $this->checkData($headers);
+            if (null !== ($headers = $request->headers->all())) {
+                $this->verifyPayload($headers);
+            }
         }
         if (true === $config->firewall->cookies) {
-            $cookies = $request->cookies->all();
-            $this->checkData($cookies);
+            if (null !== ($cookies = $request->cookies->all())) {
+                $this->verifyPayload($cookies);
+            }
         }
         if (true === $config->firewall->query) {
-            $query = $request->query->all();
-            $this->checkData($query);
+            if (null !== ($query = $request->query->all())) {
+                $this->verifyPayload($query);
+            }
         }
         if (true === $config->firewall->body) {
-            $body = $request->request->all();
-            $this->checkData($body);
+            if (null !== ($body = $request->request->all())) {
+                $this->verifyPayload($body);
+            }
         }
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\Firewall->checkData()
+     * Vector\Module\Security\Firewall->verifyPayload()
      * @param array $data
      * @return void
      * @throws SecurityException
      */
-    protected function checkData(array $data): void
+    protected function verifyPayload(array $data): void
     {
         foreach ($data as $value) {
             if (is_array($value)) {

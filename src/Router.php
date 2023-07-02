@@ -2,8 +2,11 @@
 
 namespace Vector;
 
+use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -71,11 +74,12 @@ class Router
         ]);
 
         /**
-         * @var Vector\Controller $controller
-         * @var callable $callback
-         * Execute controller callback, send the response and die.
+         * @var RedirectResponse $response
+         * @var Request $request
+         * Now that the route has been registered we can force a 302 redirect to the same route to trigger Kernel direct boot.
+         * Redirect is necessary to keep only one application exitpoint.
          */
-        $response = $callback($request, $params);
+        $response = new RedirectResponse(Kernel::getAbsoluteUrl($request), Response::HTTP_FOUND);
         $response->prepare($request);
         $response->send();
         die();

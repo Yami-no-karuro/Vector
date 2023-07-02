@@ -9,9 +9,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class AuthToken 
+class AuthToken
 {
-
     protected array $payload;
     protected SqlClient $sql;
 
@@ -36,7 +35,7 @@ class AuthToken
         $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ?", [
             ['type' => 'd', 'value' => $this->payload['userId']]
         ]);
-        if (true === $result['success'] AND !empty($data = $result['data'])) {
+        if (true === $result['success'] and !empty($data = $result['data'])) {
             $base64UrlHeader = $this->generateHeaders();
             $base64UrlPayload = $this->generatePayload();
             $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $data['secret'], true);
@@ -54,7 +53,7 @@ class AuthToken
     protected function generateHeaders(): string
     {
         $headers = json_encode([
-            'type' => 'JWT', 
+            'type' => 'JWT',
             'algo' => 'HS256'
         ]);
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($headers));

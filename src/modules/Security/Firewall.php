@@ -16,7 +16,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Firewall
 {
-
     protected array $firewallPatterns;
 
     /**
@@ -138,7 +137,7 @@ class Firewall
         foreach ($protectedRoutes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
-                
+
                 /**
                  * @var ?string $authToken
                  * Look for authToken in request cookies and headers.

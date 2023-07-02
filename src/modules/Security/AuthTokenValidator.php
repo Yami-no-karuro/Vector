@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class AuthTokenValidator
 {
-
     protected string $token;
     protected SqlClient $sql;
 
@@ -46,7 +45,7 @@ class AuthTokenValidator
         $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ?", [
             ['type' => 'd', 'value' => $payload['userId']]
         ]);
-        if (true === $result['success'] AND !empty($data = $result['data'])) {
+        if (true === $result['success'] and !empty($data = $result['data'])) {
             $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $data['secret'], true);
             $expectedBase64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
             return hash_equals($base64UrlSignature, $expectedBase64UrlSignature);
@@ -76,7 +75,7 @@ class AuthTokenValidator
     protected function getTokenParts(): ?array
     {
         $tokenParts = explode('.', $this->token);
-        if (is_array($tokenParts) AND count($tokenParts) === 3) {
+        if (is_array($tokenParts) and count($tokenParts) === 3) {
             return $tokenParts;
         }
         return null;
@@ -90,7 +89,7 @@ class AuthTokenValidator
     protected function validatePayload(mixed $payload): bool
     {
         global $config;
-        if (is_array($payload) AND array_keys($payload) === $config->security->token_schema) {
+        if (is_array($payload) and array_keys($payload) === $config->security->token_schema) {
             return true;
         }
         return false;

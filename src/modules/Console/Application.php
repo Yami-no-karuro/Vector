@@ -198,7 +198,7 @@ class Application
      */
     public static function in(): string
     {
-        $handle = fopen ('php://stdin', 'r');
+        $handle = fopen('php://stdin', 'r');
         return fgets($handle);
     }
 

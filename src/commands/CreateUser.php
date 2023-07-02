@@ -51,7 +51,7 @@ class CreateUser extends AbstractCommand
         $duplicate = $this->sql->getResults("SELECT `ID` FROM `users` WHERE `email` = ?", [
             ['type' => 's', 'value' => trim($user['email'])]
         ]);
-        if (true === $duplicate['success'] AND !empty($duplicate['data'])) {
+        if (true === $duplicate['success'] and !empty($duplicate['data'])) {
             Application::out('User (email: "' . trim($user['email']) . '") already exists on the database.');
             return 0;
         }

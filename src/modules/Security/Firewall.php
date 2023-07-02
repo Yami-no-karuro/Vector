@@ -4,20 +4,20 @@ namespace Vector\Module\Security;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Security\AuthTokenValidator;
+use Vector\Module\Security\AuthBadge;
+use Vector\Module\Security\SecurityException;
 use Symfony\Component\HttpFoundation\Request;
-use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class SecurityException extends Exception
-{
-}
 class Firewall
 {
-    protected array $patterns;
+
+    protected array $firewallPatterns;
 
     /**
      * @package Vector
@@ -27,13 +27,13 @@ class Firewall
     {
         $transient = new FileSystemTransient('vct-firewall-patterns');
         if ($transient->isValid()) {
-            $this->patterns = $transient->getData();
+            $this->firewallPatterns = $transient->getData();
         } else {
             $patternSourcePath = Kernel::getProjectRoot() . '/var/source/firewall_patterns.txt';
             $patternSource = file_get_contents($patternSourcePath);
             $patterns = array_filter(explode("\n", $patternSource), 'trim');
             $transient->setData($patterns);
-            $this->patterns = $patterns;
+            $this->firewallPatterns = $patterns;
         }
     }
 
@@ -42,30 +42,66 @@ class Firewall
      * Vector\Module\Security\Firewall->verifyRequest()
      * @param Request $request
      * @return void
+     * @throws SecurityException
      */
     public function verifyRequest(Request $request): void
     {
+
+        /**
+         * @var object $config
+         * Retrive the global configuration variable.
+         */
         global $config;
+
+        /**
+         * @var array $headers
+         * Verify request headers if set in global configuration.
+         */
         if (true === $config->firewall->headers) {
             if (null !== ($headers = $request->headers->all())) {
                 $this->verifyPayload($headers);
             }
         }
+
+        /**
+         * @var array $cookies
+         * Verify request cookies if set in global configuration.
+         */
         if (true === $config->firewall->cookies) {
             if (null !== ($cookies = $request->cookies->all())) {
                 $this->verifyPayload($cookies);
             }
         }
+
+        /**
+         * @var array $query
+         * Verify request query if set in global configuration.
+         */
         if (true === $config->firewall->query) {
             if (null !== ($query = $request->query->all())) {
                 $this->verifyPayload($query);
             }
         }
+
+        /**
+         * @var array $body
+         * Verify request body if set in global configuration.
+         */
         if (true === $config->firewall->body) {
             if (null !== ($body = $request->request->all())) {
                 $this->verifyPayload($body);
             }
         }
+
+        /**
+         * @var array $authenticatedRoutes
+         * Look if any protected routes were registered, if so current
+         * request is verified through $this->verifyRouteAccess().
+         */
+        if (null !== ($authenticatedRoutes = $config->security->authenticated_routes)) {
+            $this->verifyRouteAccess($authenticatedRoutes, $request);
+        }
+
     }
 
     /**
@@ -81,10 +117,53 @@ class Firewall
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            foreach ($this->patterns as $pattern) {
+            foreach ($this->firewallPatterns as $pattern) {
                 if (preg_match($pattern, $value)) {
                     throw new SecurityException();
                 }
+            }
+        }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Firewall->verifyRouteAccess()
+     * @param array $protectedRoutes
+     * @param Request $request
+     * @return void
+     * @throws SecurityException
+     */
+    protected function verifyRouteAccess(array $protectedRoutes, Request $request): void
+    {
+        foreach ($protectedRoutes as $route) {
+            $regex = '/' . str_replace('/', '\/', $route) . '/';
+            if (0 !== preg_match($regex, $request->getPathInfo())) {
+                
+                /**
+                 * @var ?string $authToken
+                 * Look for authToken in request cookies and headers.
+                 */
+                if (null === ($authToken = $request->cookies->get('Auth-Token'))) {
+                    $authToken = $request->headers->get('Auth-Token');
+                }
+                if (null !== $authToken) {
+
+                    /**
+                     * @var AuthTokenValidator $validator
+                     * @var AuthBadge $authBadge
+                     * Validate the retrived token on the AuthTokenValidator instance.
+                     */
+                    global $authBadge;
+                    $validator = new AuthTokenValidator($authToken);
+                    if (true === $validator->isValid()) {
+                        $payload = $validator->getPayload();
+                        $authBadge = new AuthBadge($payload);
+                        return;
+                    }
+
+                }
+
+                throw new SecurityException();
             }
         }
     }

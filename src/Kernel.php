@@ -209,7 +209,7 @@ class Kernel
         try {
             $firewall->verifyRequest($request);
         } catch (SecurityException) {
-            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();
             die();
@@ -234,16 +234,13 @@ class Kernel
 
     /**
      * @package Vector
-     * Vector\Kernel::getAbsoluteUrl()
+     * Vector\Kernel::getRequestUrl()
      * @param Request $request
      * @return string
      */
-    public static function getAbsoluteUrl(Request $request): string
+    public static function getRequestUrl(Request $request): string
     {
-        $scheme = $request->getScheme();
-        $host = $request->getHttpHost();
-        $uri = $request->getRequestUri();
-        return $scheme . '://' . $host . $uri;
+        return $request->getScheme() . '://' . $request->getHttpHost() . $request->getRequestUri();
     }
 
 }

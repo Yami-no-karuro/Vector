@@ -4,7 +4,7 @@ namespace Vector\Module\Security;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Security\AuthTokenValidator;
+use Vector\Module\Security\TokenValidator;
 use Vector\Module\Security\AuthBadge;
 use Vector\Module\Security\SecurityException;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,12 +148,12 @@ class Firewall
                 if (null !== $authToken) {
 
                     /**
-                     * @var AuthTokenValidator $validator
+                     * @var TokenValidator $validator
                      * @var AuthBadge $authBadge
-                     * Validate the retrived token on the AuthTokenValidator instance.
+                     * Validate the retrived token on the TokenValidator instance.
                      */
                     global $authBadge;
-                    $validator = new AuthTokenValidator($authToken);
+                    $validator = new TokenValidator($authToken);
                     if (true === $validator->isValid()) {
                         $payload = $validator->getPayload();
                         $authBadge = new AuthBadge($payload);

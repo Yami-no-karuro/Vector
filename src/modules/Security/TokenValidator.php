@@ -9,7 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class AuthTokenValidator
+class TokenValidator
 {
     protected string $token;
     protected SqlClient $sql;

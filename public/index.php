@@ -20,5 +20,11 @@ date_default_timezone_set(DEFAULT_TIMEZONE);
 $kernel = new Vector\Kernel();
 $kernel->boot();
 
-header('HTTP/1.1 404 Not Found');
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+
+global $request;
+$response = new RedirectResponse('/not-found', Response::HTTP_FOUND); 
+$response->prepare($request);
+$response->send();
 die();

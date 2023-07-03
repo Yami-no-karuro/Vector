@@ -20,6 +20,7 @@
         "body": true
     },
     "security": {
+        "max_login_attempts": 5,
         "authenticated_routes": [
             "/admin"
         ],

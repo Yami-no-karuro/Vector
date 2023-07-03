@@ -19,15 +19,15 @@ class AdminController extends FrontendController
     }
 
     /**
-     * Route '/admin'
-     * Twig template
+     * Route: '/admin'
+     * Methods: GET
      * @return Response
      */
     public function adminViewAction(): Response
     {
         $html = $this->template->render('admin/admin.html.twig', [
-            'title' => 'Vector - Admin',
-            'description' => 'Vector administration area.'
+            'title' => 'Vector',
+            'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
         return new Response($html, Response::HTTP_OK);
     }

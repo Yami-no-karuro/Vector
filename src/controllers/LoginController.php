@@ -19,8 +19,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class LoginController extends FrontendController
 {
-    protected const MAX_HOURLY_ATTEMPS = 5;
-
     protected function register(): void
     {
         Router::route(['GET'], '^/login?$', [$this, 'loginViewAction']);
@@ -28,8 +26,8 @@ class LoginController extends FrontendController
     }
 
     /**
-     * Route '/login'
-     * Twig template
+     * Route: '/login'
+     * Methods: GET
      * @return Response
      */
     public function loginViewAction(Request $request): Response
@@ -51,8 +49,8 @@ class LoginController extends FrontendController
          * We retrive view raw html from the twig template engine.
          */
         $html = $this->template->render('admin/login.html.twig', [
-            'title' => 'Vector - Admin login',
-            'description' => 'Vector administration area login.',
+            'title' => 'Vector',
+            'description' => 'A simple HttpFoundation framework for PHP.',
             'formMethod' => 'POST',
             'formAction' => '/login/submit'
         ]);
@@ -62,25 +60,24 @@ class LoginController extends FrontendController
 
     /**
      * Route '/login/submit'
-     * Form action
+     * Methods: POST
      * @return RedirectResponse
      */
     public function loginSubmitAction(Request $request): RedirectResponse
     {
 
         /**
+         * @var object $config
          * @var string $requestRef
          * @var SqlTransient $nonce
          * We build the login-nonce to handle brute force attacks.
          */
+        global $config;
         $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
         $nonce = new SqlTransient('login-nonce-{' . $requestRef . '}');
         if (false === $nonce->isValid(HOUR_IN_SECONDS) or
-            ($attempts = (int) $nonce->getData()) >= self::MAX_HOURLY_ATTEMPS) {
+            ($attempts = (int) $nonce->getData()) >= $config->security->max_login_attempts) {
             return new RedirectResponse('/login', Response::HTTP_FOUND);
-        } else {
-            $attempts = $attempts + 1;
-            $nonce->setData($attempts);
         }
 
         /**
@@ -113,7 +110,14 @@ class LoginController extends FrontendController
             }
         }
 
+        /**
+         * @var int $attempts
+         * Increasing the attempts variable on failure.
+         */
+        $attempts = $attempts + 1;
+        $nonce->setData($attempts);
         return new RedirectResponse('/login', Response::HTTP_FOUND);
+
     }
 
 }

@@ -149,14 +149,14 @@ class Firewall
 
                     /**
                      * @var TokenValidator $validator
-                     * @var AuthBadge $authBadge
+                     * @var AuthBadge $badge
                      * Validate the retrived token on the TokenValidator instance.
                      */
-                    global $authBadge;
+                    global $badge;
                     $validator = new TokenValidator($authToken);
                     if (true === $validator->isValid()) {
                         $payload = $validator->getPayload();
-                        $authBadge = new AuthBadge($payload);
+                        $badge = new AuthBadge($payload);
                         return;
                     }
 

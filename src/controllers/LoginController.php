@@ -35,13 +35,13 @@ class LoginController extends FrontendController
 
         /**
          * @var string $requestRef
-         * @var SqlTransient $nonce
+         * @var SqlTransient $bfpt
          * We set the login-nonce to handle brute force attacks.
          */
         $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
-        $nonce = new SqlTransient('login-nonce-{' . $requestRef . '}');
-        if (false === $nonce->isValid(HOUR_IN_SECONDS)) {
-            $nonce->setData(0);
+        $bfpt = new SqlTransient('login-nonce-{' . $requestRef . '}');
+        if (false === $bfpt->isValid(HOUR_IN_SECONDS)) {
+            $bfpt->setData(0);
         }
 
         /**
@@ -69,15 +69,15 @@ class LoginController extends FrontendController
         /**
          * @var object $config
          * @var string $requestRef
-         * @var SqlTransient $nonce
+         * @var SqlTransient $bfpt
          * We build the login-nonce to handle brute force attacks.
          */
         global $config;
         $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
-        $nonce = new SqlTransient('login-nonce-{' . $requestRef . '}');
-        if (false === $nonce->isValid(HOUR_IN_SECONDS) or
-            ($attempts = (int) $nonce->getData()) >= $config->security->max_login_attempts) {
-            return new RedirectResponse('/login', Response::HTTP_FOUND);
+        $bfpt = new SqlTransient('login-nonce-{' . $requestRef . '}');
+        if (false === $bfpt->isValid(HOUR_IN_SECONDS) or
+            ($attempts = (int) $bfpt->getData()) >= $config->security->max_login_attempts) {
+            return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
         }
 
         /**
@@ -114,9 +114,8 @@ class LoginController extends FrontendController
          * @var int $attempts
          * Increasing the attempts variable on failure.
          */
-        $attempts = $attempts + 1;
-        $nonce->setData($attempts);
-        return new RedirectResponse('/login', Response::HTTP_FOUND);
+        $bfpt->setData($attempts + 1);
+        return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
 
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-EN" data-bs-theme="dark">
+<html lang="en-EN" class="h-100" data-bs-theme="dark">
   <head>
     <meta name="description" content="{{ description }}" />
     <meta charset="utf-8">
@@ -9,12 +9,12 @@
     <script type="text/javascript" src="assets/build/app.js" defer></script>
     <link rel="stylesheet" href="assets/build/app.css"> 
   </head>
-  <body>
+  <body class="h-100">
     <header></header>
-    <main>
-      <section class="container py-5 my-3">
-        <div class="row">
-          <div class="col-sm-10 offset-sm-1 col-md-6 offset-md-3 my-5">
+    <main class="h-100">
+      <section class="container d-flex flex-column justify-content-center h-100">
+        <div class="row" style="transform: translateY(-25%)">
+          <div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 my-5">
             <form class="d-block shadow p-4 bg-body-tertiary rounded" method="{{ formMethod }}" action="{{ formAction }}">
               <div class="mb-3">
                 <label for="email" class="form-label"> Email </label>

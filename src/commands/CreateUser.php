@@ -36,25 +36,41 @@ class CreateUser extends AbstractCommand
      */
     public function execute(): int
     {
+
+        /**
+         * @var array $user
+         * Collect user data from command line input interface.
+         * Email address is validated.
+         */
         $user = [];
-        Application::out('Email address:');
-        $user['email'] = Application::in();
-        Application::out('Password:');
-        $user['password'] = Application::in();
-        Application::out('Username: (press Enter to leave empty)');
-        $user['username'] = Application::in();
-        Application::out('Firstname: (press Enter to leave empty)');
-        $user['firstname'] = Application::in();
-        Application::out('Lastname: (press Enter to leave empty)');
-        $user['lastname'] = Application::in();
-        Application::out('--------');
+        $email = Application::in('Email address:');
+        if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $user['email'] = $email;
+        } else {
+            Application::out('Invalid email address: "' . $email .  '"');
+            return self::EXIT_FAILURE;
+        }
+        $user['password'] = Application::in('Password:', true);
+        $user['username'] = Application::in('Username: (press Enter to leave empty)');
+        $user['firstname'] = Application::in('Firstname: (press Enter to leave empty)');
+        $user['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
+        
+        /**
+         * @var array $duplicate
+         * Look for duplicates by email.
+         */
         $duplicate = $this->sql->getResults("SELECT `ID` FROM `users` WHERE `email` = ? LIMIT 1", [
             ['type' => 's', 'value' => trim($user['email'])]
         ]);
         if (true === $duplicate['success'] and !empty($duplicate['data'])) {
             Application::out('User (email: "' . trim($user['email']) . '") already exists on the database.');
-            return 0;
+            return self::EXIT_SUCCESS;
         }
+
+        /**
+         * @param array @execResult
+         * Proceed to insert the new record.
+         */
         $execResult = $this->sql->exec("INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`, `secret`) 
             VALUES (NULL, ?, ?, ?, ?, ?, ?)", [
@@ -70,7 +86,8 @@ class CreateUser extends AbstractCommand
         } else {
             Application::out('Unable to create User (email:"' . $user['email'] .  '").');
         }
-        return 0;
+        
+        return self::EXIT_SUCCESS;
     }
 
     /**

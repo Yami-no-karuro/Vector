@@ -193,13 +193,15 @@ class Application
     /**
      * @package Vector
      * Vector\Module\Console\Application::in()
-     * @param mixed $message
+     * @param string $outMessage
+     * @param bool $hidden
      * @return string
      */
-    public static function in(): string
+    public static function in(string $outMessage, bool $hidden = false): string
     {
+        self::out($outMessage);
         $handle = fopen('php://stdin', 'r');
-        return fgets($handle);
+        return trim(fgets($handle));
     }
 
 }

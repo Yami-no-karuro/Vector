@@ -9,6 +9,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractCommand
 {
+
+    const EXIT_SUCCESS = 0;
+    const EXIT_FAILURE = 1;
+
     protected ?array $args;
 
     /**

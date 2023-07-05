@@ -4,7 +4,6 @@ namespace Vector\Controller;
 
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
-use Vector\Module\Transient\SqlTransient;
 use Vector\Module\SqlClient;
 use Vector\Module\Security\AuthToken;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,23 +29,12 @@ class LoginController extends FrontendController
      * Methods: GET
      * @return Response
      */
-    public function loginViewAction(Request $request): Response
+    public function loginViewAction(): Response
     {
 
         /**
-         * @var string $requestRef
-         * @var SqlTransient $bfpt
-         * We set the login-nonce to handle brute force attacks.
-         */
-        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
-        $bfpt = new SqlTransient('login-nonce-{' . $requestRef . '}');
-        if (false === $bfpt->isValid(HOUR_IN_SECONDS)) {
-            $bfpt->setData(0);
-        }
-
-        /**
          * @var string $html
-         * We retrive view raw html from the twig template engine.
+         * Retrive raw view html from the twig template engine.
          */
         $html = $this->template->render('admin/login.html.twig', [
             'title' => 'Vector',
@@ -61,31 +49,19 @@ class LoginController extends FrontendController
     /**
      * Route '/login/submit'
      * Methods: POST
+     * @param Request $request
      * @return RedirectResponse
      */
     public function loginSubmitAction(Request $request): RedirectResponse
     {
 
         /**
-         * @var object $config
-         * @var string $requestRef
-         * @var SqlTransient $bfpt
-         * We build the login-nonce to handle brute force attacks.
-         */
-        global $config;
-        $requestRef = $request->getClientIp() . '%' . $request->headers->get('User-Agent');
-        $bfpt = new SqlTransient('login-nonce-{' . $requestRef . '}');
-        if (false === $bfpt->isValid(HOUR_IN_SECONDS) or
-            ($attempts = (int) $bfpt->getData()) >= $config->security->max_login_attempts) {
-            return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
-        }
-
-        /**
          * @var string $email
          * @var string $password
          * @var array $result
-         * If the provided email is valid we search for an existing database user.
+         * If the provided email is valid search for an existing user.
          * On password match set the autentication cookie and redirect to /admin.
+         * Redirect back with "?success=false" on failure.
          */
         if (null !== ($email = $request->get('email'))) {
             if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -110,13 +86,7 @@ class LoginController extends FrontendController
             }
         }
 
-        /**
-         * @var int $attempts
-         * Increasing the attempts variable on failure.
-         */
-        $bfpt->setData($attempts + 1);
         return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
-
     }
 
 }

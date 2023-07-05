@@ -41,6 +41,13 @@ class Install extends AbstractCommand
      */
     public function execute(): int
     {
+
+        /**
+         * @var string $dir
+         * @var RecursiveDirectoryIterator $sqlDir
+         * @var RecursiveIteratorIterator $iterator
+         * Iterate through the sql directory, files will be executed as raw sql.
+         */
         $dir = Kernel::getProjectRoot() . 'var/sql/';
         if (file_exists($dir) and is_dir($dir)) {
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
@@ -54,13 +61,14 @@ class Install extends AbstractCommand
                     } catch (Exception $e) {
                         Application::out($e);
                         $this->logger->write($e);
-                        return 1;
+                        return self::EXIT_FAILURE;
                     }
                 }
             }
         }
+
         Application::out('Vector installed succesfully!');
-        return 0;
+        return self::EXIT_SUCCESS;
     }
 
     /**

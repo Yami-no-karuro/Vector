@@ -54,7 +54,7 @@ class CreateUser extends AbstractCommand
         $user['username'] = Application::in('Username: (press Enter to leave empty)');
         $user['firstname'] = Application::in('Firstname: (press Enter to leave empty)');
         $user['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
-        
+
         /**
          * @var array $duplicate
          * Look for duplicates by email.
@@ -86,7 +86,7 @@ class CreateUser extends AbstractCommand
         } else {
             Application::out('Unable to create User (email:"' . $user['email'] .  '").');
         }
-        
+
         return self::EXIT_SUCCESS;
     }
 

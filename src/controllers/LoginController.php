@@ -22,6 +22,7 @@ class LoginController extends FrontendController
     {
         Router::route(['GET'], '^/login?$', [$this, 'loginViewAction']);
         Router::route(['POST'], '^/login/submit?$', [$this, 'loginSubmitAction']);
+        Router::route(['GET'], '^/logout?$', [$this, 'logoutAction']);
     }
 
     /**
@@ -87,6 +88,18 @@ class LoginController extends FrontendController
         }
 
         return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
+    }
+
+    /**
+     * Route '/logout'
+     * Methods: GET
+     * @return RedirectResponse
+     */
+    public function logoutAction(): RedirectResponse
+    {
+        $response = new RedirectResponse('/login', Response::HTTP_FOUND);
+        $response->headers->clearCookie('Auth-Token');
+        return $response;
     }
 
 }

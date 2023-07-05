@@ -18,7 +18,6 @@
 /\bxss\b/i
 /\bcmd\b/i
 /\broot\b/i
-/\badmin\b/i
 /\bor\b/i
 /\bsleep\b/i
 /\bdelay\b/i
@@ -34,9 +33,7 @@
 /\binclude\s*/i
 /\brequire\s*/i
 /\beval\s*/i
-/\bphpinfo\b/i
 /\bbase64_decode\s*/i
-/\bdocument.cookie\b/i
 /\balert\s*/i
 /\b<\s*iframe\b/i
 /\b<\s*object\b/i
@@ -48,8 +45,6 @@
 /\b<\simg\son\w+="."\s>/siU
 /\b<\sa\shref\b/i
 /\b<\sform\saction\b/i
-/\bunion\s+all\b/i
-/\binsert\s+into\b/i
 /\bupdate.+set\b/i
 /\bselect\b/i
 /\bdelete\b/i
@@ -57,7 +52,6 @@
 /\bwhere\b/i
 /\bunion\b/i
 /\band\b/i
-/\bor\b/i
 /\bjoin\b/i
 /\btable\b/i
 /\bcolumn\b/i
@@ -70,7 +64,5 @@
 /\bbackup\b/i
 /\brestore\b/i
 /\bopenrowset\b/i
-/\badmin\b/i
-/\broot\b/i
 /\bsudo\b/i
 /\bsu\b/i

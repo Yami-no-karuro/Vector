@@ -155,6 +155,7 @@ class Kernel
          * @var FileSystemTransient $transient
          * @var object $config
          * Loads global configuration.
+         * "onConfigurationLoaded" event is dispatched.
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
@@ -165,6 +166,7 @@ class Kernel
             $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
+        EventDispatcher::dispatch('KernelListener', 'onConfigurationLoaded', [&$data]);
         $config = $data;
 
     }
@@ -199,18 +201,20 @@ class Kernel
         /**
          * @var Request $request
          * @var Firewall $firewall
-         * Request is passed through application Firewall for basic validation.
+         * Request is passed through application Firewall for approval.
+         * "onRequestVerified" event is dispatched.
          */
         global $request;
         $firewall = new Firewall();
         try {
-            $firewall->checkRequest($request);
+            $firewall->verifyRequest($request);
         } catch (SecurityException) {
-            $response = new Response(null, Response::HTTP_BAD_REQUEST);
+            $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();
             die();
         }
+        EventDispatcher::dispatch('KernelListener', 'onRequestVerified', [&$request]);
 
     }
 
@@ -226,6 +230,17 @@ class Kernel
             return $workingDir . '/../';
         }
         return $workingDir . '/';
+    }
+
+    /**
+     * @package Vector
+     * Vector\Kernel::getRequestUrl()
+     * @param Request $request
+     * @return string
+     */
+    public static function getRequestUrl(Request $request): string
+    {
+        return $request->getScheme() . '://' . $request->getHttpHost() . $request->getRequestUri();
     }
 
 }

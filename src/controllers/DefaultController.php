@@ -16,7 +16,7 @@ class DefaultController extends FrontendController
     protected function register(): void
     {
         Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
-        Router::route(['GET'], '^/not-found?$', [$this, 'notFoundAction']);
+        Router::route(['GET'], '^/not-found?$', [$this, 'errorAction']);
     }
 
     /**
@@ -34,13 +34,13 @@ class DefaultController extends FrontendController
     }
 
     /**
-     * Route: '/not-found'
+     * Route: '/error'
      * Methods: GET
      * @return Response
      */
-    public function notFoundAction(): Response
+    public function errorAction(): Response
     {
-        $html = $this->template->render('not-found.html.twig', [
+        $html = $this->template->render('error.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);

@@ -3,6 +3,7 @@
 namespace Vector\Module\Security;
 
 use Vector\Module\SqlClient;
+use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -89,8 +90,13 @@ class TokenValidator
     protected function validatePayload(mixed $payload): bool
     {
         global $config;
+        global $request;
         if (is_array($payload) and array_keys($payload) === $config->security->token_schema) {
-            return true;
+            $ipAddress = $request->getClientIp();
+            $userAgent = $request->headers->get('User-Agent');
+            if ($payload['ipAddress'] === $ipAddress and $payload['userAgent'] === $userAgent) {
+                return true;
+            }            
         }
         return false;
     }

@@ -33,10 +33,10 @@ class MongoClient
         global $config;
         $dbName = $config->mongodb->db_name;
         $dsn = $config->mongodb->dsn;
+
         $this->client = new Client($dsn);
         $this->manager = $this->client->getManager();
         $this->database = $this->client->$dbName;
-
     }
 
     /**

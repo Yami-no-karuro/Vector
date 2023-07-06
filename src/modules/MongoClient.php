@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class MongoClient
 {
-
     protected Client $client;
     protected Manager $manager;
     protected mixed $database;

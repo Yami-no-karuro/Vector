@@ -96,7 +96,7 @@ class TokenValidator
             $userAgent = $request->headers->get('User-Agent');
             if ($payload['ipAddress'] === $ipAddress and $payload['userAgent'] === $userAgent) {
                 return true;
-            }            
+            }
         }
         return false;
     }

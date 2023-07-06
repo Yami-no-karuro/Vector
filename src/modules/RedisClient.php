@@ -18,7 +18,7 @@ class RedisClient
      * @package Vector
      * __construct()
      */
-    public function __construct()
+    private function __construct()
     {
         global $config;
         $this->client = new Client([

@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-EN" data-bs-theme="dark">
-  <head>
-    <meta name="description" content="{{ description }}" />
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="">
-    <title> {{ title }} </title>
-    <script type="text/javascript" src="assets/build/app.js" defer></script>
-    <link rel="stylesheet" href="assets/build/app.css"> 
-  </head>
+  {% include 'template_parts/head.html.twig' %}
   <body>
     <header></header>
     <main>
@@ -19,4 +11,5 @@
     </main>
     <footer></footer>
   </body>
+
 </html>

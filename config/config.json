@@ -13,6 +13,10 @@
         "host": "redis",
         "port": "6379"
     },
+    "mongodb": {
+        "dsn": "mongodb://mongodb:27017",
+        "db_name": "vector_mongodb"
+    },
     "firewall": {
         "headers": true,
         "cookies": true,
@@ -20,7 +24,6 @@
         "body": true
     },
     "security": {
-        "max_login_attempts": 5,
         "authenticated_routes": [
             "/admin"
         ],

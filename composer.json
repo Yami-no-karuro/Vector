@@ -4,7 +4,8 @@
         "symfony/http-foundation": "^6.2",
         "captainhook/captainhook": "^5.16",
         "phpstan/phpstan": "^1.10",
-        "predis/predis": "^2.1"
+        "predis/predis": "^2.1",
+        "mongodb/mongodb": "^1.16"
     },
     "config": {
         "allow-plugins": {

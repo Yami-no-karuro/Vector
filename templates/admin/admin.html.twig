@@ -1,31 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-EN" data-bs-theme="dark">
-  <head>
-    <meta name="description" content="{{ description }}" />
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="">
-    <title> {{ title }} </title>
-    <script type="text/javascript" src="assets/build/app.js" defer></script>
-    <link rel="stylesheet" href="assets/build/app.css"> 
-  </head>
+  {% include 'template_parts/head.html.twig' %}
   <body>
     <header>
-      <div>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-          <div class="container">
-            <a class="navbar-brand fw-bold" href="/"> Vector </a>
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/admin"> Dashboard </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/logout"> Logout </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+      {% include 'template_parts/navbar.html.twig' %}
     </header>
     <main>
       <section class="container py-5 my-3">

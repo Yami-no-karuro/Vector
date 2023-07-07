@@ -20,12 +20,12 @@
 /var/logs/*
 !/var/logs/.gitkeep
 
-# keys
-/var/keys/*
-!/var/keys/.gitkeep
-
 # node_modules
 node_modules
 
 # captainhook
 .php-cs-fixer.cache
+
+# documents
+/public/assets/documents/*
+!/public/assets/documents/.gitkeep

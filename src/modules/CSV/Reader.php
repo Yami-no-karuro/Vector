@@ -7,9 +7,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Reader 
+class Reader
 {
-
     protected mixed $fileHandle;
     protected string $delimiter;
 
@@ -17,7 +16,7 @@ class Reader
      * @package Vector
      * __construct()
      */
-    public function __construct(string $filename, string $delimiter = ',') 
+    public function __construct(string $filename, string $delimiter = ',')
     {
         $this->fileHandle = fopen($filename, 'r');
         $this->delimiter = $delimiter;
@@ -27,7 +26,7 @@ class Reader
      * @package Vector
      * __destruct()
      */
-    public function __destruct() 
+    public function __destruct()
     {
         fclose($this->fileHandle);
     }

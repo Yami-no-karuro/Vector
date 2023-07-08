@@ -103,11 +103,11 @@ class Kernel
          * @var Vector\Controller $controller
          * @var callable $method
          * Execute controller callback, send the response and die.
-         * "onControllerCallback" and "onResponse" events are dispatched.
+         * "onCallback" and "onResponse" events are dispatched.
          */
         $controller = new $cacheData['controller'](true);
         $method = $cacheData['callback'];
-        EventDispatcher::dispatch('KernelListener', 'onControllerCallback', [&$request, $controller, $method, &$params]);
+        EventDispatcher::dispatch('KernelListener', 'onCallback', [&$request, $controller, $method, &$params]);
         $response = call_user_func_array([$controller, $method], [$request, $params]);
         EventDispatcher::dispatch('KernelListener', 'onResponse', [&$request, &$response]);
 
@@ -155,7 +155,7 @@ class Kernel
          * @var FileSystemTransient $transient
          * @var object $config
          * Loads global configuration.
-         * "onConfigurationLoaded" event is dispatched.
+         * "onConfiguration" event is dispatched.
          */
         global $config;
         $transient = new FileSystemTransient('vct-config');
@@ -166,7 +166,8 @@ class Kernel
             $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
-        EventDispatcher::dispatch('KernelListener', 'onConfigurationLoaded', [&$data]);
+
+        EventDispatcher::dispatch('KernelListener', 'onConfiguration', [&$data]);
         $config = $data;
 
     }
@@ -202,7 +203,6 @@ class Kernel
          * @var Request $request
          * @var Firewall $firewall
          * Request is passed through application Firewall for approval.
-         * "onRequestVerified" event is dispatched.
          */
         global $request;
         $firewall = new Firewall();
@@ -214,7 +214,6 @@ class Kernel
             $response->send();
             die();
         }
-        EventDispatcher::dispatch('KernelListener', 'onRequestVerified', [&$request]);
 
     }
 

@@ -33,7 +33,7 @@ class LogsController extends FrontendController
          * @var SqlClient $sql
          * @var int $total
          * Gets the SqlClient and count the entries on database.
-         * Total is necessary to handle server side pagination. 
+         * Total is necessary to handle server side pagination.
          */
         $db = SqlClient::getInstance();
         $logs = [];
@@ -58,7 +58,7 @@ class LogsController extends FrontendController
             ]);
             if ($results['success'] and !empty($results['data'])) {
                 if (false === is_array($results['data'][0])) {
-                    $logs[] = $results['data'];  
+                    $logs[] = $results['data'];
                 } else {
                     $logs = $results['data'];
                 }

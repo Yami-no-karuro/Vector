@@ -16,6 +16,7 @@ class AdminController extends FrontendController
     protected function register(): void
     {
         Router::route(['GET'], '^/admin?$', [$this, 'adminViewAction']);
+        Router::route(['GET'], '^/admin/logs?$', [$this, 'logsViewAction']);
     }
 
     /**
@@ -26,6 +27,20 @@ class AdminController extends FrontendController
     public function adminViewAction(): Response
     {
         $html = $this->template->render('admin/admin.html.twig', [
+            'title' => 'Vector',
+            'description' => 'A simple HttpFoundation framework for PHP.'
+        ]);
+        return new Response($html, Response::HTTP_OK);
+    }
+
+    /**
+     * Route: '/admin/logs'
+     * Methods: GET
+     * @return Response
+     */
+    public function logsViewAction(): Response
+    {
+        $html = $this->template->render('admin/logs.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);

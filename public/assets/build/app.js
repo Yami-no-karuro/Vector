@@ -10,6 +10,45 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_app_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/app.scss */ "./assets/styles/app.scss");
 
+(function () {
+  'use-strict';
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var logsTable = document.getElementById("logs-table-wrapper");
+    if (null !== logsTable) {
+      var grid = new gridjs.Grid({
+        columns: ['ID', 'Domain', 'Content'],
+        sort: true,
+        server: {
+          url: '/api/v1/logs',
+          then: function then(data) {
+            return data.data.entries.map(function (el) {
+              return [el.ID, el.domain, el.log];
+            });
+          },
+          total: function total(data) {
+            return data.data.total;
+          }
+        },
+        pagination: {
+          limit: 5,
+          server: {
+            url: function url(prev, page, limit) {
+              return "".concat(prev, "?limit=").concat(limit, "&offset=").concat(page * limit);
+            }
+          }
+        }
+        // search: {
+        //   server: {
+        //     url: (prev, keyword) => `${prev}?search=${keyword}`
+        //   }
+        // }
+      });
+
+      grid.render(logsTable);
+    }
+  });
+})();
 
 /***/ }),
 

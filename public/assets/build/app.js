@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
   document.addEventListener('DOMContentLoaded', function () {
     var logsTable = document.getElementById("logs-table-wrapper");
     if (null !== logsTable) {
-      var grid = new gridjs.Grid({
+      new gridjs.Grid({
         columns: ['ID', 'Domain', 'Content'],
         sort: true,
         server: {
@@ -31,21 +31,34 @@ __webpack_require__.r(__webpack_exports__);
           }
         },
         pagination: {
-          limit: 5,
+          limit: 25,
           server: {
             url: function url(prev, page, limit) {
               return "".concat(prev, "?limit=").concat(limit, "&offset=").concat(page * limit);
             }
           }
+        },
+        search: {
+          server: {
+            url: function url(prev, keyword) {
+              return "".concat(prev, "?search=").concat(keyword);
+            }
+          }
+        },
+        language: {
+          'search': {
+            'placeholder': 'Find in entries'
+          },
+          'pagination': {
+            'previous': 'Previus',
+            'next': 'Next',
+            'showing': 'Displaying',
+            'results': function results() {
+              return 'Records';
+            }
+          }
         }
-        // search: {
-        //   server: {
-        //     url: (prev, keyword) => `${prev}?search=${keyword}`
-        //   }
-        // }
-      });
-
-      grid.render(logsTable);
+      }).render(logsTable);
     }
   });
 })();

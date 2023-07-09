@@ -1,38 +1,47 @@
 import './styles/app.scss';
 
 (() => {
-    'use-strict';
+  'use-strict';
 
-    document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
 
-      const logsTable = document.getElementById("logs-table-wrapper");
-      if (null !== logsTable) {
-        const grid = new gridjs.Grid({
-          columns: ['ID', 'Domain', 'Content'],
-          sort: true,
+    const logsTable = document.getElementById("logs-table-wrapper");
+    if (null !== logsTable) {
+      new gridjs.Grid({
+        columns: ['ID', 'Domain', 'Content'],
+        sort: true,
+        server: {
+          url: '/api/v1/logs',
+          then: data => data.data.entries.map(el => 
+            [el.ID, el.domain, el.log]
+          ),
+          total: data => data.data.total
+        },
+        pagination: {
+          limit: 25,
           server: {
-            url: '/api/v1/logs',
-            then: data => data.data.entries.map(el => 
-              [el.ID, el.domain, el.log]
-            ),
-            total: data => data.data.total
+            url: (prev, page, limit) => `${prev}?limit=${limit}&offset=${page * limit}`
+          }
+        },
+        search: {
+          server: {
+            url: (prev, keyword) => `${prev}?search=${keyword}`
+          }
+        },
+        language: {
+          'search': {
+            'placeholder': 'Find in entries'
           },
-          pagination: {
-            limit: 5,
-            server: {
-              url: (prev, page, limit) => `${prev}?limit=${limit}&offset=${page * limit}`
-            }
-          },
-          // search: {
-          //   server: {
-          //     url: (prev, keyword) => `${prev}?search=${keyword}`
-          //   }
-          // }
-        });
+          'pagination': {
+            'previous': 'Previus',
+            'next': 'Next',
+            'showing': 'Displaying',
+            'results': () => 'Records'
+          }
+        }
+      }).render(logsTable);
+    }
 
-        grid.render(logsTable);
-      }
-
-    });
+  });
 
 })();

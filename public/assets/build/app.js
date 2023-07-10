@@ -14,7 +14,7 @@ __webpack_require__.r(__webpack_exports__);
   'use-strict';
 
   document.addEventListener('DOMContentLoaded', function () {
-    var logsTable = document.getElementById("logs-table-wrapper");
+    var logsTable = document.getElementById('logs-table-wrapper');
     if (null !== logsTable) {
       new gridjs.Grid({
         columns: ['ID', 'Domain', 'Content'],
@@ -31,7 +31,7 @@ __webpack_require__.r(__webpack_exports__);
           }
         },
         pagination: {
-          limit: 25,
+          limit: 5,
           server: {
             url: function url(prev, page, limit) {
               return "".concat(prev, "?limit=").concat(limit, "&offset=").concat(page * limit);

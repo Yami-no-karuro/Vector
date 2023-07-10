@@ -5,7 +5,7 @@ import './styles/app.scss';
 
   document.addEventListener('DOMContentLoaded', () => {
 
-    const logsTable = document.getElementById("logs-table-wrapper");
+    const logsTable = document.getElementById('logs-table-wrapper');
     if (null !== logsTable) {
       new gridjs.Grid({
         columns: ['ID', 'Domain', 'Content'],
@@ -18,7 +18,7 @@ import './styles/app.scss';
           total: data => data.data.total
         },
         pagination: {
-          limit: 25,
+          limit: 5,
           server: {
             url: (prev, page, limit) => `${prev}?limit=${limit}&offset=${page * limit}`
           }

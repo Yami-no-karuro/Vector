@@ -88,9 +88,11 @@ class LoginController extends FrontendController
                         return $response;
                     }
                 }
+                $logger->write('User: "' . $email . '" attempted to login with incorrect credentials.');
             }
         }
 
+        $logger->write('Client: "' . $request->getClientIp() . '" attempted to login with incorrect credentials.');
         return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
     }
 

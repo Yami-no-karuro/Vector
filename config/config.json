@@ -25,7 +25,9 @@
     },
     "security": {
         "authenticated_routes": [
-            "/admin"
+            "/admin",
+            "/internal",
+            "/api"
         ],
         "token_schema": [
             "userId",

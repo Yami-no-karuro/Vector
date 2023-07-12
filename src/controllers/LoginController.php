@@ -88,7 +88,6 @@ class LoginController extends FrontendController
                         return $response;
                     }
                 }
-                $logger->write('User: "' . $email . '" attempted to login with incorrect credentials.');
             }
         }
 

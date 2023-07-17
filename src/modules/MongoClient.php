@@ -4,7 +4,6 @@ namespace Vector\Module;
 
 use MongoDB\Client;
 use MongoDB\Collection;
-use MongoDB\Driver\Manager;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');

@@ -24,6 +24,7 @@ class FileSystemTransient extends AbstractTransient
     public function __construct(string $name)
     {
         parent::__construct($name);
+
         $this->path = Kernel::getProjectRoot() . 'var/cache/transients/' . $this->name;
         if (file_exists($this->path)) {
             $this->data = file_get_contents($this->path, true);
@@ -41,8 +42,7 @@ class FileSystemTransient extends AbstractTransient
     {
         if (!$this->data) {
             return false;
-        }
-        if (0 === $seconds) {
+        } elseif (0 === $seconds) {
             return true;
         }
         return (time() - $this->time) > $seconds ? false : true;
@@ -55,10 +55,7 @@ class FileSystemTransient extends AbstractTransient
      */
     public function getData(): mixed
     {
-        if (!$this->data) {
-            return null;
-        }
-        return unserialize($this->data);
+        return null === $this->data ? null : unserialize($this->data);
     }
 
     /**

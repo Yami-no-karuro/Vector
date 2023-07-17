@@ -5,7 +5,8 @@
         "captainhook/captainhook": "^5.16",
         "phpstan/phpstan": "^1.10",
         "predis/predis": "^2.1",
-        "mongodb/mongodb": "^1.16"
+        "mongodb/mongodb": "^1.16",
+        "react/async": "*"
     },
     "config": {
         "allow-plugins": {

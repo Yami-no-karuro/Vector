@@ -4,7 +4,6 @@ namespace Vector\Module;
 
 use MongoDB\Client;
 use MongoDB\Collection;
-use MongoDB\Driver\Manager;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class MongoClient
 {
     protected Client $client;
-    protected Manager $manager;
     protected mixed $database;
     private static mixed $instance = null;
 
@@ -35,17 +33,7 @@ class MongoClient
         $dsn = $config->mongodb->dsn;
 
         $this->client = new Client($dsn);
-        $this->manager = $this->client->getManager();
         $this->database = $this->client->$dbName;
-    }
-
-    /**
-     * @package Vector
-     * __destruct()
-     */
-    public function __destruct()
-    {
-        $this->manager->close();
     }
 
     /**

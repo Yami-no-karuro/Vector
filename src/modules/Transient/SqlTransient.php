@@ -24,7 +24,7 @@ class SqlTransient extends AbstractTransient
     public function __construct(string $name)
     {
         parent::__construct($name);
-        
+
         $this->sql = SqlClient::getInstance();
         $transient = $this->sql->getResults("SELECT `data`, `time` 
             FROM `transients` 
@@ -60,7 +60,7 @@ class SqlTransient extends AbstractTransient
      */
     public function getData(): mixed
     {
-        return null === $this->data ? null : unserialize($this->data); 
+        return null === $this->data ? null : unserialize($this->data);
     }
 
     /**

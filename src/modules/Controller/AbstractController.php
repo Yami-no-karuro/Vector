@@ -30,7 +30,7 @@ abstract class AbstractController
         if (!$direct) {
             $this->register();
         }
-        
+
     }
 
 

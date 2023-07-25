@@ -44,13 +44,13 @@ class ErrorHandler
          */
         global $config;
         $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
-
         if (true === $config->debug) {
             $this->outputErrorBox($errorMessage);
         }
         if (true === $config->debug_log) {
             $this->logger->write($errorMessage);
         }
+
     }
 
     /**
@@ -70,13 +70,13 @@ class ErrorHandler
          */
         global $config;
         $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-
         if (true === $config->debug) {
             $this->outputErrorBox($exceptionMessage);
         }
         if (true === $config->debug_log) {
             $this->logger->write($exceptionMessage);
         }
+
     }
 
     /**

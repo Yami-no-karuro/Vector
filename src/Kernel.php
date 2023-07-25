@@ -4,12 +4,16 @@ namespace Vector;
 
 use Vector\Module\Security\Firewall;
 use Vector\Module\Security\SecurityException;
+use Vector\Module\Security\UnauthorizedException;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Event\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -22,6 +26,7 @@ class Kernel
 {
     protected Request $request;
     protected FileSystemLogger $logger;
+    protected SqlLogger $sqlLogger;
 
     /**
      * @package Vector
@@ -39,7 +44,9 @@ class Kernel
         $request = Request::createFromGlobals();
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
+        $this->loadConfig();
         $this->logger = new FileSystemLogger('core');
+        $this->sqlLogger = new SqlLogger('auth');
     }
 
     /**
@@ -49,19 +56,18 @@ class Kernel
      */
     public function boot(): void
     {
-        $this->loadConfig();
-        $this->requestFirewall();
+        $this->verifyRequest();
         $this->registerShutdownFunctions();
-        $this->directBoot();
-        $this->registerBoot();
+        $this->handleCallback();
+        $this->routeRegister();
     }
 
     /**
      * @package Vector
-     * Vector\Kernel->directBoot()
+     * Vector\Kernel->handleCallback()
      * @return void
      */
-    protected function directBoot(): void
+    protected function handleCallback(): void
     {
 
         /**
@@ -119,10 +125,10 @@ class Kernel
 
     /**
      * @package Vector
-     * Vector\Kernel->registerBoot()
+     * Vector\Kernel->routeRegister()
      * @return void
      */
-    protected function registerBoot(): void
+    protected function routeRegister(): void
     {
 
         /**
@@ -193,10 +199,10 @@ class Kernel
 
     /**
      * @package Vector
-     * Vector\Kernel->requestFirewall()
+     * Vector\Kernel->verifyRequest()
      * @return void
      */
-    protected function requestFirewall(): void
+    protected function verifyRequest(): void
     {
 
         /**
@@ -208,8 +214,14 @@ class Kernel
         $firewall = new Firewall();
         try {
             $firewall->verifyRequest($request);
-        } catch (SecurityException) {
-            $response = new Response(null, Response::HTTP_UNAUTHORIZED);
+        } catch (Exception $e) {
+            if ($e instanceof SecurityException) {
+                $response = new Response(null, Response::HTTP_UNAUTHORIZED);
+                $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" request contained malicious content.');
+            } elseif ($e instanceof UnauthorizedException) {
+                $response = new RedirectResponse('/login', Response::HTTP_FOUND);
+                $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" attempted to reach a secure route without being authenticated.');
+            }
             $response->prepare($request);
             $response->send();
             die();

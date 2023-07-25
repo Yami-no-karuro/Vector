@@ -7,6 +7,7 @@ use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Security\TokenValidator;
 use Vector\Module\Security\AuthBadge;
 use Vector\Module\Security\SecurityException;
+use Vector\Module\Security\UnauthorizedException;
 use Vector\Module\Event\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -179,7 +180,7 @@ class Firewall
 
                 }
 
-                throw new SecurityException();
+                throw new UnauthorizedException();
             }
         }
     }

@@ -25,7 +25,7 @@ class Application
      * @package Vector
      * __construct()
      */
-    public function __construct(array $argv) 
+    public function __construct(array $argv)
     {
         $this->console = array_shift($argv);
         $this->command = '';
@@ -97,7 +97,7 @@ class Application
                  * @var string $commandName
                  * @var array $registeredCommands
                  * Initialize class to retrive command informations.
-                 * If the current input matches the command will be executed. 
+                 * If the current input matches the command will be executed.
                  * Command data is cached for future runs.
                  */
                 $class = 'Vector\\Command\\' . basename($fname, '.php');
@@ -141,7 +141,7 @@ class Application
         /**
          * @var string $cache
          * @var string $class
-         * @var AbstractCommand $command 
+         * @var AbstractCommand $command
          */
         if ($this->transient->isValid(HOUR_IN_SECONDS)) {
             $cache = $this->transient->getData();

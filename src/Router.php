@@ -79,7 +79,7 @@ class Router
          * Now that the route has been registered we can force a 302 redirect to the same route to trigger Kernel direct boot.
          * Redirect is necessary to keep only one application exitpoint.
          */
-        $response = new RedirectResponse(Kernel::getRequestUrl($request), Response::HTTP_FOUND);
+        $response = new RedirectResponse(Kernel::getRequestUrl($request), Response::HTTP_FOUND, $request->headers->all());
         $response->prepare($request);
         $response->send();
         die();

@@ -50,7 +50,7 @@ class ErrorHandler
         if (true === $config->debug_log) {
             $this->logger->write($errorMessage);
         }
-        
+
     }
 
     /**

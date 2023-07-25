@@ -26,6 +26,10 @@ node_modules
 # captainhook
 .php-cs-fixer.cache
 
+# protected
+/public/assets/protected/*
+!/public/assets/protected/.htaccess
+
 # documents
 /public/assets/documents/*
 !/public/assets/documents/.gitkeep

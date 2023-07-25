@@ -25,7 +25,7 @@ class Application
      * @package Vector
      * __construct()
      */
-    public function __construct(array $argv)
+    public function __construct(array $argv) 
     {
         $this->console = array_shift($argv);
         $this->command = '';
@@ -76,12 +76,30 @@ class Application
     {
         $this->loadConfig();
         $this->directRun();
+
+        /**
+         * @var array $registeredCommand
+         * @var RecursiveDirectoryIterator $dir
+         * @var RecursiveIteratorIterator $iterator
+         * Iterate thorough command classes looking for registered commands.
+         * If nothing is found matching the given criteria prints out the available commands.
+         */
         $registeredCommands = [];
         $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/commands');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
+
+                /**
+                 * @var string $class
+                 * @var AbstractCommand $command
+                 * @var string $commandName
+                 * @var array $registeredCommands
+                 * Initialize class to retrive command informations.
+                 * If the current input matches the command will be executed. 
+                 * Command data is cached for future runs.
+                 */
                 $class = 'Vector\\Command\\' . basename($fname, '.php');
                 $command = new $class($this->args);
                 $commandName = $command->getCommandName();
@@ -99,8 +117,10 @@ class Application
                     echo PHP_EOL;
                     exit($exitCode);
                 }
+
             }
         }
+
         $this->vectorCliSignature();
         self::out('Unable to find command: "' . $this->command . '"');
         self::out('Available commands:');
@@ -117,6 +137,12 @@ class Application
      */
     protected function directRun(): void
     {
+
+        /**
+         * @var string $cache
+         * @var string $class
+         * @var AbstractCommand $command 
+         */
         if ($this->transient->isValid(HOUR_IN_SECONDS)) {
             $cache = $this->transient->getData();
             $class = $cache['handler'];
@@ -194,10 +220,9 @@ class Application
      * @package Vector
      * Vector\Module\Console\Application::in()
      * @param string $outMessage
-     * @param bool $hidden
      * @return string
      */
-    public static function in(string $outMessage, bool $hidden = false): string
+    public static function in(string $outMessage): string
     {
         self::out($outMessage);
         $handle = fopen('php://stdin', 'r');

@@ -6,7 +6,7 @@ use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpClient\HttpClient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -74,12 +74,28 @@ class Router
         ]);
 
         /**
-         * @var RedirectResponse $response
+         * @var Response $response
          * @var Request $request
-         * Now that the route has been registered we can force a 302 redirect to the same route to trigger Kernel direct boot.
+         * Now that the route has been registered we force a new internal request to same route to trigger Kernel direct boot.
          * Redirect is necessary to keep only one application exitpoint.
          */
-        $response = new RedirectResponse(Kernel::getRequestUrl($request), Response::HTTP_FOUND, $request->headers->all());
+        $client = HttpClient::create();
+        $response = $client->request($request->getMethod(), Kernel::getRequestUrl($request), [
+            'headers' => $request->headers->all(),
+            'body' => $request->getContent()
+        ]);
+
+        /**
+         * @var int $statusCode
+         * @var array $headers
+         * @var string $body 
+         * Retrive response information from the internal request.
+         * A new Response object is created and sent.
+         */
+        $statusCode = $response->getStatusCode();
+        $headers = $response->getHeaders();
+        $body = $response->getContent();
+        $response = new Response($body, $statusCode, $headers);
         $response->prepare($request);
         $response->send();
         die();

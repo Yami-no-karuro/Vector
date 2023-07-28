@@ -6,7 +6,8 @@
         "phpstan/phpstan": "^1.10",
         "predis/predis": "^2.1",
         "mongodb/mongodb": "^1.16",
-        "react/async": "*"
+        "react/async": "*",
+        "symfony/http-client": "^6.3"
     },
     "config": {
         "allow-plugins": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\CSV;
+namespace Vector\Module\Document;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -33,7 +33,7 @@ class Writer
 
     /**
      * @package Vector
-     * Vector\Module\CSV\Writer->writeRow()
+     * Vector\Module\Document\Writer->writeRow()
      * @return void
      */
     public function writeRow($data): void
@@ -43,7 +43,7 @@ class Writer
 
     /**
      * @package Vector
-     * Vector\Module\CSV\Writer->writeRows()
+     * Vector\Module\Document\Writer->writeRows()
      * @return void
      */
     public function writeRows($data): void

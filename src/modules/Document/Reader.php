@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\CSV;
+namespace Vector\Module\Document;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -33,7 +33,7 @@ class Reader
 
     /**
      * @package Vector
-     * Vector\Module\CSV\Reader->getRow()
+     * Vector\Module\Document\Reader->getRow()
      * @return false|array
      */
     public function getRow(): false|array

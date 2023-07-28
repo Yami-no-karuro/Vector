@@ -76,7 +76,7 @@ class Router
         /**
          * @var Response $response
          * @var Request $request
-         * Now that the route has been registered we force a new internal request to same route to trigger Kernel direct boot.
+         * Now that the route has been registered force a new internal request to same route to trigger Kernel direct boot.
          * Redirect is necessary to keep only one application exitpoint.
          */
         $client = HttpClient::create();

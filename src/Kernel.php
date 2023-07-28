@@ -175,7 +175,6 @@ class Kernel
 
         EventDispatcher::dispatch('KernelListener', 'onConfiguration', [&$data]);
         $config = $data;
-
     }
 
     /**

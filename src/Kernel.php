@@ -175,7 +175,6 @@ class Kernel
 
         EventDispatcher::dispatch('KernelListener', 'onConfiguration', [&$data]);
         $config = $data;
-
     }
 
     /**
@@ -251,7 +250,31 @@ class Kernel
      */
     public static function getRequestUrl(Request $request): string
     {
-        return $request->getScheme() . '://' . $request->getHttpHost() . $request->getRequestUri();
+
+        /**
+         * @var object $config
+         * Load global configuration.
+         */
+        global $config;
+
+        /**
+         * @var string $host
+         * @var string $port
+         * @var string $scheme
+         * Preparing URL based on the machine envoirment.
+         * If the project is running on Docker the internal host will be used.
+         */
+        if (true === $config->dockerized) {
+            $host = 'php-apache';
+            $port = 80;
+            $scheme = 'http';
+        } else {
+            $host = $request->getHost();
+            $port = $request->getPort();
+            $scheme = $request->getScheme();
+        }
+
+        return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
     }
 
 }

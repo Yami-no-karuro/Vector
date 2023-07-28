@@ -2,6 +2,7 @@
     "debug": false,
     "debug_log": true,
     "debug_log_rotation": 5000000,
+    "dockerized": true,
     "database": {
         "db_host": "mariadb",
         "db_user": "vector_usr",

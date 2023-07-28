@@ -88,7 +88,7 @@ class Router
         /**
          * @var int $statusCode
          * @var array $headers
-         * @var string $body 
+         * @var string $body
          * Retrive response information from the internal request.
          * A new Response object is created and sent.
          */

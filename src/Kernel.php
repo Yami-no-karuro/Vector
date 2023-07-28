@@ -274,7 +274,7 @@ class Kernel
             $port = $request->getPort();
             $scheme = $request->getScheme();
         }
-        
+
         return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
     }
 

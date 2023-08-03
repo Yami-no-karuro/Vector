@@ -36,13 +36,6 @@ class FileSystemLogger extends AbstractLogger
      */
     public function write(string $log): bool
     {
-        global $config;
-        if (filesize($this->path) > $config->debug_log_rotation) {
-            $zip = new ZipArchive();
-            $zip->open($this->archivePath, ZIPARCHIVE::CREATE);
-            $zip->addFile($this->path);
-            unlink($this->path);
-        }
         $prefix = '[' . date('Y-m-d h:m:s') . ']';
         $log = $prefix . ' ' . $log . ' ' . PHP_EOL;
         return file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);

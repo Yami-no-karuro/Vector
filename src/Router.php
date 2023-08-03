@@ -2,11 +2,9 @@
 
 namespace Vector;
 
-use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Event\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpClient\HttpClient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -74,28 +72,15 @@ class Router
         ]);
 
         /**
-         * @var Response $response
-         * @var Request $request
-         * Now that the route has been registered force a new internal request to same route to trigger Kernel direct boot.
-         * Redirect is necessary to keep only one application exitpoint.
+         * @var Vector\Controller $controller
+         * @var callable $method
+         * Execute controller callback, send the response and die.
+         * "onCallback" and "onResponse" events are dispatched.
          */
-        $client = HttpClient::create();
-        $response = $client->request($request->getMethod(), Kernel::getRequestUrl($request), [
-            'headers' => $request->headers->all(),
-            'body' => $request->getContent()
-        ]);
+        EventDispatcher::dispatch('KernelListener', 'onCallback', [&$request, $controller, $method, &$params]);
+        $response = $callback($request, $params);
+        EventDispatcher::dispatch('KernelListener', 'onResponse', [&$request, &$response]);
 
-        /**
-         * @var int $statusCode
-         * @var array $headers
-         * @var string $body
-         * Retrive response information from the internal request.
-         * A new Response object is created and sent.
-         */
-        $statusCode = $response->getStatusCode();
-        $headers = $response->getHeaders();
-        $body = $response->getContent();
-        $response = new Response($body, $statusCode, $headers);
         $response->prepare($request);
         $response->send();
         die();

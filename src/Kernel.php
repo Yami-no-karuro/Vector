@@ -13,9 +13,9 @@ use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -253,28 +253,25 @@ class Kernel
 
         /**
          * @var object $config
-         * Load global configuration.
+         * Preparing URL based on the machine envoirment.
+         * If the project is running on Docker the internal host will be used.
          */
         global $config;
+        if (true === $config->dockerized) {
+            return 'http://php-apache:80' . $request->getRequestUri();
+        }
 
         /**
          * @var string $host
          * @var string $port
          * @var string $scheme
-         * Preparing URL based on the machine envoirment.
-         * If the project is running on Docker the internal host will be used.
+         * If the project is hosted natively we retrive url based on request informations.
          */
-        if (true === $config->dockerized) {
-            $host = 'php-apache';
-            $port = 80;
-            $scheme = 'http';
-        } else {
-            $host = $request->getHost();
-            $port = $request->getPort();
-            $scheme = $request->getScheme();
-        }
-
+        $host = $request->getHost();
+        $port = $request->getPort();
+        $scheme = $request->getScheme();
         return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
+
     }
 
 }

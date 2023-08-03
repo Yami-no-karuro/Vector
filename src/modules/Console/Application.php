@@ -32,7 +32,7 @@ class Application
         if (!empty($argv)) {
             $this->command = array_shift($argv);
         }
-        
+
         $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
         $this->stopWatch = new StopWatch();
         $this->args = $argv;

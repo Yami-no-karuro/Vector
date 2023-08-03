@@ -260,7 +260,7 @@ class Kernel
         if (true === $config->dockerized) {
             return 'http://php-apache:80' . $request->getRequestUri();
         }
-        
+
         /**
          * @var string $host
          * @var string $port

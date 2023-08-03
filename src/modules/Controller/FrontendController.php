@@ -23,7 +23,7 @@ abstract class FrontendController extends AbstractController
      */
     public function __construct(bool $direct = false)
     {
-        
+
         /**
          * @var Envoirment $template
          * @var FilesystemLoader

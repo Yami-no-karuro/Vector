@@ -6,6 +6,7 @@ use Vector\Module\Security\Firewall;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Event\EventDispatcher;
@@ -72,11 +73,11 @@ class Kernel
 
         /**
          * @var Request $request
-         * @var FileSystemTransient $transient
+         * @var SqlTransient $transient
          * Try to load route data from cache
          */
         global $request;
-        $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
+        $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         if (!$transient->isValid()) {
             return;
         }

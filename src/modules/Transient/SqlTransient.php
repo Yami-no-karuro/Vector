@@ -50,9 +50,9 @@ class SqlTransient extends AbstractTransient
         if (null === $this->content) {
             return false;
         }
-        if ($this->content['ttl'] === 0 OR 
+        if ($this->content['ttl'] === 0 or
             time() - $this->content['time'] < $this->content['ttl']) {
-                return true;
+            return true;
         }
         return false;
     }

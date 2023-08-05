@@ -13,8 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlTransient extends AbstractTransient
 {
     protected SqlClient $sql;
-    protected mixed $data = null;
-    protected ?int $time = null;
+    protected ?array $content = null;
 
     /**
      * @package Vector
@@ -25,32 +24,37 @@ class SqlTransient extends AbstractTransient
     {
         parent::__construct($name);
 
+        /**
+         * @var array $transient
+         * If the transient data is available content is unserialized.
+         */
         $this->sql = SqlClient::getInstance();
-        $transient = $this->sql->getResults("SELECT `data`, `time` 
+        $transient = $this->sql->getResults("SELECT `content` 
             FROM `transients` 
             WHERE `name` = ? LIMIT 1", [
                 ['type' => 's', 'value' => $this->name]
         ]);
         if (true === $transient['success'] and !empty($transient['data'])) {
-            $this->data = $transient['data']['data'];
-            $this->time = $transient['data']['time'];
+            $this->content = unserialize($transient['data']['content']);
         }
+
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\SqlTransient->isValid()
-     * @param int $seconds
      * @return bool
      */
-    public function isValid(int $seconds = 0): bool
+    public function isValid(): bool
     {
-        if (!$this->data) {
+        if (null === $this->content) {
             return false;
-        } elseif (0 === $seconds) {
-            return true;
         }
-        return (time() - $this->time) > $seconds ? false : true;
+        if ($this->content['ttl'] === 0 OR 
+            time() - $this->content['time'] < $this->content['ttl']) {
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -60,35 +64,34 @@ class SqlTransient extends AbstractTransient
      */
     public function getData(): mixed
     {
-        return null === $this->data ? null : unserialize($this->data);
+        if (null !== $this->content) {
+            return $this->content['data'];
+        }
+        return null;
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\SqlTransient->setData()
      * @param mixed $data
+     * @param int $ttl
      * @return bool
      */
-    public function setData(mixed $data): bool
+    public function setData(mixed $data, int $ttl = 0): bool
     {
-        if (!$this->data) {
-            $execResult = $this->sql->exec("INSERT INTO `transients` 
-                (`ID`, `name`, `data`, `time`) 
-                VALUES (NULL, ?, ?, ?)", [
-                    ['type' => 's', 'value' => $this->name],
-                    ['type' => 's', 'value' => serialize($data)],
-                    ['type' => 's', 'value' => time()]
-            ]);
-        } else {
-            $execResult = $this->sql->exec("UPDATE `transients` 
-                SET `data` = ?, `time` = ?
-                WHERE `name` = ?", [
-                    ['type' => 's', 'value' => serialize($data)],
-                    ['type' => 's', 'value' => time()],
-                    ['type' => 's', 'value' => $this->name]
-            ]);
-        }
-        return $execResult['success'];
+        $content = serialize([
+            'time' => time(),
+            'ttl' => $ttl,
+            'data' => $data
+        ]);
+        $result = $this->sql->exec("INSERT INTO `transients` 
+            (`ID`, `name`, `content`) VALUES (NULL, ?, ?) 
+            ON DUPLICATE KEY UPDATE `content` = ?", [
+                ['type' => 's', 'value' => $this->name],
+                ['type' => 's', 'value' => $content],
+                ['type' => 's', 'value' => $content]
+        ]);
+        return $result['success'];
     }
 
     /**

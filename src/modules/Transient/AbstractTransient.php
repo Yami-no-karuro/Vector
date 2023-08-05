@@ -24,10 +24,9 @@ abstract class AbstractTransient
     /**
      * @package Vector
      * Vector\Module\Transient\AbstractTransient->isValid()
-     * @param int $seconds
      * @return bool
      */
-    abstract public function isValid(int $seconds): bool;
+    abstract public function isValid(): bool;
 
     /**
      * @package Vector
@@ -40,9 +39,10 @@ abstract class AbstractTransient
      * @package Vector
      * Vector\Module\Transient\AbstractTransient->setData()
      * @param mixed $data
+     * @param int $ttl
      * @return bool
      */
-    abstract public function setData(mixed $data): bool;
+    abstract public function setData(mixed $data, int $ttl): bool;
 
     /**
      * @package Vector

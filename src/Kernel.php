@@ -235,10 +235,16 @@ class Kernel
      */
     public static function getProjectRoot(): string
     {
+
+        /**
+         * @var string $workingDir
+         * Retriving workdir based on the execution mode. 
+         */
         $workingDir = getcwd();
         if (str_contains($workingDir, 'public')) {
             return $workingDir . '/../';
         }
+        
         return $workingDir . '/';
     }
 

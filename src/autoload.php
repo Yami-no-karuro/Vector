@@ -13,12 +13,27 @@ use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 
 spl_autoload_register(function ($class) {
+
+    /**
+     * @var string $classId
+     * @var FileSystemTransient $transient
+     * Try to load class data from cache.
+     */
     $classId = strtolower(str_replace('\\', '-', $class));
     $transient = new FileSystemTransient('vct-autoload-{' . $classId . '}');
     if ($transient->isValid()) {
         require_once($transient->getData());
         return;
     }
+
+    /**
+     * @var array $pathArr
+     * @var string $classname
+     * @var RecursiveDirectoryIterator $dir
+     * @var RecursiveIteratorIterator $iterator
+     * Loops through files looking for the $classname.
+     * Cache data for futures autoloads.
+     */
     $pathArr = explode('\\', $class);
     $classname = $pathArr[count($pathArr) - 1];
     $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src');
@@ -29,4 +44,5 @@ spl_autoload_register(function ($class) {
             require_once($file->getPathname());
         }
     }
+
 });

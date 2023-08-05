@@ -5,7 +5,6 @@ namespace Vector\Controller;
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\Response;
-use Vector\Module\Transient\RedisTransient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -31,18 +30,6 @@ class DefaultController extends FrontendController
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
-
-        $transient = new RedisTransient('default');
-        if ($transient->isValid()) {
-            $html = $transient->getData();
-        } else {
-            $html = $this->template->render('default.html.twig', [
-                'title' => 'Vector',
-                'description' => 'A simple HttpFoundation framework for PHP.'
-            ]);
-            $transient->setData($html, 900);
-        }
-
         return new Response($html, Response::HTTP_OK);
     }
 

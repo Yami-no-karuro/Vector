@@ -13,8 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class FileSystemTransient extends AbstractTransient
 {
     protected string $path;
-    protected mixed $data = null;
-    protected ?int $time = null;
+    protected ?array $content = null;
 
     /**
      * @package Vector
@@ -25,27 +24,34 @@ class FileSystemTransient extends AbstractTransient
     {
         parent::__construct($name);
 
+        /**
+         * @var string $data
+         * If the transient file is available at "$this->path" file content is unserialized.
+         */
         $this->path = Kernel::getProjectRoot() . 'var/cache/transients/' . $this->name;
         if (file_exists($this->path)) {
-            $this->data = file_get_contents($this->path, true);
-            $this->time = filemtime($this->path);
+            if (false !== ($data = file_get_contents($this->path, true))) {
+                $this->content = unserialize($data);
+            }
         }
+
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\FileSystemTransient->isValid()
-     * @param int $seconds
      * @return bool
      */
-    public function isValid(int $seconds = 0): bool
+    public function isValid(): bool
     {
-        if (!$this->data) {
+        if (null === $this->content) {
             return false;
-        } elseif (0 === $seconds) {
+        }
+        if ($this->content['ttl'] === 0 or
+            time() - $this->content['time'] < $this->content['ttl']) {
             return true;
         }
-        return (time() - $this->time) > $seconds ? false : true;
+        return false;
     }
 
     /**
@@ -55,18 +61,26 @@ class FileSystemTransient extends AbstractTransient
      */
     public function getData(): mixed
     {
-        return null === $this->data ? null : unserialize($this->data);
+        if (null !== $this->content) {
+            return $this->content['data'];
+        }
+        return null;
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\FileSystemTransient->setData()
      * @param mixed $data
+     * @param int $ttl
      * @return bool
      */
-    public function setData(mixed $data): bool
+    public function setData(mixed $data, int $ttl = 0): bool
     {
-        return file_put_contents($this->path, serialize($data), LOCK_EX);
+        return file_put_contents($this->path, serialize([
+            'time' => time(),
+            'ttl' => $ttl,
+            'data' => $data
+        ]), LOCK_EX);
     }
 
     /**

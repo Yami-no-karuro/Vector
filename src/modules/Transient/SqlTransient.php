@@ -79,11 +79,11 @@ class SqlTransient extends AbstractTransient
      */
     public function setData(mixed $data, int $ttl = 0): void
     {
-        $content = serialize([
+        $content = [
             'time' => time(),
             'ttl' => $ttl,
             'data' => $data
-        ]);
+        ];
         $this->content = $content;
         $serialized = serialize($content);
         $this->sql->exec("INSERT INTO `transients` 

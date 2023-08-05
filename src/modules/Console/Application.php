@@ -4,6 +4,7 @@ namespace Vector\Module\Console;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Vector\Module\StopWatch;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -15,7 +16,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-    protected FileSystemTransient $transient;
+    protected SqlTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
     protected string $command;
@@ -33,7 +34,8 @@ class Application
             $this->command = array_shift($argv);
         }
 
-        $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
+        $this->loadConfig();
+        $this->transient = new SqlTransient('vct-command-{' . $this->command . '}');
         $this->stopWatch = new StopWatch();
         $this->args = $argv;
     }
@@ -75,7 +77,6 @@ class Application
      */
     public function run(): void
     {
-        $this->loadConfig();
         $this->directRun();
 
         /**
@@ -115,7 +116,6 @@ class Application
                     $this->stopWatch->stop();
                     self::out('Exitcode: ' . $exitCode);
                     self::out('Executed for: ' . $this->stopWatch->getElapsed());
-                    echo PHP_EOL;
                     exit($exitCode);
                 }
 
@@ -128,7 +128,6 @@ class Application
         foreach ($registeredCommands as $registeredCommand) {
             self::out('"' . $registeredCommand . '"');
         }
-        echo PHP_EOL;
     }
 
     /**
@@ -154,7 +153,6 @@ class Application
                 $this->stopWatch->stop();
                 self::out('Exitcode: ' . $exitCode);
                 self::out('Executed for: ' . $this->stopWatch->getElapsed());
-                echo PHP_EOL;
                 exit($exitCode);
             }
         }

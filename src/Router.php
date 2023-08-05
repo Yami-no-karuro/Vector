@@ -2,7 +2,7 @@
 
 namespace Vector;
 
-use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Vector\Module\Event\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,12 +57,12 @@ class Router
         /**
          * @var object $controller
          * @var callabled $method
-         * @var FileSystemTransient $transient
+         * @var SqlTransient $transient
          * Cache route data for future requests.
          */
         $controller = get_class($callback[0]);
         $method = $callback[1];
-        $transient = new FileSystemTransient('vct-route-{' . $request->getPathInfo() . '}');
+        $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         $transient->setData([
             'path' => $request->getPathInfo(),
             'regex' => $regex,

@@ -75,36 +75,36 @@ class SqlTransient extends AbstractTransient
      * Vector\Module\Transient\SqlTransient->setData()
      * @param mixed $data
      * @param int $ttl
-     * @return bool
+     * @return void
      */
-    public function setData(mixed $data, int $ttl = 0): bool
+    public function setData(mixed $data, int $ttl = 0): void
     {
         $content = serialize([
             'time' => time(),
             'ttl' => $ttl,
             'data' => $data
         ]);
-        $result = $this->sql->exec("INSERT INTO `transients` 
+        $this->content = $content;
+        $serialized = serialize($content);
+        $this->sql->exec("INSERT INTO `transients` 
             (`ID`, `name`, `content`) VALUES (NULL, ?, ?) 
             ON DUPLICATE KEY UPDATE `content` = ?", [
                 ['type' => 's', 'value' => $this->name],
-                ['type' => 's', 'value' => $content],
-                ['type' => 's', 'value' => $content]
+                ['type' => 's', 'value' => $serialized],
+                ['type' => 's', 'value' => $serialized]
         ]);
-        return $result['success'];
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\SqlTransient->delete()
-     * @return bool
+     * @return void
      */
-    public function delete(): bool
+    public function delete(): void
     {
-        $execResult = $this->sql->exec("DELETE FROM `transients` WHERE `name` = ?", [
+        $this->sql->exec("DELETE FROM `transients` WHERE `name` = ?", [
             ['type' => 's', 'value' => $this->name]
         ]);
-        return $execResult['success'];
     }
 
 }

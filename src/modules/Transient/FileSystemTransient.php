@@ -72,25 +72,28 @@ class FileSystemTransient extends AbstractTransient
      * Vector\Module\Transient\FileSystemTransient->setData()
      * @param mixed $data
      * @param int $ttl
-     * @return bool
+     * @return void
      */
-    public function setData(mixed $data, int $ttl = 0): bool
+    public function setData(mixed $data, int $ttl = 0): void
     {
-        return file_put_contents($this->path, serialize([
+        $content = [
             'time' => time(),
             'ttl' => $ttl,
             'data' => $data
-        ]), LOCK_EX);
+        ];
+        $this->content = $content;
+        $serialized = serialize($content);
+        file_put_contents($this->path, $serialized, LOCK_EX);
     }
 
     /**
      * @package Vector
      * Vector\Module\Transient\FileSystemTransient->delete()
-     * @return bool
+     * @return void
      */
-    public function delete(): bool
+    public function delete(): void
     {
-        return unlink($this->path);
+        unlink($this->path);
     }
 
 }

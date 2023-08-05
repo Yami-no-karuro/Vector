@@ -40,15 +40,15 @@ abstract class AbstractTransient
      * Vector\Module\Transient\AbstractTransient->setData()
      * @param mixed $data
      * @param int $ttl
-     * @return bool
+     * @return void
      */
-    abstract public function setData(mixed $data, int $ttl): bool;
+    abstract public function setData(mixed $data, int $ttl): void;
 
     /**
      * @package Vector
      * Vector\Module\Transient\AbstractTransient->delete()
-     * @return bool
+     * @return void
      */
-    abstract public function delete(): bool;
+    abstract public function delete(): void;
 
 }

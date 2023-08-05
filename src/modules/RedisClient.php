@@ -58,7 +58,7 @@ class RedisClient
      * @param int $ttl
      * @return void
      */
-    public function set(string $key, string $value, int $ttl = 3600): void
+    public function set(string $key, string $value, int $ttl = 86400): void
     {
         $this->client->set($key, $value, 'EX', $ttl);
     }

@@ -2,17 +2,18 @@
 
 namespace Vector\Module\Transient;
 
-use Vector\Kernel;
 use Vector\Module\Transient\AbstractTransient;
+use Vector\Module\MongoClient;
+use MongoDB\Collection;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class FileSystemTransient extends AbstractTransient
+class MongoDBTransient extends AbstractTransient
 {
-    protected string $path;
+    protected Collection $collection;
     protected ?array $content = null;
 
     /**
@@ -24,18 +25,21 @@ class FileSystemTransient extends AbstractTransient
     {
         parent::__construct($name);
 
-        $this->path = Kernel::getProjectRoot() . 'var/cache/transients/' . $this->name;
-        if (file_exists($this->path)) {
-            if (false !== ($data = file_get_contents($this->path, true))) {
-                $this->content = unserialize($data);
-            }
+        $client = MongoClient::getInstance();
+        $this->collection = $client->getCollection('transients');
+        if (null !== ($content = $this->collection->findOne(['name' => $this->name]))) {
+            $data = $content->getArrayCopy();
+            $this->content = [
+                'time' => $data['time'],
+                'ttl' => $data['ttl'],
+                'data' => unserialize($data['data'])
+            ];
         }
-
     }
 
-    /**
+        /**
      * @package Vector
-     * Vector\Module\Transient\FileSystemTransient->isValid()
+     * Vector\Module\Transient\MongoDBTransient->isValid()
      * @return bool
      */
     public function isValid(): bool
@@ -52,7 +56,7 @@ class FileSystemTransient extends AbstractTransient
 
     /**
      * @package Vector
-     * Vector\Module\Transient\FileSystemTransient->getData()
+     * Vector\Module\Transient\MongoDBTransient->getData()
      * @return mixed
      */
     public function getData(): mixed
@@ -65,31 +69,37 @@ class FileSystemTransient extends AbstractTransient
 
     /**
      * @package Vector
-     * Vector\Module\Transient\FileSystemTransient->setData()
+     * Vector\Module\Transient\MongoDBTransient->setData()
      * @param mixed $data
      * @param int $ttl
      * @return void
      */
     public function setData(mixed $data, int $ttl = 0): void
     {
-        $content = [
+        $this->content = [
             'time' => time(),
             'ttl' => $ttl,
             'data' => $data
         ];
-        $this->content = $content;
-        $serialized = serialize($content);
-        file_put_contents($this->path, $serialized, LOCK_EX);
+        $this->collection->updateOne(
+            ['name' => $this->name],
+            ['$set' => [
+                'time' => time(),
+                'ttl' => $ttl,
+                'data' => serialize($data)
+            ]],
+            ['upsert' => true]
+        );
     }
 
     /**
      * @package Vector
-     * Vector\Module\Transient\FileSystemTransient->delete()
+     * Vector\Module\Transient\MongoDBTransient->delete()
      * @return void
      */
     public function delete(): void
     {
-        unlink($this->path);
+        $this->collection->deleteOne(['name' => $this->name]);
     }
 
 }

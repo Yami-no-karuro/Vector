@@ -24,10 +24,6 @@ class SqlTransient extends AbstractTransient
     {
         parent::__construct($name);
 
-        /**
-         * @var array $transient
-         * If the transient data is available content is unserialized.
-         */
         $this->sql = SqlClient::getInstance();
         $transient = $this->sql->getResults("SELECT `content` 
             FROM `transients` 

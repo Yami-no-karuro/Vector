@@ -159,20 +159,18 @@ class Firewall
                     $authToken = $request->headers->get('Auth-Token');
                 }
                 if (null !== $authToken) {
-
-                    /** "onTokenRetrived" event is dispatched. */
                     EventDispatcher::dispatch('FirewallListener', 'onTokenRetrived', [$request, &$authToken]);
 
                     /**
                      * @var TokenValidator $validator
                      * @var AuthBadge $badge
                      * Validate the retrived token on the TokenValidator instance.
-                     * "onTokenVerified" event is dispatched.
+                     * "onTokenVerified" and "onTokenRejected" events are being dispatched.
                      */
                     global $badge;
-                    $validator = new TokenValidator($authToken);
-                    if (true === $validator->isValid()) {
-                        $payload = $validator->getPayload();
+                    $validator = new TokenValidator();
+                    if (true === $validator->isValid($authToken)) {
+                        $payload = $validator->getPayload($authToken);
                         $badge = new AuthBadge($payload);
                         EventDispatcher::dispatch('FirewallListener', 'onTokenVerified', [$request, &$authToken, &$badge]);
                         return;

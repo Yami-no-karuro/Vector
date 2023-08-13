@@ -4,7 +4,6 @@ namespace Vector\Command;
 
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
-use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\Console\Application;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -15,7 +14,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class CreateUser extends AbstractCommand
 {
     protected SqlClient $sql;
-    protected FileSystemLogger $logger;
 
     /**
      * @package Vector
@@ -26,7 +24,6 @@ class CreateUser extends AbstractCommand
     {
         parent::__construct($args);
         $this->sql = SqlClient::getInstance();
-        $this->logger = new FileSystemLogger('command');
     }
 
     /**
@@ -72,14 +69,13 @@ class CreateUser extends AbstractCommand
          * Proceed to insert the new record.
          */
         $execResult = $this->sql->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`, `secret`) 
-            VALUES (NULL, ?, ?, ?, ?, ?, ?)", [
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
+            VALUES (NULL, ?, ?, ?, ?, ?)", [
                 ['type' => 's', 'value' => trim($user['email'])],
                 ['type' => 's', 'value' => hash('sha256', trim($user['password']))],
                 ['type' => 's', 'value' => trim($user['username'])],
                 ['type' => 's', 'value' => trim($user['firstname'])],
-                ['type' => 's', 'value' => trim($user['lastname'])],
-                ['type' => 's', 'value' => bin2hex(random_bytes(32))]
+                ['type' => 's', 'value' => trim($user['lastname'])]
         ]);
         if (true === $execResult['success']) {
             Application::out('User (email: "' . trim($user['email']) .  '") was succesfully created!');

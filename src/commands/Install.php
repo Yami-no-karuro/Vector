@@ -11,6 +11,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
+use Vector\Module\Settings;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -65,6 +66,17 @@ class Install extends AbstractCommand
                     }
                 }
             }
+        }
+
+        /**
+         * Sets the default settings.   
+         */
+        try {
+            Settings::set('jwt_secret', bin2hex(random_bytes(32)));
+        } catch (Exception $e) {
+            Application::out($e);
+            $this->logger->write($e);
+            return self::EXIT_FAILURE;
         }
 
         Application::out('Vector installed succesfully!');

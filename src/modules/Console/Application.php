@@ -4,7 +4,6 @@ namespace Vector\Module\Console;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Transient\SqlTransient;
 use Vector\Module\StopWatch;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -16,7 +15,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-    protected SqlTransient $transient;
+    protected FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
     protected string $command;
@@ -35,7 +34,7 @@ class Application
         }
 
         $this->loadConfig();
-        $this->transient = new SqlTransient('vct-command-{' . $this->command . '}');
+        $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
         $this->stopWatch = new StopWatch();
         $this->args = $argv;
     }

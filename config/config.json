@@ -28,11 +28,6 @@
             "/admin",
             "/internal",
             "/api"
-        ],
-        "token_schema": [
-            "userId",
-            "ipAddress",
-            "userAgent"
         ]
     }
 }

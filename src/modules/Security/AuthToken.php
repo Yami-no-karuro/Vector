@@ -36,8 +36,8 @@ class AuthToken
             $payload = $this->generatePayload($payload);
             $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $encodedSignature = str_replace(
-                ['+', '/', '='], 
-                ['-', '_', ''], 
+                ['+', '/', '='],
+                ['-', '_', ''],
                 base64_encode($signature)
             );
             return $headers . '.' . $payload . '.' . $encodedSignature;
@@ -57,8 +57,8 @@ class AuthToken
             'algo' => 'HS256'
         ]);
         return str_replace(
-            ['+', '/', '='], 
-            ['-', '_', ''], 
+            ['+', '/', '='],
+            ['-', '_', ''],
             base64_encode($headers)
         );
     }
@@ -73,8 +73,8 @@ class AuthToken
     {
         $payload = json_encode($payload);
         return str_replace(
-            ['+', '/', '='], 
-            ['-', '_', ''], 
+            ['+', '/', '='],
+            ['-', '_', ''],
             base64_encode($payload)
         );
     }

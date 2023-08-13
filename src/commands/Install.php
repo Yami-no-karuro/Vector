@@ -69,7 +69,7 @@ class Install extends AbstractCommand
         }
 
         /**
-         * Sets the default settings.   
+         * Sets the default settings.
          */
         try {
             Settings::set('jwt_secret', bin2hex(random_bytes(32)));

@@ -38,8 +38,8 @@ class TokenValidator
         $secret = Settings::get('jwt_secret');
         $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
         $expectedSignature = str_replace(
-            ['+', '/', '='], 
-            ['-', '_', ''], 
+            ['+', '/', '='],
+            ['-', '_', ''],
             base64_encode($calculatedSignature)
         );
         return hash_equals($signature, $expectedSignature);
@@ -57,10 +57,12 @@ class TokenValidator
             return null;
         }
         $base64UrlPayload = $tokenParts[1];
-        return json_decode(base64_decode(str_replace(
-            ['-', '_'], 
-            ['+', '/'], 
-            $base64UrlPayload)
+        return json_decode(base64_decode(
+            str_replace(
+                ['-', '_'],
+                ['+', '/'],
+                $base64UrlPayload
+            )
         ), true);
     }
 

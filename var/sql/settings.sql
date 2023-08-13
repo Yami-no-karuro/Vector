@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS `settings` (
-    `ID` INT NOT NULL AUTO_INCREMENT ,
     `key` VARCHAR(50) NOT NULL ,
     `value` VARCHAR(255) NOT NULL ,
-    PRIMARY KEY (`ID`, `key`)
+    PRIMARY KEY (`key`)
 ) ENGINE = InnoDB;

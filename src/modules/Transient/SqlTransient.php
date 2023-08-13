@@ -83,7 +83,7 @@ class SqlTransient extends AbstractTransient
         $this->content = $content;
         $serialized = serialize($content);
         $this->sql->exec("INSERT INTO `transients` 
-            (`ID`, `name`, `content`) VALUES (NULL, ?, ?) 
+            (`name`, `content`) VALUES (?, ?) 
             ON DUPLICATE KEY UPDATE `content` = ?", [
                 ['type' => 's', 'value' => $this->name],
                 ['type' => 's', 'value' => $serialized],

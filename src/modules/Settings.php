@@ -40,7 +40,7 @@ class Settings
     {
         $sql = SqlClient::getInstance();
         $sql->exec("INSERT INTO `settings` 
-            (`ID`, `key`, `value`) VALUES (NULL, ?, ?) 
+            (`key`, `value`) VALUES (?, ?) 
             ON DUPLICATE KEY UPDATE `value` = ?", [
                 ['type' => 's', 'value' => $key],
                 ['type' => 's', 'value' => $value],

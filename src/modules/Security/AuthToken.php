@@ -2,6 +2,7 @@
 
 namespace Vector\Module\Security;
 
+use Vector\Module\Settings;
 use Vector\Module\SqlClient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -11,36 +12,35 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class AuthToken
 {
-    protected array $payload;
     protected SqlClient $sql;
 
     /**
      * @package Vector
      * __construct()
-     * @param array $payload
      */
-    public function __construct(array $payload)
+    public function __construct()
     {
-        $this->payload = $payload;
         $this->sql = SqlClient::getInstance();
     }
 
     /**
      * @package Vector
      * Vector\Module\Security\AuthToken->generate()
+     * @param array $payload
      * @return ?string
      */
-    public function generate(): ?string
+    public function generate(array $payload): ?string
     {
-        $result = $this->sql->getResults("SELECT `secret` FROM `users` WHERE `ID` = ? LIMIT 1", [
-            ['type' => 'd', 'value' => $this->payload['userId']]
-        ]);
-        if (true === $result['success'] and !empty($data = $result['data'])) {
-            $base64UrlHeader = $this->generateHeaders();
-            $base64UrlPayload = $this->generatePayload();
-            $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $data['secret'], true);
-            $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-            return $base64UrlHeader . '.' . $base64UrlPayload . '.' . $base64UrlSignature;
+        if (null !== ($secret = Settings::get('jwt_secret'))) {
+            $headers = $this->generateHeaders();
+            $payload = $this->generatePayload($payload);
+            $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
+            $encodedSignature = str_replace(
+                ['+', '/', '='],
+                ['-', '_', ''],
+                base64_encode($signature)
+            );
+            return $headers . '.' . $payload . '.' . $encodedSignature;
         }
         return null;
     }
@@ -56,18 +56,27 @@ class AuthToken
             'type' => 'JWT',
             'algo' => 'HS256'
         ]);
-        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($headers));
+        return str_replace(
+            ['+', '/', '='],
+            ['-', '_', ''],
+            base64_encode($headers)
+        );
     }
 
     /**
      * @package Vector
      * Vector\Module\Security\AuthToken->generatePayload()
+     * @param array $payload
      * @return string
      */
-    protected function generatePayload(): string
+    protected function generatePayload(array $payload): string
     {
-        $payload = json_encode($this->payload);
-        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+        $payload = json_encode($payload);
+        return str_replace(
+            ['+', '/', '='],
+            ['-', '_', ''],
+            base64_encode($payload)
+        );
     }
 
 }

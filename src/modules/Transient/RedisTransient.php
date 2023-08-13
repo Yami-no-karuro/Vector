@@ -24,10 +24,6 @@ class RedisTransient extends AbstractTransient
     {
         parent::__construct($name);
 
-        /**
-         * @var ?string $data
-         * If the transient data is available content is unserialized.
-         */
         $this->client = RedisClient::getInstance();
         if (null !== ($data = $this->client->get($this->name))) {
             $this->content = unserialize($data);

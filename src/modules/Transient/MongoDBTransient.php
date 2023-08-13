@@ -3,16 +3,17 @@
 namespace Vector\Module\Transient;
 
 use Vector\Module\Transient\AbstractTransient;
-use Vector\Module\SqlClient;
+use Vector\Module\MongoClient;
+use MongoDB\Collection;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class SqlTransient extends AbstractTransient
+class MongoDBTransient extends AbstractTransient
 {
-    protected SqlClient $sql;
+    protected Collection $collection;
     protected ?array $content = null;
 
     /**
@@ -24,21 +25,21 @@ class SqlTransient extends AbstractTransient
     {
         parent::__construct($name);
 
-        $this->sql = SqlClient::getInstance();
-        $transient = $this->sql->getResults("SELECT `content` 
-            FROM `transients` 
-            WHERE `name` = ? LIMIT 1", [
-                ['type' => 's', 'value' => $this->name]
-        ]);
-        if (true === $transient['success'] and !empty($transient['data'])) {
-            $this->content = unserialize($transient['data']['content']);
+        $client = MongoClient::getInstance();
+        $this->collection = $client->getCollection('transients');
+        if (null !== ($content = $this->collection->findOne(['name' => $this->name]))) {
+            $data = $content->getArrayCopy();
+            $this->content = [
+                'time' => $data['time'],
+                'ttl' => $data['ttl'],
+                'data' => unserialize($data['data'])
+            ];
         }
-
     }
 
-    /**
+        /**
      * @package Vector
-     * Vector\Module\Transient\SqlTransient->isValid()
+     * Vector\Module\Transient\MongoDBTransient->isValid()
      * @return bool
      */
     public function isValid(): bool
@@ -55,7 +56,7 @@ class SqlTransient extends AbstractTransient
 
     /**
      * @package Vector
-     * Vector\Module\Transient\SqlTransient->getData()
+     * Vector\Module\Transient\MongoDBTransient->getData()
      * @return mixed
      */
     public function getData(): mixed
@@ -68,39 +69,37 @@ class SqlTransient extends AbstractTransient
 
     /**
      * @package Vector
-     * Vector\Module\Transient\SqlTransient->setData()
+     * Vector\Module\Transient\MongoDBTransient->setData()
      * @param mixed $data
      * @param int $ttl
      * @return void
      */
     public function setData(mixed $data, int $ttl = 0): void
     {
-        $content = [
+        $this->content = [
             'time' => time(),
             'ttl' => $ttl,
             'data' => $data
         ];
-        $this->content = $content;
-        $serialized = serialize($content);
-        $this->sql->exec("INSERT INTO `transients` 
-            (`name`, `content`) VALUES (?, ?) 
-            ON DUPLICATE KEY UPDATE `content` = ?", [
-                ['type' => 's', 'value' => $this->name],
-                ['type' => 's', 'value' => $serialized],
-                ['type' => 's', 'value' => $serialized]
-        ]);
+        $this->collection->updateOne(
+            ['name' => $this->name],
+            ['$set' => [
+                'time' => time(),
+                'ttl' => $ttl,
+                'data' => serialize($data)
+            ]],
+            ['upsert' => true]
+        );
     }
 
     /**
      * @package Vector
-     * Vector\Module\Transient\SqlTransient->delete()
+     * Vector\Module\Transient\MongoDBTransient->delete()
      * @return void
      */
     public function delete(): void
     {
-        $this->sql->exec("DELETE FROM `transients` WHERE `name` = ?", [
-            ['type' => 's', 'value' => $this->name]
-        ]);
+        $this->collection->deleteOne(['name' => $this->name]);
     }
 
 }

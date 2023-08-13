@@ -77,12 +77,12 @@ class LoginController extends FrontendController
                     $password = $result['data']['password'];
                     if (hash('sha256', $request->get('password', '')) === $password) {
                         $logger->write('User: "' . $email . '" has logged in successfully.');
-                        $authToken = new AuthToken([
+                        $token = new AuthToken();
+                        $cookie = new Cookie('Auth-Token', $token->generate([
                             'userId' => $result['data']['ID'],
                             'ipAddress' => $request->getClientIp(),
                             'userAgent' => $request->headers->get('User-Agent')
-                        ]);
-                        $cookie = new Cookie('Auth-Token', $authToken->generate());
+                        ]));
                         $response = new RedirectResponse('/admin', Response::HTTP_FOUND);
                         $response->headers->setCookie($cookie);
                         return $response;

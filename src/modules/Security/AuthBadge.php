@@ -9,9 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class AuthBadge
 {
-    protected int $userId;
-    protected string $ipAddress;
-    protected string $userAgent;
+    protected array $payload;
 
     /**
      * @package Vector
@@ -20,39 +18,37 @@ class AuthBadge
      */
     public function __construct(array $payload)
     {
-        $this->userId = $payload['userId'];
-        $this->ipAddress = $payload['ipAddress'];
-        $this->userAgent = $payload['userAgent'];
+        $this->payload = $payload;
     }
 
     /**
      * @package Vector
      * Vector\Module\Security\AuthBadge->getUserId()
-     * @return int
+     * @return ?int
      */
-    public function getUserId(): int
+    public function getUserId(): ?int
     {
-        return $this->userId;
+        return array_key_exists('userId', $this->payload) ? $this->payload['userId'] : null;
     }
 
     /**
      * @package Vector
      * Vector\Module\Security\AuthBadge->getIpAddress()
-     * @return string
+     * @return ?string
      */
-    public function getIpAddress(): string
+    public function getIpAddress(): ?string
     {
-        return $this->ipAddress;
+        return array_key_exists('ipAddress', $this->payload) ? $this->payload['ipAddress'] : null;
     }
 
     /**
      * @package Vector
      * Vector\Module\Security\AuthBadge->getUserAgent()
-     * @return string
+     * @return ?string
      */
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
-        return $this->userAgent;
+        return array_key_exists('userAgent', $this->payload) ? $this->payload['userAgent'] : null;
     }
 
 }

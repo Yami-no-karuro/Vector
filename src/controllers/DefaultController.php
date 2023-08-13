@@ -4,6 +4,8 @@ namespace Vector\Controller;
 
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
+use Vector\Module\ApplicationLogger\SqlLogger;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -36,10 +38,18 @@ class DefaultController extends FrontendController
     /**
      * Route: '/not-found'
      * Methods: GET
+     * @param Request $request
      * @return Response
      */
-    public function notFoundAction(): Response
+    public function notFoundAction(Request $request): Response
     {
+
+        /**
+         * @var SqlLogger $logger
+         * Logging 404s to keep track of user and bot activities.
+         */
+        $logger = new SqlLogger('auth');
+        $logger->write('Client: "' . $request->getClientIp() . '" attempted to navigate an unknown route.');
         $html = $this->template->render('not-found.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'

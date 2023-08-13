@@ -8,7 +8,6 @@ use Vector\Module\Security\TokenValidator;
 use Vector\Module\Security\AuthBadge;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
-use Vector\Module\Event\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -36,8 +35,6 @@ class Firewall
             $patterns = array_filter(explode("\n", $patternSource), 'trim');
             $transient->setData($patterns);
         }
-
-        EventDispatcher::dispatch('FirewallListener', 'onPatterns', [&$patterns]);
         $this->firewallPatterns = $patterns;
     }
 
@@ -64,7 +61,6 @@ class Firewall
          */
         if (true === $config->firewall->headers) {
             if (null !== ($headers = $request->headers->all())) {
-                EventDispatcher::dispatch('FirewallListener', 'onHeaders', [$request, &$headers]);
                 $this->verifyPayload($headers);
             }
         }
@@ -76,7 +72,6 @@ class Firewall
          */
         if (true === $config->firewall->cookies) {
             if (null !== ($cookies = $request->cookies->all())) {
-                EventDispatcher::dispatch('FirewallListener', 'onCookies', [$request, &$cookies]);
                 $this->verifyPayload($cookies);
             }
         }
@@ -88,7 +83,6 @@ class Firewall
          */
         if (true === $config->firewall->query) {
             if (null !== ($query = $request->query->all())) {
-                EventDispatcher::dispatch('FirewallListener', 'onQuery', [$request, &$query]);
                 $this->verifyPayload($query);
             }
         }
@@ -100,7 +94,6 @@ class Firewall
          */
         if (true === $config->firewall->body) {
             if (null !== ($body = $request->request->all())) {
-                EventDispatcher::dispatch('FirewallListener', 'onBody', [$request, &$body]);
                 $this->verifyPayload($body);
             }
         }
@@ -159,7 +152,6 @@ class Firewall
                     $authToken = $request->headers->get('Auth-Token');
                 }
                 if (null !== $authToken) {
-                    EventDispatcher::dispatch('FirewallListener', 'onTokenRetrived', [$request, &$authToken]);
 
                     /**
                      * @var TokenValidator $validator
@@ -172,7 +164,6 @@ class Firewall
                     if (true === $validator->isValid($authToken)) {
                         $payload = $validator->getPayload($authToken);
                         $badge = new AuthBadge($payload);
-                        EventDispatcher::dispatch('FirewallListener', 'onTokenVerified', [$request, &$authToken, &$badge]);
                         return;
                     }
 

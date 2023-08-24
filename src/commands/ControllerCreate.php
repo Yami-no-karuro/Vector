@@ -11,12 +11,12 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class CreateController extends AbstractCommand
+class ControllerCreate extends AbstractCommand
 {
 
     /**
      * @package Vector
-     * Vector\Command\CreateController->execute()
+     * Vector\Command\ControllerCreate->execute()
      * @return int
      */
     public function execute(): int
@@ -25,12 +25,11 @@ class CreateController extends AbstractCommand
         /**
          * @var array $args 
          * Check the provided arguments.
-         * "controller_name" and "controller_type" are required.
+         * "controller name" and "controller type" are required.
          */
-        $args = $this->getArgs();
-        if (null === $args OR empty($args)) {
-            Application::out('You need to provide valid controller name and type.');
-            Application::out('Select type from: "frontend", "rest".');
+        if (null === ($args = $this->getArgs()) OR empty($args)) {
+            Application::out('Invalid arguments, you need to provide controller name and type.');
+            Application::out('Chose controller type from: "frontend", "rest".');
             return self::EXIT_FAILURE;
         }
 
@@ -39,7 +38,8 @@ class CreateController extends AbstractCommand
          * @var string $controllerType
          * @var string $templatePath
          * List the provided arguments.
-         * "controller_type" argument will be used to construct the template path.
+         * "controller type" argument will be used to construct the template path.
+         * Defaults to "fr_controller_template.txt".
          */
         list($controllerName, $controllerType) = $args;
         $templatePath = match ($controllerType) {
@@ -49,24 +49,25 @@ class CreateController extends AbstractCommand
         };
         
         /**
-         * @var string $content
+         * @var string $fileContent
+         * @var string $filePath
          * Build controller content from template.
          */
         $filePath = Kernel::getProjectRoot() . 'src/controllers/' . $controllerName . '.php'; 
         if (file_exists($filePath)) {
-            Application::out('Controller "' . $controllerName .  '" already exits!');
+            Application::out('Cannot create controller "' . $controllerName .  '", file already exits!');
             return self::EXIT_FAILURE;
         }
         $fileContent = str_replace('%controller_name%', $controllerName, file_get_contents($templatePath));
         file_put_contents($filePath, $fileContent);
+
         Application::out('Controller "' . $controllerName .  '" successfully created!');
-        
         return self::EXIT_SUCCESS;
     }
 
     /**
      * @package Vector
-     * Vector\Command\CreateController->getCommandName()
+     * Vector\Command\ControllerCreate->getCommandName()
      * @return void
      */
     public function getCommandName(): string

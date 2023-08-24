@@ -61,7 +61,7 @@ class CreateUser extends AbstractCommand
         ]);
         if (true === $duplicate['success'] and !empty($duplicate['data'])) {
             Application::out('User (email: "' . trim($user['email']) . '") already exists on the database.');
-            return self::EXIT_SUCCESS;
+            return self::EXIT_FAILURE;
         }
 
         /**
@@ -81,6 +81,7 @@ class CreateUser extends AbstractCommand
             Application::out('User (email: "' . trim($user['email']) .  '") was succesfully created!');
         } else {
             Application::out('Unable to create User (email:"' . $user['email'] .  '").');
+            return self::EXIT_FAILURE;
         }
 
         return self::EXIT_SUCCESS;

@@ -26,6 +26,16 @@ abstract class AbstractCommand
 
     /**
      * @package Vector
+     * Vector\Module\Console\Command->getArgs()
+     * @return ?array
+     */
+    protected function getArgs(): ?array
+    {
+        return $this->args;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\Console\Command->execute()
      * @return int
      */

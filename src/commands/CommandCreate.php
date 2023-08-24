@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CommandCreate extends AbstractCommand
 {
-
     /**
      * @package Vector
      * Vector\Command\CommandCreate->execute()
@@ -23,11 +22,11 @@ class CommandCreate extends AbstractCommand
     {
 
         /**
-         * @var array $args 
+         * @var array $args
          * Check the provided arguments.
          * "command class" and "command" are required.
          */
-        if (null === ($args = $this->getArgs()) OR empty($args)) {
+        if (null === ($args = $this->getArgs()) or empty($args)) {
             Application::out('Invalid arguments, you need to provide command class and command.');
             return self::EXIT_FAILURE;
         }
@@ -40,13 +39,13 @@ class CommandCreate extends AbstractCommand
          */
         list($commandClass, $command) = $args;
         $templatePath = Kernel::getProjectRoot() . 'var/source/command_template.txt';
-        
+
         /**
          * @var string $fileContent
          * @var string $filePath
          * Build command content from template.
          */
-        $filePath = Kernel::getProjectRoot() . 'src/commands/' . $commandClass . '.php'; 
+        $filePath = Kernel::getProjectRoot() . 'src/commands/' . $commandClass . '.php';
         if (file_exists($filePath)) {
             Application::out('Cannot create command "' . $commandClass .  '", file already exits!');
             return self::EXIT_FAILURE;

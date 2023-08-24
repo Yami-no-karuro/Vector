@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class ControllerCreate extends AbstractCommand
 {
-
     /**
      * @package Vector
      * Vector\Command\ControllerCreate->execute()
@@ -23,11 +22,11 @@ class ControllerCreate extends AbstractCommand
     {
 
         /**
-         * @var array $args 
+         * @var array $args
          * Check the provided arguments.
          * "controller name" and "controller type" are required.
          */
-        if (null === ($args = $this->getArgs()) OR empty($args)) {
+        if (null === ($args = $this->getArgs()) or empty($args)) {
             Application::out('Invalid arguments, you need to provide controller name and type.');
             Application::out('Chose controller type from: "frontend", "rest".');
             return self::EXIT_FAILURE;
@@ -47,13 +46,13 @@ class ControllerCreate extends AbstractCommand
             'rest' => Kernel::getProjectRoot() . 'var/source/rs_controller_template.txt',
             default => Kernel::getProjectRoot() . 'var/source/fr_controller_template.txt'
         };
-        
+
         /**
          * @var string $fileContent
          * @var string $filePath
          * Build controller content from template.
          */
-        $filePath = Kernel::getProjectRoot() . 'src/controllers/' . $controllerName . '.php'; 
+        $filePath = Kernel::getProjectRoot() . 'src/controllers/' . $controllerName . '.php';
         if (file_exists($filePath)) {
             Application::out('Cannot create controller "' . $controllerName .  '", file already exits!');
             return self::EXIT_FAILURE;

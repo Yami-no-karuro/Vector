@@ -4,9 +4,11 @@ namespace Vector\Module\Console;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Vector\Module\StopWatch;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -15,7 +17,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-    protected FileSystemTransient $transient;
+    protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
     protected string $command;
@@ -34,39 +36,14 @@ class Application
         }
 
         $this->loadConfig();
-        $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
+        try {
+            $this->transient = new SqlTransient('vct-command-{' . $this->command . '}');
+        } catch (Exception) {
+            $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
+            self::out('Temporarely saving command transients on filesystem, please run the "vector:cache-clear" command once installation is complete.');
+        }
         $this->stopWatch = new StopWatch();
         $this->args = $argv;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Console\Application->getConsole()
-     * @return string
-     */
-    public function getConsole(): string
-    {
-        return $this->console;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Console\Application->getCommand()
-     * @return ?string
-     */
-    public function getCommand(): string
-    {
-        return $this->command;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Console\Application->getArgs()
-     * @return ?array
-     */
-    public function getArgs(): ?array
-    {
-        return $this->args;
     }
 
     /**

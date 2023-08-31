@@ -25,10 +25,16 @@ class AdminController extends FrontendController
      */
     public function adminViewAction(): Response
     {
+
+        /**
+         * @var string $html
+         * Builds the view raw html.
+         */
         $html = $this->template->render('admin/admin.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
+        
         return new Response($html, Response::HTTP_OK);
     }
 

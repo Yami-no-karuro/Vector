@@ -148,9 +148,7 @@ class Firewall
                  * @var ?string $authToken
                  * Look for authToken in request cookies and headers.
                  */
-                if (null === ($authToken = $request->cookies->get('Auth-Token'))) {
-                    $authToken = $request->headers->get('Auth-Token');
-                }
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken) {
 
                     /**

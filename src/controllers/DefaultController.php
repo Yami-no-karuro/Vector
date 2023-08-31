@@ -28,10 +28,16 @@ class DefaultController extends FrontendController
      */
     public function defaultAction(): Response
     {
+
+        /**
+         * @var string $html
+         * Builds the view raw html.
+         */
         $html = $this->template->render('default.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
+
         return new Response($html, Response::HTTP_OK);
     }
 
@@ -46,14 +52,23 @@ class DefaultController extends FrontendController
 
         /**
          * @var SqlLogger $logger
+         * @var string $clientIp
          * Logging 404s to keep track of user and bot activities.
          */
         $logger = new SqlLogger('auth');
-        $logger->write('Client: "' . $request->getClientIp() . '" attempted to navigate an unknown route.');
+        if (null !== ($clientIp = $request->getClientIp())) {
+            $logger->write('Client: "' . $clientIp . '" attempted to navigate an unknown route.');
+        }
+        
+        /**
+         * @var string $html
+         * Builds the view raw html.
+         */
         $html = $this->template->render('not-found.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
+
         return new Response($html, Response::HTTP_OK);
     }
 

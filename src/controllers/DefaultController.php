@@ -59,7 +59,7 @@ class DefaultController extends FrontendController
         if (null !== ($clientIp = $request->getClientIp())) {
             $logger->write('Client: "' . $clientIp . '" attempted to navigate an unknown route.');
         }
-        
+
         /**
          * @var string $html
          * Builds the view raw html.

@@ -65,7 +65,7 @@ class LoginController extends FrontendController
         $logger = new SqlLogger('auth');
         if (null !== ($email = $request->get('email'))) {
             if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                
+
                 /**
                  * @var SqlClient $sql
                  * @var array $result
@@ -107,7 +107,7 @@ class LoginController extends FrontendController
         if (null !== ($clientIp = $request->getClientIp())) {
             $logger->write('Client: "' . $clientIp . '" attempted to login with incorrect credentials.');
         }
-        
+
         return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
     }
 

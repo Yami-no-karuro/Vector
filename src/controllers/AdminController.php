@@ -34,7 +34,7 @@ class AdminController extends FrontendController
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
         ]);
-        
+
         return new Response($html, Response::HTTP_OK);
     }
 

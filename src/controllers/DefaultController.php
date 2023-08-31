@@ -18,7 +18,7 @@ class DefaultController extends FrontendController
     protected function register(): void
     {
         Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
-        Router::route(['GET'], '^/not-found?$', [$this, 'notFoundAction']);
+        Router::route(['GET'], '^/not-found/?$', [$this, 'notFoundAction']);
     }
 
     /**

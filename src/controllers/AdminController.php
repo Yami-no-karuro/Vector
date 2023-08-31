@@ -15,7 +15,7 @@ class AdminController extends FrontendController
 {
     protected function register(): void
     {
-        Router::route(['GET'], '^/admin?$', [$this, 'adminViewAction']);
+        Router::route(['GET'], '^/admin/?$', [$this, 'adminViewAction']);
     }
 
     /**

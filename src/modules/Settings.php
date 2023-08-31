@@ -23,7 +23,7 @@ class Settings
         $result = $sql->getResults("SELECT `value` FROM `settings` WHERE `key` = ?", [
             ['type' => 'd', 'value' => $key]
         ]);
-        if (true === $result['success'] and !empty($data = $result['data'])) {
+        if (true === $result['success'] && !empty($data = $result['data'])) {
             return $data['value'];
         }
         return null;

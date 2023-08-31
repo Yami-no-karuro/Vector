@@ -21,9 +21,9 @@ class LoginController extends FrontendController
 {
     protected function register(): void
     {
-        Router::route(['GET'], '^/login?$', [$this, 'loginViewAction']);
-        Router::route(['POST'], '^/login/submit?$', [$this, 'loginSubmitAction']);
-        Router::route(['GET'], '^/logout?$', [$this, 'logoutAction']);
+        Router::route(['GET'], '^/login/?$', [$this, 'loginViewAction']);
+        Router::route(['POST'], '^/login/submit/?$', [$this, 'loginSubmitAction']);
+        Router::route(['GET'], '^/logout/?$', [$this, 'logoutAction']);
     }
 
     /**

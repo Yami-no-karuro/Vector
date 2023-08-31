@@ -9,7 +9,7 @@ use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Transient\SqlTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ApplicationLogger\SqlLogger;
-use Vector\Module\Event\EventDispatcher;
+use Vector\Module\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -50,7 +50,7 @@ class Install extends AbstractCommand
          * Iterate through the sql directory, files will be executed as raw sql.
          */
         $dir = Kernel::getProjectRoot() . 'var/sql/';
-        if (file_exists($dir) and is_dir($dir)) {
+        if (file_exists($dir) && is_dir($dir)) {
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($sqlDir, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($iterator as $file) {

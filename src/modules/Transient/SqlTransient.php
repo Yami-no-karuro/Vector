@@ -30,7 +30,7 @@ class SqlTransient extends AbstractTransient
             WHERE `name` = ? LIMIT 1", [
                 ['type' => 's', 'value' => $this->name]
         ]);
-        if (true === $transient['success'] and !empty($transient['data'])) {
+        if (true === $transient['success'] && !empty($transient['data'])) {
             $this->content = unserialize($transient['data']['content']);
         }
 

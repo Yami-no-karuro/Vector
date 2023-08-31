@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\Event;
+namespace Vector\Module;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -9,9 +9,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class EventDispatcher
 {
+    
     /**
      * @package Vector
-     * Vector\Module\Event::dispatch()
+     * Vector\Module\EventDispatcher::dispatch()
      * @param string $eventClass
      * @param string $eventMethod
      * @param array $args
@@ -22,7 +23,7 @@ class EventDispatcher
         $eventClass = 'Vector\\Event\\' . $eventClass;
         if (class_exists($eventClass)) {
             $event = new $eventClass();
-            if (method_exists($event, $eventMethod) and $event instanceof AbstractListener) {
+            if (method_exists($event, $eventMethod)) {
                 $event->$eventMethod(...$args);
             }
         }

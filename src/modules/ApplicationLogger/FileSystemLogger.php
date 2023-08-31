@@ -29,13 +29,13 @@ class FileSystemLogger extends AbstractLogger
      * @package Vector
      * Vector\Module\ApplicationLogger\FileSystemLogger->write()
      * @param string $log
-     * @return bool
+     * @return void
      */
-    public function write(string $log): bool
+    public function write(string $log): void
     {
         $prefix = '[' . date('Y-m-d h:m:s') . ']';
         $log = $prefix . ' ' . $log . ' ' . PHP_EOL;
-        return file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
+        file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
     }
 
 }

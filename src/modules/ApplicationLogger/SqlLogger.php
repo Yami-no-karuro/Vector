@@ -29,18 +29,17 @@ class SqlLogger extends AbstractLogger
      * @package Vector
      * Vector\Module\ApplicationLogger\SqlLogger->write()
      * @param string $log
-     * @return bool
+     * @return void
      */
-    public function write(string $log): bool
+    public function write(string $log): void
     {
-        $execResult = $this->sql->exec("INSERT INTO `logs` 
+        $this->sql->exec("INSERT INTO `logs` 
             (`ID`, `domain`, `time`, `log`) 
             VALUES (NULL, ?, ?, ?)", [
                 ['type' => 's', 'value' => $this->domain],
                 ['type' => 's', 'value' => time()],
                 ['type' => 's', 'value' => $log]
         ]);
-        return $execResult['success'];
     }
 
 }

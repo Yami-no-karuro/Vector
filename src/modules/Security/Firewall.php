@@ -45,7 +45,7 @@ class Firewall
      * @return void
      * @throws SecurityException
      */
-    public function verifyRequest(Request $request): void
+    public function verifyRequest(Request &$request): void
     {
 
         /**
@@ -138,7 +138,7 @@ class Firewall
      * @return void
      * @throws SecurityException
      */
-    protected function verifyRouteAccess(array $protectedRoutes, Request $request): void
+    protected function verifyRouteAccess(array $protectedRoutes, Request &$request): void
     {
         foreach ($protectedRoutes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';

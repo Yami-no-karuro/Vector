@@ -57,8 +57,8 @@ class Kernel
      */
     public function boot(): void
     {
-        $this->verifyRequest();
         $this->registerShutdownFunctions();
+        $this->verifyRequest();
         $this->handleCallback();
         $this->routeRegister();
     }
@@ -255,7 +255,7 @@ class Kernel
      * @param Request $request
      * @return string
      */
-    public static function getRequestUrl(Request $request): string
+    public static function getRequestUrl(Request &$request): string
     {
 
         /**

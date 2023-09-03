@@ -44,11 +44,11 @@ class JWTValidator
                 $payload
             )
         ), true);
-        if (!array_key_exists('ipAddress', $decodedPayload) || 
+        if (!array_key_exists('ipAddress', $decodedPayload) ||
             $decodedPayload['ipAddress'] !== $request->getClientIp() ||
             !array_key_exists('userAgent', $decodedPayload) ||
             $decodedPayload['userAgent'] !== $request->headers->get('User-Agent')) {
-                return false;
+            return false;
         }
         $secret = Settings::get('jwt_secret');
         $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);

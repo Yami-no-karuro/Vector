@@ -6,8 +6,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 }
 
 require_once(__DIR__ . '/Kernel.php');
-require_once(__DIR__ . '/modules/Transient/AbstractTransient.php');
-require_once(__DIR__ . '/modules/Transient/FileSystemTransient.php');
+require_once(__DIR__ . '/module/Transient/AbstractTransient.php');
+require_once(__DIR__ . '/module/Transient/FileSystemTransient.php');
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;

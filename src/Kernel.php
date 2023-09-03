@@ -9,7 +9,7 @@ use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Transient\SqlTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ApplicationLogger\SqlLogger;
-use Vector\Module\Event\EventDispatcher;
+use Vector\Module\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,8 +57,8 @@ class Kernel
      */
     public function boot(): void
     {
-        $this->verifyRequest();
         $this->registerShutdownFunctions();
+        $this->verifyRequest();
         $this->handleCallback();
         $this->routeRegister();
     }
@@ -135,9 +135,9 @@ class Kernel
         /**
          * @var RecursiveDirectoryIterator $dir
          * @var RecursiveIteratorIterator $iterator
-         * Recursively initialize controllers, request will be parsed trough the Router instance.
+         * Recursively initialize controller, request will be parsed trough the Router instance.
          */
-        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controllers');
+        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
@@ -255,7 +255,7 @@ class Kernel
      * @param Request $request
      * @return string
      */
-    public static function getRequestUrl(Request $request): string
+    public static function getRequestUrl(Request &$request): string
     {
 
         /**

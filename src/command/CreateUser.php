@@ -73,7 +73,7 @@ class CreateUser extends AbstractCommand
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
             VALUES (NULL, ?, ?, ?, ?, ?)", [
                 ['type' => 's', 'value' => $email],
-                ['type' => 's', 'value' => hash('sha256', trim($user['password']))],
+                ['type' => 's', 'value' => hash('sha256', trim($userdata['password']))],
                 ['type' => 's', 'value' => trim($userdata['username'])],
                 ['type' => 's', 'value' => trim($userdata['firstname'])],
                 ['type' => 's', 'value' => trim($userdata['lastname'])]

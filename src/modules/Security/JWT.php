@@ -10,7 +10,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class AuthToken
+class JWT
 {
     protected SqlClient $sql;
 
@@ -25,7 +25,7 @@ class AuthToken
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthToken->generate()
+     * Vector\Module\Security\JWT->generate()
      * @param array $payload
      * @return ?string
      */
@@ -47,7 +47,7 @@ class AuthToken
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthToken->generateHeaders()
+     * Vector\Module\Security\JWT->generateHeaders()
      * @return string
      */
     protected function generateHeaders(): string
@@ -65,7 +65,7 @@ class AuthToken
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthToken->generatePayload()
+     * Vector\Module\Security\JWT->generatePayload()
      * @param array $payload
      * @return string
      */

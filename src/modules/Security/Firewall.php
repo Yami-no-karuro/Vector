@@ -4,7 +4,7 @@ namespace Vector\Module\Security;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Security\TokenValidator;
+use Vector\Module\Security\JWTValidator;
 use Vector\Module\Security\AuthBadge;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
@@ -124,7 +124,7 @@ class Firewall
             }
             foreach ($this->firewallPatterns as $pattern) {
                 if (preg_match($pattern, $value)) {
-                    throw new SecurityException();
+                    throw new SecurityException('Unauthorized.');
                 }
             }
         }
@@ -152,13 +152,13 @@ class Firewall
                 if (null !== $authToken) {
 
                     /**
-                     * @var TokenValidator $validator
+                     * @var JWTValidator $validator
                      * @var AuthBadge $badge
-                     * Validate the retrived token on the TokenValidator instance.
+                     * Validate the retrived token on the JWTValidator instance.
                      * "onTokenVerified" and "onTokenRejected" events are being dispatched.
                      */
                     global $badge;
-                    $validator = new TokenValidator();
+                    $validator = new JWTValidator();
                     if (true === $validator->isValid($authToken)) {
                         $payload = $validator->getPayload($authToken);
                         $badge = new AuthBadge($payload);
@@ -167,7 +167,7 @@ class Firewall
 
                 }
 
-                throw new UnauthorizedException();
+                throw new UnauthorizedException('Unauthorized.');
             }
         }
     }

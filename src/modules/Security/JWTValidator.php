@@ -10,7 +10,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class TokenValidator
+class JWTValidator
 {
     protected SqlClient $sql;
 
@@ -25,7 +25,7 @@ class TokenValidator
 
     /**
      * @package Vector
-     * Vector\Module\Security\TokenValidator->isValid()
+     * Vector\Module\Security\JWTValidator->isValid()
      * @param string $token
      * @return bool
      */
@@ -47,7 +47,7 @@ class TokenValidator
 
     /**
      * @package Vector
-     * Vector\Module\Security\TokenValidator->getPayload()
+     * Vector\Module\Security\JWTValidator->getPayload()
      * @param string $token
      * @return ?array
      */
@@ -68,7 +68,7 @@ class TokenValidator
 
     /**
      * @package Vector
-     * Vector\Module\Security\TokenValidator->getTokenParts()
+     * Vector\Module\Security\JWTValidator->getTokenParts()
      * @param string $token
      * @return ?array
      */

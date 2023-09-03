@@ -25,15 +25,14 @@ class SqlTransient extends AbstractTransient
         parent::__construct($name);
 
         $this->sql = SqlClient::getInstance();
-        $transient = $this->sql->getResults("SELECT `content` 
+        $result = $this->sql->getResults("SELECT `content` 
             FROM `transients` 
             WHERE `name` = ? LIMIT 1", [
                 ['type' => 's', 'value' => $this->name]
         ]);
-        if (true === $transient['success'] && !empty($transient['data'])) {
-            $this->content = unserialize($transient['data']['content']);
+        if ($result['success'] && !empty($result['data'])) {
+            $this->content = unserialize($result['data']['content']);
         }
-
     }
 
     /**

@@ -30,7 +30,6 @@ class FileSystemTransient extends AbstractTransient
                 $this->content = unserialize($data);
             }
         }
-
     }
 
     /**

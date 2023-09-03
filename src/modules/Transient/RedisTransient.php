@@ -28,7 +28,6 @@ class RedisTransient extends AbstractTransient
         if (null !== ($data = $this->client->get($this->name))) {
             $this->content = unserialize($data);
         }
-
     }
 
     /**

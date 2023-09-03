@@ -6,7 +6,7 @@ use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\SqlLogger;
-use Vector\Module\Security\AuthToken;
+use Vector\Module\Security\JWT;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -81,11 +81,11 @@ class LoginController extends FrontendController
                  * On password match set the autentication cookie and redirect to /admin.
                  * Redirect back with "?success=false" on failure.
                  */
-                if (true === $result['success'] && !empty($result['data'])) {
+                if ($result['success'] && !empty($result['data'])) {
                     $password = $result['data']['password'];
                     if (hash('sha256', $request->get('password', '')) === $password) {
                         $logger->write('User: "' . $email . '" has logged in successfully.');
-                        $token = new AuthToken();
+                        $token = new JWT();
                         $cookie = new Cookie('Auth-Token', $token->generate([
                             'userId' => $result['data']['ID'],
                             'ipAddress' => $request->getClientIp(),

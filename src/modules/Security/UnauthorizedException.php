@@ -11,4 +11,25 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class UnauthorizedException extends Exception
 {
+    protected string $content;
+
+    /**
+    * @package Vector
+    * __construct()
+    */
+    public function __construct(string $content = '')
+    {
+        $this->content = $content;
+    }
+
+    /**
+    * @package Vector
+    * Vector\Module\Security\UnauthorizedException->getContent()
+    * @return string
+    */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
 }

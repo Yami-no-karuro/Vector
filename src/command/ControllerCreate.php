@@ -52,7 +52,7 @@ class ControllerCreate extends AbstractCommand
          * @var string $filePath
          * Build controller content from template.
          */
-        $filePath = Kernel::getProjectRoot() . 'src/controllers/' . $controllerName . '.php';
+        $filePath = Kernel::getProjectRoot() . 'src/controller/' . $controllerName . '.php';
         if (file_exists($filePath)) {
             Application::out('Cannot create controller "' . $controllerName .  '", file already exits!');
             return self::EXIT_FAILURE;

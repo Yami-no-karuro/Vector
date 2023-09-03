@@ -62,7 +62,7 @@ class CreateUser extends AbstractCommand
          */
         $email = trim($user['email']);
         $user = $this->repository->getByEmail($email);
-        if (!empty($user)) {
+        if (null !== $user) {
             Application::out('User (email: "' . $email . '") already exists on the database.');
             return self::EXIT_FAILURE;
         }

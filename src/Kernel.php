@@ -135,9 +135,9 @@ class Kernel
         /**
          * @var RecursiveDirectoryIterator $dir
          * @var RecursiveIteratorIterator $iterator
-         * Recursively initialize controllers, request will be parsed trough the Router instance.
+         * Recursively initialize controller, request will be parsed trough the Router instance.
          */
-        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controllers');
+        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();

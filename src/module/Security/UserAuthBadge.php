@@ -2,14 +2,17 @@
 
 namespace Vector\Module\Security;
 
+use Vector\Repository\UserRepository;
+
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class AuthBadge
+class UserAuthBadge
 {
     protected array $payload;
+    protected UserRepository $repository;
 
     /**
      * @package Vector
@@ -19,21 +22,25 @@ class AuthBadge
     public function __construct(array $payload)
     {
         $this->payload = $payload;
+        $this->repository = UserRepository::getInstance();
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthBadge->getUserId()
-     * @return ?int
+     * Vector\Module\Security\UserAuthBadge->getUserId()
+     * @return ?array
      */
-    public function getUserId(): ?int
+    public function getUser(): ?array
     {
-        return array_key_exists('userId', $this->payload) ? $this->payload['userId'] : null;
+        if (array_key_exists('userId', $this->payload)) {
+            return $this->repository->getById($this->payload['userId']);
+        }
+        return null;
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthBadge->getIpAddress()
+     * Vector\Module\Security\UserAuthBadge->getIpAddress()
      * @return ?string
      */
     public function getIpAddress(): ?string
@@ -43,7 +50,7 @@ class AuthBadge
 
     /**
      * @package Vector
-     * Vector\Module\Security\AuthBadge->getUserAgent()
+     * Vector\Module\Security\UserAuthBadge->getUserAgent()
      * @return ?string
      */
     public function getUserAgent(): ?string

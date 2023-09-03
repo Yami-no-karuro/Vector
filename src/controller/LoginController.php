@@ -4,7 +4,6 @@ namespace Vector\Controller;
 
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
-use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Security\JWT;
 use Vector\Repository\UserRepository;
@@ -74,7 +73,7 @@ class LoginController extends FrontendController
              * Looks for valid users by email.
              */
             $user = $repository->getByEmail($email);
-            if (!empty($user)) {
+            if (null !== $user) {
 
                 /**
                 * @var string $password
@@ -86,10 +85,8 @@ class LoginController extends FrontendController
                     $logger->write('User: "' . $email . '" has logged in successfully.');
                     $token = new JWT();
                     $cookie = new Cookie('Auth-Token', $token->generate([
-                        'userId' => $user['ID'],
-                        'ipAddress' => $request->getClientIp(),
-                        'userAgent' => $request->headers->get('User-Agent')
-                    ]));
+                        'userId' => $user['ID']
+                    ], $request));
                     $response = new RedirectResponse('/admin', Response::HTTP_FOUND);
                     $response->headers->setCookie($cookie);
                     return $response;

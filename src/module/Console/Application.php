@@ -59,11 +59,11 @@ class Application
          * @var array $registeredCommand
          * @var RecursiveDirectoryIterator $dir
          * @var RecursiveIteratorIterator $iterator
-         * Iterate thorough command classes looking for registered commands.
-         * If nothing is found matching the given criteria prints out the available commands.
+         * Iterate thorough command classes looking for registered command.
+         * If nothing is found matching the given criteria prints out the available command.
          */
         $registeredCommands = [];
-        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/commands');
+        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/command');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();

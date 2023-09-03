@@ -5,7 +5,7 @@ namespace Vector\Module\Security;
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Security\JWTValidator;
-use Vector\Module\Security\AuthBadge;
+use Vector\Module\Security\UserAuthBadge;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,20 +148,21 @@ class Firewall
                  * @var ?string $authToken
                  * Look for authToken in request cookies and headers.
                  */
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
+                    $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken) {
 
                     /**
                      * @var JWTValidator $validator
-                     * @var AuthBadge $badge
+                     * @var UserAuthBadge $badge
                      * Validate the retrived token on the JWTValidator instance.
                      * "onTokenVerified" and "onTokenRejected" events are being dispatched.
                      */
                     global $badge;
                     $validator = new JWTValidator();
-                    if (true === $validator->isValid($authToken)) {
+                    if (true === $validator->isValid($authToken, $request)) {
                         $payload = $validator->getPayload($authToken);
-                        $badge = new AuthBadge($payload);
+                        $badge = new UserAuthBadge($payload);
                         return;
                     }
 

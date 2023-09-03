@@ -39,27 +39,27 @@ class UserRepository
     /**
      * @package Vector
      * Vector\Repository\UserRepository->getById()
-     * @return array
+     * @return ?array
      */
-    public function getById(int $id): array
+    public function getById(int $id): ?array
     {
         $result = $this->client->getResults("SELECT * FROM `users` WHERE `ID` = ? LIMIT 1", [
             ['type' => 'd', 'value' => $id]
         ]);
-        return ($result['success'] && !empty($result['data'])) ? $result['data'] : [];
+        return ($result['success'] && !empty($result['data'])) ? $result['data'] : null;
     }
 
     /**
      * @package Vector
      * Vector\Repository\UserRepository->getById()
-     * @return array
+     * @return ?array
      */
-    public function getByEmail(string $email): array
+    public function getByEmail(string $email): ?array
     {
         $result = $this->client->getResults("SELECT * FROM `users` WHERE `email` = ? LIMIT 1", [
             ['type' => 's', 'value' => $email]
         ]);
-        return ($result['success'] && !empty($result['data'])) ? $result['data'] : [];
+        return ($result['success'] && !empty($result['data'])) ? $result['data'] : null;
     }
 
 }

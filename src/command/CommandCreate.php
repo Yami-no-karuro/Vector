@@ -45,7 +45,7 @@ class CommandCreate extends AbstractCommand
          * @var string $filePath
          * Build command content from template.
          */
-        $filePath = Kernel::getProjectRoot() . 'src/commands/' . $commandClass . '.php';
+        $filePath = Kernel::getProjectRoot() . 'src/command/' . $commandClass . '.php';
         if (file_exists($filePath)) {
             Application::out('Cannot create command "' . $commandClass .  '", file already exits!');
             return self::EXIT_FAILURE;

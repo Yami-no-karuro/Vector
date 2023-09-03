@@ -38,34 +38,33 @@ class CreateUser extends AbstractCommand
     {
 
         /**
-         * @var array $user
+         * @var array $userdata
          * Collect user data from command line input interface.
-         * Email address is validated.
+         * Email address must be validated.
          */
-        $user = [];
+        $userdata = [];
         $email = Application::in('Email address:');
         if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $user['email'] = $email;
+            $userdata['email'] = $email;
         } else {
             Application::out('Invalid email address: "' . $email .  '"');
             return self::EXIT_FAILURE;
         }
-        $user['password'] = Application::in('Password:', true);
-        $user['username'] = Application::in('Username: (press Enter to leave empty)');
-        $user['firstname'] = Application::in('Firstname: (press Enter to leave empty)');
-        $user['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
+        $userdata['password'] = Application::in('Password:');
+        $userdata['username'] = Application::in('Username: (press Enter to leave empty)');
+        $userdata['firstname'] = Application::in('Firstname: (press Enter to leave empty)');
+        $userdata['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
 
         /**
-         * @var string $email
          * @var array $user
          * Looks for already existing users by email.
          */
-        $email = trim($user['email']);
         $user = $this->repository->getByEmail($email);
         if (null !== $user) {
             Application::out('User (email: "' . $email . '") already exists on the database.');
             return self::EXIT_FAILURE;
         }
+
         /**
          * @param array $result
          * Proceed to insert the new record.
@@ -73,16 +72,16 @@ class CreateUser extends AbstractCommand
         $result = $this->sql->exec("INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
             VALUES (NULL, ?, ?, ?, ?, ?)", [
-                ['type' => 's', 'value' => trim($user['email'])],
+                ['type' => 's', 'value' => $email],
                 ['type' => 's', 'value' => hash('sha256', trim($user['password']))],
-                ['type' => 's', 'value' => trim($user['username'])],
-                ['type' => 's', 'value' => trim($user['firstname'])],
-                ['type' => 's', 'value' => trim($user['lastname'])]
+                ['type' => 's', 'value' => trim($userdata['username'])],
+                ['type' => 's', 'value' => trim($userdata['firstname'])],
+                ['type' => 's', 'value' => trim($userdata['lastname'])]
         ]);
         if (true === $result['success']) {
-            Application::out('User (email: "' . trim($user['email']) .  '") was succesfully created!');
+            Application::out('User (email: "' . $email .  '") was succesfully created!');
         } else {
-            Application::out('Unable to create User (email:"' . $user['email'] .  '").');
+            Application::out('Unable to create User (email:"' . $email .  '").');
             return self::EXIT_FAILURE;
         }
 

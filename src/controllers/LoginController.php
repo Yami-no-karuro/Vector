@@ -66,36 +66,36 @@ class LoginController extends FrontendController
          */
         $logger = new SqlLogger('auth');
         $repository = UserRepository::getInstance();
-        if (null !== ($email = $request->get('email')) && 
+        if (null !== ($email = $request->get('email')) &&
             false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                
+
+            /**
+             * @var array $user
+             * Looks for valid users by email.
+             */
+            $user = $repository->getByEmail($email);
+            if (!empty($user)) {
+
                 /**
-                 * @var array $user
-                 * Looks for valid users by email.
-                 */
-                $user = $repository->getByEmail($email);
-                if (!empty($user)) {
-
-                    /**
-                    * @var string $password
-                    * On password match set the autentication cookie and redirect to /admin.
-                    * Redirect back with "?success=false" on failure.
-                    */
-                    $password = $user['password'];
-                    if (hash('sha256', $request->get('password', '')) === $password) {
-                        $logger->write('User: "' . $email . '" has logged in successfully.');
-                        $token = new JWT();
-                        $cookie = new Cookie('Auth-Token', $token->generate([
-                            'userId' => $user['ID'],
-                            'ipAddress' => $request->getClientIp(),
-                            'userAgent' => $request->headers->get('User-Agent')
-                        ]));
-                        $response = new RedirectResponse('/admin', Response::HTTP_FOUND);
-                        $response->headers->setCookie($cookie);
-                        return $response;
-                    }
-
+                * @var string $password
+                * On password match set the autentication cookie and redirect to /admin.
+                * Redirect back with "?success=false" on failure.
+                */
+                $password = $user['password'];
+                if (hash('sha256', $request->get('password', '')) === $password) {
+                    $logger->write('User: "' . $email . '" has logged in successfully.');
+                    $token = new JWT();
+                    $cookie = new Cookie('Auth-Token', $token->generate([
+                        'userId' => $user['ID'],
+                        'ipAddress' => $request->getClientIp(),
+                        'userAgent' => $request->headers->get('User-Agent')
+                    ]));
+                    $response = new RedirectResponse('/admin', Response::HTTP_FOUND);
+                    $response->headers->setCookie($cookie);
+                    return $response;
                 }
+
+            }
         }
 
         /**

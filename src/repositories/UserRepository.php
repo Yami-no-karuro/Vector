@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class UserRepository
 {
-
     private static mixed $instance = null;
     protected SqlClient $client;
 
@@ -23,7 +22,7 @@ class UserRepository
     {
         $this->client = SqlClient::getInstance();
     }
-    
+
     /**
      * @package Vector
      * Vector\Repository\UserRepository::getInstance()

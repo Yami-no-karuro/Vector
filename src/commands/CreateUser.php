@@ -5,6 +5,7 @@ namespace Vector\Command;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\Console\Application;
+use Vector\Repository\UserRepository;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,6 +15,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class CreateUser extends AbstractCommand
 {
     protected SqlClient $sql;
+    protected UserRepository $repository;
 
     /**
      * @package Vector
@@ -24,6 +26,7 @@ class CreateUser extends AbstractCommand
     {
         parent::__construct($args);
         $this->sql = SqlClient::getInstance();
+        $this->repository = UserRepository::getInstance();
     }
 
     /**
@@ -53,22 +56,21 @@ class CreateUser extends AbstractCommand
         $user['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
 
         /**
-         * @var array $duplicate
-         * Look for duplicates by email.
+         * @var string $email
+         * @var array $user
+         * Looks for already existing users by email.
          */
-        $result = $this->sql->getResults("SELECT `ID` FROM `users` WHERE `email` = ? LIMIT 1", [
-            ['type' => 's', 'value' => trim($user['email'])]
-        ]);
-        if ($result['success'] && !empty($result['data'])) {
-            Application::out('User (email: "' . trim($user['email']) . '") already exists on the database.');
+        $email = trim($user['email']);
+        $user = $this->repository->getByEmail($email);
+        if (!empty($user)) {
+            Application::out('User (email: "' . $email . '") already exists on the database.');
             return self::EXIT_FAILURE;
         }
-
         /**
-         * @param array @execResult
+         * @param array $result
          * Proceed to insert the new record.
          */
-        $execResult = $this->sql->exec("INSERT INTO `users` 
+        $result = $this->sql->exec("INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
             VALUES (NULL, ?, ?, ?, ?, ?)", [
                 ['type' => 's', 'value' => trim($user['email'])],
@@ -77,7 +79,7 @@ class CreateUser extends AbstractCommand
                 ['type' => 's', 'value' => trim($user['firstname'])],
                 ['type' => 's', 'value' => trim($user['lastname'])]
         ]);
-        if (true === $execResult['success']) {
+        if (true === $result['success']) {
             Application::out('User (email: "' . trim($user['email']) .  '") was succesfully created!');
         } else {
             Application::out('Unable to create User (email:"' . $user['email'] .  '").');

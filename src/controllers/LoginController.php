@@ -7,6 +7,7 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Security\JWT;
+use Vector\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -59,35 +60,33 @@ class LoginController extends FrontendController
 
         /**
          * @var SqlLogger $logger
+         * @var UserRepository $repository
          * @var string $email
          * If the provided email is valid search for an existing user.
          */
         $logger = new SqlLogger('auth');
-        if (null !== ($email = $request->get('email'))) {
-            if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
+        $repository = UserRepository::getInstance();
+        if (null !== ($email = $request->get('email')) && 
+            false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                
                 /**
-                 * @var SqlClient $sql
-                 * @var array $result
-                 * Looks for a valid user by email.
+                 * @var array $user
+                 * Looks for valid users by email.
                  */
-                $sql = SqlClient::getInstance();
-                $result = $sql->getResults("SELECT `ID`, `password` FROM `users` WHERE `email` = ? LIMIT 1", [
-                    ['type' => 's', 'value' => $email]
-                ]);
+                $user = $repository->getByEmail($email);
+                if (!empty($user)) {
 
-                /**
-                 * @var string $password
-                 * On password match set the autentication cookie and redirect to /admin.
-                 * Redirect back with "?success=false" on failure.
-                 */
-                if ($result['success'] && !empty($result['data'])) {
-                    $password = $result['data']['password'];
+                    /**
+                    * @var string $password
+                    * On password match set the autentication cookie and redirect to /admin.
+                    * Redirect back with "?success=false" on failure.
+                    */
+                    $password = $user['password'];
                     if (hash('sha256', $request->get('password', '')) === $password) {
                         $logger->write('User: "' . $email . '" has logged in successfully.');
                         $token = new JWT();
                         $cookie = new Cookie('Auth-Token', $token->generate([
-                            'userId' => $result['data']['ID'],
+                            'userId' => $user['ID'],
                             'ipAddress' => $request->getClientIp(),
                             'userAgent' => $request->headers->get('User-Agent')
                         ]));
@@ -95,9 +94,8 @@ class LoginController extends FrontendController
                         $response->headers->setCookie($cookie);
                         return $response;
                     }
-                }
 
-            }
+                }
         }
 
         /**

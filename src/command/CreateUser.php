@@ -3,7 +3,6 @@
 namespace Vector\Command;
 
 use Vector\Module\Console\AbstractCommand;
-use Vector\Module\SqlClient;
 use Vector\Module\Console\Application;
 use Vector\Repository\UserRepository;
 
@@ -14,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CreateUser extends AbstractCommand
 {
-    protected SqlClient $sql;
     protected UserRepository $repository;
 
     /**
@@ -25,7 +23,6 @@ class CreateUser extends AbstractCommand
     public function __construct(?array $args)
     {
         parent::__construct($args);
-        $this->sql = SqlClient::getInstance();
         $this->repository = UserRepository::getInstance();
     }
 
@@ -69,21 +66,8 @@ class CreateUser extends AbstractCommand
          * @param array $result
          * Proceed to insert the new record.
          */
-        $result = $this->sql->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
-            VALUES (NULL, ?, ?, ?, ?, ?)", [
-                ['type' => 's', 'value' => $email],
-                ['type' => 's', 'value' => hash('sha256', trim($userdata['password']))],
-                ['type' => 's', 'value' => trim($userdata['username'])],
-                ['type' => 's', 'value' => trim($userdata['firstname'])],
-                ['type' => 's', 'value' => trim($userdata['lastname'])]
-        ]);
-        if (true === $result['success']) {
-            Application::out('User (email: "' . $email .  '") was succesfully created!');
-        } else {
-            Application::out('Unable to create User (email:"' . $email .  '").');
-            return self::EXIT_FAILURE;
-        }
+        $this->repository->insert($userdata);
+        Application::out('User (email: "' . $email .  '") was succesfully created!');
 
         return self::EXIT_SUCCESS;
     }
@@ -97,5 +81,4 @@ class CreateUser extends AbstractCommand
     {
         return 'vector:create-user';
     }
-
 }

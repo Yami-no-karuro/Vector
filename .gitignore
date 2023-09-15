@@ -33,3 +33,7 @@ node_modules
 # documents
 /public/assets/documents/*
 !/public/assets/documents/.gitkeep
+
+# neovim
+'\'
+\

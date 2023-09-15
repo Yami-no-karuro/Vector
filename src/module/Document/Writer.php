@@ -34,6 +34,7 @@ class Writer
     /**
      * @package Vector
      * Vector\Module\Document\Writer->writeRow()
+     * @param array $data
      * @return void
      */
     public function writeRow($data): void
@@ -44,6 +45,7 @@ class Writer
     /**
      * @package Vector
      * Vector\Module\Document\Writer->writeRows()
+     * @param array $data
      * @return void
      */
     public function writeRows($data): void
@@ -52,5 +54,4 @@ class Writer
             fputcsv($this->fileHandle, $row, $this->delimiter);
         }
     }
-
 }

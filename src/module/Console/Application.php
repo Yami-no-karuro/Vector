@@ -25,6 +25,7 @@ class Application
 
     /**
      * @package Vector
+     * @param array $argv
      * __construct()
      */
     public function __construct(array $argv)
@@ -94,7 +95,6 @@ class Application
                     self::out('Executed for: ' . $this->stopWatch->getElapsed());
                     exit($exitCode);
                 }
-
             }
         }
 
@@ -132,7 +132,6 @@ class Application
                 exit($exitCode);
             }
         }
-
     }
 
     /**
@@ -157,7 +156,6 @@ class Application
             $transient->setData($data);
         }
         $config = $data;
-
     }
 
     /**
@@ -204,5 +202,4 @@ class Application
         $handle = fopen('php://stdin', 'r');
         return trim(fgets($handle));
     }
-
 }

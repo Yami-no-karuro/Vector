@@ -62,4 +62,22 @@ class UserRepository
         return ($result['success'] && !empty($result['data'])) ? $result['data'] : null;
     }
 
+    /**
+     * @package Vector
+     * Vector\Repository\UserRepository->insert()
+     * @param array $userdata
+     * @return void
+     */
+    public function insert(array $userdata): void
+    {
+        $this->client->exec("INSERT INTO `users` 
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
+            VALUES (NULL, ?, ?, ?, ?, ?)", [
+            ['type' => 's', 'value' => $userdata['email']],
+            ['type' => 's', 'value' => hash('sha256', trim($userdata['password']))],
+            ['type' => 's', 'value' => trim($userdata['username'])],
+            ['type' => 's', 'value' => trim($userdata['firstname'])],
+            ['type' => 's', 'value' => trim($userdata['lastname'])]
+        ]);
+    }
 }

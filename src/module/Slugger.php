@@ -7,9 +7,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Slugger 
+class Slugger
 {
-
     /**
      * @package Vector
      * Vector\Module\Slugger::fromString()

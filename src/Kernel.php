@@ -216,12 +216,11 @@ class Kernel
             $firewall->verifyRequest($request);
         } catch (Exception $e) {
             if ($e instanceof SecurityException) {
-                $response = new Response(null, Response::HTTP_UNAUTHORIZED);
                 $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" request contained malicious content.');
             } elseif ($e instanceof UnauthorizedException) {
-                $response = new RedirectResponse('/login', Response::HTTP_FOUND);
                 $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" attempted to reach a secure route without being authenticated.');
             }
+            $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();
             die();

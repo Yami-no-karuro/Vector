@@ -37,8 +37,8 @@ class WebToken
         if (null !== ($secret = Settings::get('jwt_secret'))) {
             $headers = $this->generateHeaders();
             if (false === $ignoreRequestInfo) {
-                $payload['ipAddress'] = $request->getClientIp();
-                $payload['userAgent'] = $request->headers->get('User-Agent', 'unknown');
+                $payload['ip_address'] = $request->getClientIp();
+                $payload['user_agent'] = $request->headers->get('User-Agent', 'unknown');
             }
             $payload = $this->generatePayload($payload);
             $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);

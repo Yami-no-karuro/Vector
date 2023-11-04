@@ -56,10 +56,10 @@ class Validator
          * Checks requests informations validity.
          */
         if (false === $ignoreRequestInfo) {
-            if (!array_key_exists('ipAddress', $decodedPayload) || $decodedPayload['ipAddress'] !== $request->getClientIp()) {
+            if (!array_key_exists('ip_address', $decodedPayload) || $decodedPayload['ip_address'] !== $request->getClientIp()) {
                 return false;
             }
-            if (!array_key_exists('userAgent', $decodedPayload) || $decodedPayload['userAgent'] !== $request->headers->get('User-Agent')) {
+            if (!array_key_exists('user_agent', $decodedPayload) || $decodedPayload['user_agent'] !== $request->headers->get('User-Agent')) {
                 return false;
             }
         }

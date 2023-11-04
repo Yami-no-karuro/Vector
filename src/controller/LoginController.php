@@ -90,7 +90,7 @@ class LoginController extends FrontendController
                      */
                     $token = new WebToken();
                     $cookie = new Cookie('Auth-Token', $token->generate([
-                        'userId' => $user['ID'],
+                        'rsid' => $user['ID'],
                         'time' => microtime()
                     ], $request));
 

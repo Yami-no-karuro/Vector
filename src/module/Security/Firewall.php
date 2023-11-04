@@ -17,6 +17,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Firewall
 {
+
     protected array $firewallPatterns;
 
     /**
@@ -112,11 +113,11 @@ class Firewall
     /**
      * @package Vector
      * Vector\Module\Security\Firewall->verifyPayload()
-     * @param array $data
+     * @param mixed $data
      * @return void
      * @throws SecurityException
      */
-    protected function verifyPayload(array $data): void
+    protected function verifyPayload(mixed $data): void
     {
         foreach ($data as $value) {
             if (is_array($value)) {
@@ -148,8 +149,7 @@ class Firewall
                  * @var ?string $authToken
                  * Look for authToken in request cookies and headers.
                  */
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ?
-                    $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken) {
 
                     /**

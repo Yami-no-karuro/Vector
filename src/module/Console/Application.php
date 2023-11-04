@@ -17,6 +17,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
+
     protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
@@ -43,6 +44,7 @@ class Application
             $this->transient = new FileSystemTransient('vct-command-{' . $this->command . '}');
             self::out('Temporarely saving command transients on filesystem, please run the "vector:cache-clear" command once installation is complete.');
         }
+
         $this->stopWatch = new StopWatch();
         $this->args = $argv;
     }

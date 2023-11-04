@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class RedisTransient extends AbstractTransient
 {
+
     protected RedisClient $client;
     protected mixed $content = null;
 

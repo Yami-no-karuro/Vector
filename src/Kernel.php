@@ -80,6 +80,7 @@ class Kernel
         if (!$transient->isValid()) {
             return;
         }
+
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
 

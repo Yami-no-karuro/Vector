@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class UserAuthBadge
 {
-
     protected array $payload;
     protected UserRepository $repository;
 

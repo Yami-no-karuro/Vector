@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlTransient extends AbstractTransient
 {
-
     protected SqlClient $sql;
     protected ?array $content = null;
 

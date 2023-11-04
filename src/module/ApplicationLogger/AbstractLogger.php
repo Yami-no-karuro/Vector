@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractLogger
 {
-
     protected string $domain;
 
     /**

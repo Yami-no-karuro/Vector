@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlClient
 {
-
     protected mysqli $mysqlitunnel;
     private static mixed $instance = null;
 

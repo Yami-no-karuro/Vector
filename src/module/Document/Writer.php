@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Writer
 {
-
     protected mixed $fileHandle;
     protected string $delimiter;
 

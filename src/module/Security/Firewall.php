@@ -17,7 +17,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Firewall
 {
-
     protected array $firewallPatterns;
 
     /**

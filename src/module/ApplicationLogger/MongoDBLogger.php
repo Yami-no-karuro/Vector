@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class MongoDBLogger extends AbstractLogger
 {
-
     protected MongoClient $client;
 
     /**

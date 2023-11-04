@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractController
 {
-
     protected Request $request;
 
     /**

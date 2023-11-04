@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class MongoDBTransient extends AbstractTransient
 {
-
     protected Collection $collection;
     protected ?array $content = null;
 

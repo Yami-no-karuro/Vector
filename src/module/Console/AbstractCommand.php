@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractCommand
 {
-
     public const EXIT_SUCCESS = 0;
     public const EXIT_FAILURE = 1;
 

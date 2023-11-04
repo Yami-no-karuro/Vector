@@ -9,7 +9,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Reader
 {
-
     protected mixed $fileHandle;
     protected string $delimiter;
 

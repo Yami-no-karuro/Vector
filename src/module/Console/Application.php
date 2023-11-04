@@ -17,7 +17,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-
     protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;

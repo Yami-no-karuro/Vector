@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemLogger extends AbstractLogger
 {
-
     protected string $path;
 
     /**

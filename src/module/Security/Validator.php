@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Validator
 {
-
     protected SqlClient $sql;
 
     /**
@@ -38,7 +37,7 @@ class Validator
 
         /**
          * @var ?array $parts
-         * Token parts are retrived and decoded.  
+         * Token parts are retrived and decoded.
          */
         if (null === ($parts = $this->getTokenParts($token))) {
             return false;
@@ -67,7 +66,7 @@ class Validator
 
         /**
          * @var ?string $secret
-         * The has is validated against the "jwt_secret" option. 
+         * The has is validated against the "jwt_secret" option.
          */
         if (null !== ($secret = Settings::get('jwt_secret'))) {
             $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
@@ -78,7 +77,7 @@ class Validator
             );
             return hash_equals($signature, $expectedSignature);
         }
-        
+
         return false;
     }
 

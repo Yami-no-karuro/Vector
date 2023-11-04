@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class WebToken
 {
-
     protected SqlClient $sql;
 
     /**

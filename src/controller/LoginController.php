@@ -5,7 +5,7 @@ namespace Vector\Controller;
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\SqlLogger;
-use Vector\Module\Security\JWT;
+use Vector\Module\Security\WebToken;
 use Vector\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,11 +84,11 @@ class LoginController extends FrontendController
                     $logger->write('User: "' . $email . '" has logged in successfully.');
 
                     /**
-                     * @var JWT $jwt
+                     * @var WebToken $jwt
                      * @var Cookie $cookie
                      * Authentication cookie is set.
                      */
-                    $token = new JWT();
+                    $token = new WebToken();
                     $cookie = new Cookie('Auth-Token', $token->generate([
                         'userId' => $user['ID'],
                         'time' => microtime()

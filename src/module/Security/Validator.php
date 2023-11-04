@@ -11,8 +11,9 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class JWTValidator
+class Validator
 {
+
     protected SqlClient $sql;
 
     /**
@@ -26,13 +27,19 @@ class JWTValidator
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWTValidator->isValid()
+     * Vector\Module\Security\Validator->isValid()
      * @param string $token
      * @param Request $request
+     * @param bool $ignoreRequestInfo
      * @return bool
      */
-    public function isValid(string $token, Request $request): bool
+    public function isValid(string $token, Request $request, bool $ignoreRequestInfo = false): bool
     {
+
+        /**
+         * @var ?array $parts
+         * Token parts are retrived and decoded.  
+         */
         if (null === ($parts = $this->getTokenParts($token))) {
             return false;
         }
@@ -44,25 +51,40 @@ class JWTValidator
                 $payload
             )
         ), true);
-        if (!array_key_exists('ipAddress', $decodedPayload) ||
-            $decodedPayload['ipAddress'] !== $request->getClientIp() ||
-            !array_key_exists('userAgent', $decodedPayload) ||
-            $decodedPayload['userAgent'] !== $request->headers->get('User-Agent')) {
-            return false;
+
+        /**
+         * @param bool $ignoreRequestInfo
+         * Checks requests informations validity.
+         */
+        if (false === $ignoreRequestInfo) {
+            if (!array_key_exists('ipAddress', $decodedPayload) || $decodedPayload['ipAddress'] !== $request->getClientIp()) {
+                return false;
+            }
+            if (!array_key_exists('userAgent', $decodedPayload) || $decodedPayload['userAgent'] !== $request->headers->get('User-Agent')) {
+                return false;
+            }
         }
-        $secret = Settings::get('jwt_secret');
-        $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
-        $expectedSignature = str_replace(
-            ['+', '/', '='],
-            ['-', '_', ''],
-            base64_encode($calculatedSignature)
-        );
-        return hash_equals($signature, $expectedSignature);
+
+        /**
+         * @var ?string $secret
+         * The has is validated against the "jwt_secret" option. 
+         */
+        if (null !== ($secret = Settings::get('jwt_secret'))) {
+            $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
+            $expectedSignature = str_replace(
+                ['+', '/', '='],
+                ['-', '_', ''],
+                base64_encode($calculatedSignature)
+            );
+            return hash_equals($signature, $expectedSignature);
+        }
+        
+        return false;
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWTValidator->getPayload()
+     * Vector\Module\Security\Validator->getPayload()
      * @param string $token
      * @return ?array
      */
@@ -83,7 +105,7 @@ class JWTValidator
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWTValidator->getTokenParts()
+     * Vector\Module\Security\Validator->getTokenParts()
      * @param string $token
      * @return ?array
      */

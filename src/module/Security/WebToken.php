@@ -11,7 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class JWT
+class WebToken
 {
     protected SqlClient $sql;
 
@@ -26,17 +26,20 @@ class JWT
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWT->generate()
+     * Vector\Module\Security\WebToken->generate()
      * @param array $payload
      * @param Request $request
+     * @param bool $ignoreRequestInfo
      * @return ?string
      */
-    public function generate(array $payload, Request $request): ?string
+    public function generate(array $payload, Request $request, bool $ignoreRequestInfo = false): ?string
     {
         if (null !== ($secret = Settings::get('jwt_secret'))) {
             $headers = $this->generateHeaders();
-            $payload['ipAddress'] = $request->getClientIp();
-            $payload['userAgent'] = $request->headers->get('User-Agent');
+            if (false === $ignoreRequestInfo) {
+                $payload['ipAddress'] = $request->getClientIp();
+                $payload['userAgent'] = $request->headers->get('User-Agent', 'unknown');
+            }
             $payload = $this->generatePayload($payload);
             $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $encodedSignature = str_replace(
@@ -46,19 +49,18 @@ class JWT
             );
             return $headers . '.' . $payload . '.' . $encodedSignature;
         }
+
         return null;
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWT->generateHeaders()
+     * Vector\Module\Security\WebToken->generateHeaders()
      * @return string
      */
     protected function generateHeaders(): string
     {
-        $headers = json_encode([
-            'type' => 'JWT',
-            'algo' => 'HS256'
+        $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256'
         ]);
         return str_replace(
             ['+', '/', '='],
@@ -69,7 +71,7 @@ class JWT
 
     /**
      * @package Vector
-     * Vector\Module\Security\JWT->generatePayload()
+     * Vector\Module\Security\WebToken->generatePayload()
      * @param array $payload
      * @return string
      */

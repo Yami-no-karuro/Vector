@@ -4,7 +4,7 @@ namespace Vector\Module\Security;
 
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
-use Vector\Module\Security\JWTValidator;
+use Vector\Module\Security\Validator;
 use Vector\Module\Security\UserAuthBadge;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
@@ -112,11 +112,11 @@ class Firewall
     /**
      * @package Vector
      * Vector\Module\Security\Firewall->verifyPayload()
-     * @param array $data
+     * @param mixed $data
      * @return void
      * @throws SecurityException
      */
-    protected function verifyPayload(array $data): void
+    protected function verifyPayload(mixed $data): void
     {
         foreach ($data as $value) {
             if (is_array($value)) {
@@ -148,18 +148,17 @@ class Firewall
                  * @var ?string $authToken
                  * Look for authToken in request cookies and headers.
                  */
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ?
-                    $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken) {
 
                     /**
-                     * @var JWTValidator $validator
+                     * @var Validator $validator
                      * @var UserAuthBadge $badge
-                     * Validate the retrived token on the JWTValidator instance.
+                     * Validate the retrived token on the Validator instance.
                      * "onTokenVerified" and "onTokenRejected" events are being dispatched.
                      */
                     global $badge;
-                    $validator = new JWTValidator();
+                    $validator = new Validator();
                     if (true === $validator->isValid($authToken, $request)) {
                         $payload = $validator->getPayload($authToken);
                         $badge = new UserAuthBadge($payload);

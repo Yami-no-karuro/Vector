@@ -5,7 +5,7 @@ namespace Vector\Controller;
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\SqlLogger;
-use Vector\Module\Security\JWT;
+use Vector\Module\Security\WebToken;
 use Vector\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,8 +65,7 @@ class LoginController extends FrontendController
          */
         $logger = new SqlLogger('auth');
         $repository = UserRepository::getInstance();
-        if (null !== ($email = $request->get('email')) &&
-            false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
             /**
              * @var array $user
@@ -76,22 +75,32 @@ class LoginController extends FrontendController
             if (null !== $user) {
 
                 /**
-                * @var string $password
-                * On password match set the autentication cookie and redirect to /admin.
-                * Redirect back with "?success=false" on failure.
-                */
+                 * @var string $password
+                 * On password match set the autentication cookie and redirect to /admin.
+                 * Redirect back with "?success=false" on failure.
+                 */
                 $password = $user['password'];
                 if (hash('sha256', $request->get('password', '')) === $password) {
                     $logger->write('User: "' . $email . '" has logged in successfully.');
-                    $token = new JWT();
+
+                    /**
+                     * @var WebToken $jwt
+                     * @var Cookie $cookie
+                     * Authentication cookie is set.
+                     */
+                    $token = new WebToken();
                     $cookie = new Cookie('Auth-Token', $token->generate([
-                        'userId' => $user['ID']
+                        'userId' => $user['ID'],
+                        'time' => microtime()
                     ], $request));
+
+                    $cookie->withHttpOnly(true);
+                    $cookie->withSecure(true);
+
                     $response = new RedirectResponse('/admin', Response::HTTP_FOUND);
                     $response->headers->setCookie($cookie);
                     return $response;
                 }
-
             }
         }
 
@@ -103,7 +112,10 @@ class LoginController extends FrontendController
             $logger->write('Client: "' . $clientIp . '" attempted to login with incorrect credentials.');
         }
 
-        return new RedirectResponse('/login?success=false', Response::HTTP_FOUND);
+        return new RedirectResponse(
+            '/login?success=false',
+            Response::HTTP_FOUND
+        );
     }
 
     /**

@@ -13,7 +13,6 @@ use Vector\Module\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
@@ -81,6 +80,7 @@ class Kernel
         if (!$transient->isValid()) {
             return;
         }
+
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
 
@@ -121,7 +121,6 @@ class Kernel
         $response->prepare($request);
         $response->send();
         die();
-
     }
 
     /**
@@ -147,7 +146,6 @@ class Kernel
                 new $controller();
             }
         }
-
     }
 
     /**
@@ -194,7 +192,6 @@ class Kernel
         set_error_handler([$errorHandler, 'handleError']);
         set_exception_handler([$errorHandler, 'handleException']);
         register_shutdown_function([$errorHandler, 'handleShutdown']);
-
     }
 
     /**
@@ -216,17 +213,15 @@ class Kernel
             $firewall->verifyRequest($request);
         } catch (Exception $e) {
             if ($e instanceof SecurityException) {
-                $response = new Response(null, Response::HTTP_UNAUTHORIZED);
                 $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" request contained malicious content.');
             } elseif ($e instanceof UnauthorizedException) {
-                $response = new RedirectResponse('/login', Response::HTTP_FOUND);
                 $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" attempted to reach a secure route without being authenticated.');
             }
+            $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();
             die();
         }
-
     }
 
     /**
@@ -278,7 +273,5 @@ class Kernel
         $port = $request->getPort();
         $scheme = $request->getScheme();
         return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
-
     }
-
 }

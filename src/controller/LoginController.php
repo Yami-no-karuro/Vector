@@ -19,7 +19,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class LoginController extends FrontendController
 {
-
     protected function register(): void
     {
         Router::route(['GET'], '^/login/?$', [$this, 'loginViewAction']);
@@ -114,7 +113,7 @@ class LoginController extends FrontendController
         }
 
         return new RedirectResponse(
-            '/login?success=false', 
+            '/login?success=false',
             Response::HTTP_FOUND
         );
     }

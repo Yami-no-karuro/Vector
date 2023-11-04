@@ -66,9 +66,9 @@ class Validator
 
         /**
          * @var ?string $secret
-         * The has is validated against the "jwt_secret" option.
+         * The has is validated against the "web_token_secret" option.
          */
-        if (null !== ($secret = Settings::get('jwt_secret'))) {
+        if (null !== ($secret = Settings::get('web_token_secret'))) {
             $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $expectedSignature = str_replace(
                 ['+', '/', '='],

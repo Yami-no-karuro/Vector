@@ -72,7 +72,7 @@ class Install extends AbstractCommand
          * Sets the default settings.
          */
         try {
-            Settings::set('jwt_secret', bin2hex(random_bytes(32)));
+            Settings::set('web_token_secret', bin2hex(random_bytes(32)));
         } catch (Exception $e) {
             Application::out($e);
             $this->logger->write($e);

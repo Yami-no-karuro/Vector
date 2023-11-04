@@ -34,7 +34,7 @@ class WebToken
      */
     public function generate(array $payload, Request $request, bool $ignoreRequestInfo = false): ?string
     {
-        if (null !== ($secret = Settings::get('jwt_secret'))) {
+        if (null !== ($secret = Settings::get('web_token_secret'))) {
             $headers = $this->generateHeaders();
             if (false === $ignoreRequestInfo) {
                 $payload['ip_address'] = $request->getClientIp();

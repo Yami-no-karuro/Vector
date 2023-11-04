@@ -84,7 +84,6 @@ class Router
         $response->prepare($request);
         $response->send();
         die();
-
     }
 
 }

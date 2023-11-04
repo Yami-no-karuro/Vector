@@ -13,7 +13,6 @@ use Vector\Module\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
@@ -121,7 +120,6 @@ class Kernel
         $response->prepare($request);
         $response->send();
         die();
-
     }
 
     /**
@@ -147,7 +145,6 @@ class Kernel
                 new $controller();
             }
         }
-
     }
 
     /**
@@ -194,7 +191,6 @@ class Kernel
         set_error_handler([$errorHandler, 'handleError']);
         set_exception_handler([$errorHandler, 'handleException']);
         register_shutdown_function([$errorHandler, 'handleShutdown']);
-
     }
 
     /**
@@ -225,7 +221,6 @@ class Kernel
             $response->send();
             die();
         }
-
     }
 
     /**
@@ -277,7 +272,5 @@ class Kernel
         $port = $request->getPort();
         $scheme = $request->getScheme();
         return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
-
     }
-
 }

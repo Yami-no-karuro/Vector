@@ -32,8 +32,8 @@ class UserAuthBadge
      */
     public function getUser(): ?array
     {
-        if (array_key_exists('userId', $this->payload)) {
-            return $this->repository->getById($this->payload['userId']);
+        if (array_key_exists('rsid', $this->payload)) {
+            return $this->repository->getById($this->payload['rsid']);
         }
         return null;
     }
@@ -45,7 +45,7 @@ class UserAuthBadge
      */
     public function getIpAddress(): ?string
     {
-        return array_key_exists('ipAddress', $this->payload) ? $this->payload['ipAddress'] : null;
+        return array_key_exists('ip_address', $this->payload) ? $this->payload['ip_address'] : null;
     }
 
     /**
@@ -55,7 +55,7 @@ class UserAuthBadge
      */
     public function getUserAgent(): ?string
     {
-        return array_key_exists('userAgent', $this->payload) ? $this->payload['userAgent'] : null;
+        return array_key_exists('user_agent', $this->payload) ? $this->payload['user_agent'] : null;
     }
 
 }

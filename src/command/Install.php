@@ -44,6 +44,14 @@ class Install extends AbstractCommand
     {
 
         /**
+         * Install command is only executable once.
+         */
+        if (null !== Settings::get('installed')) {
+            Application::out('Vector is already installed!');
+            return self::EXIT_FAILURE;
+        }
+
+        /**
          * @var string $dir
          * @var RecursiveDirectoryIterator $sqlDir
          * @var RecursiveIteratorIterator $iterator
@@ -69,10 +77,13 @@ class Install extends AbstractCommand
         }
 
         /**
-         * Sets the default settings.
+         * Defaults settings are created.
          */
         try {
+            Settings::set('installed', true);
             Settings::set('web_token_secret', bin2hex(random_bytes(32)));
+            Settings::set('crypt_key', bin2hex(random_bytes(32)));
+            Settings::set('crypt_iv', bin2hex(random_bytes(8)));
         } catch (Exception $e) {
             Application::out($e);
             $this->logger->write($e);

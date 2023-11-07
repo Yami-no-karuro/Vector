@@ -56,9 +56,7 @@ class DefaultController extends FrontendController
          * Logging 404s to keep track of user and bot activities.
          */
         $logger = new SqlLogger('auth');
-        if (null !== ($clientIp = $request->getClientIp())) {
-            $logger->write('Client: "' . $clientIp . '" attempted to navigate an unknown route.');
-        }
+        $logger->write('Client: "' . $request->getClientIp() . '" attempted to navigate an unknown route.');
 
         /**
          * @var string $html

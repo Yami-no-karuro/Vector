@@ -51,6 +51,7 @@ class ErrorHandler
             $this->logger->write($errorMessage);
         }
 
+        die();
     }
 
     /**
@@ -77,6 +78,7 @@ class ErrorHandler
             $this->logger->write($exceptionMessage);
         }
 
+        die();
     }
 
     /**
@@ -114,6 +116,8 @@ class ErrorHandler
             $response->send();
 
         }
+
+        die();
     }
 
     /**

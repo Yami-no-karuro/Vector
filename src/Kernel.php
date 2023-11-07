@@ -45,6 +45,7 @@ class Kernel
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
         $this->loadConfig();
+        $this->registerShutdownFunctions();
         $this->logger = new FileSystemLogger('core');
         $this->sqlLogger = new SqlLogger('auth');
     }
@@ -56,7 +57,6 @@ class Kernel
      */
     public function boot(): void
     {
-        $this->registerShutdownFunctions();
         $this->verifyRequest();
         $this->handleCallback();
         $this->routeRegister();
@@ -187,8 +187,11 @@ class Kernel
         /**
          * @var ErrorHandler $errorHandler
          * Errors, Exceptions and Shutdowns are delegated to the ErrorHandler class.
+         * "onErrorHandler" event is dispatched.
          */
         $errorHandler = new ErrorHandler();
+        EventDispatcher::dispatch('KernelListener', 'onErrorHandler', [&$errorHandler]);
+
         set_error_handler([$errorHandler, 'handleError']);
         set_exception_handler([$errorHandler, 'handleException']);
         register_shutdown_function([$errorHandler, 'handleShutdown']);
@@ -206,9 +209,12 @@ class Kernel
          * @var Request $request
          * @var Firewall $firewall
          * Request is passed through application Firewall for approval.
+         * "onFirewall event is dispatched.
          */
         global $request;
         $firewall = new Firewall();
+        EventDispatcher::dispatch('KernelListener', 'onFirewall', [&$firewall]);
+
         try {
             $firewall->verifyRequest($request);
         } catch (Exception $e) {

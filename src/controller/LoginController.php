@@ -58,12 +58,10 @@ class LoginController extends FrontendController
     {
 
         /**
-         * @var SqlLogger $logger
          * @var UserRepository $repository
          * @var string $email
          * If the provided email is valid search for an existing user.
          */
-        $logger = new SqlLogger('auth');
         $repository = UserRepository::getInstance();
         if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -71,8 +69,7 @@ class LoginController extends FrontendController
              * @var array $user
              * Looks for valid users by email.
              */
-            $user = $repository->getByEmail($email);
-            if (null !== $user) {
+            if (null !== ($user = $repository->getByEmail($email))) {
 
                 /**
                  * @var string $password
@@ -81,15 +78,12 @@ class LoginController extends FrontendController
                  */
                 $password = $user['password'];
                 if (hash('sha256', $request->get('password', '')) === $password) {
-                    $logger->write('User: "' . $email . '" has logged in successfully.');
 
                     /**
-                     * @var WebToken $jwt
                      * @var Cookie $cookie
                      * Authentication cookie is set.
                      */
-                    $token = new WebToken();
-                    $cookie = new Cookie('Auth-Token', $token->generate([
+                    $cookie = new Cookie('Auth-Token', WebToken::generate([
                         'rsid' => $user['ID'],
                         'time' => microtime()
                     ], $request));
@@ -105,12 +99,11 @@ class LoginController extends FrontendController
         }
 
         /**
-         * @var string $clientIp
+         * @var SqlLogger $logger
          * Logging login attempt to keep track of user and bot activities.
          */
-        if (null !== ($clientIp = $request->getClientIp())) {
-            $logger->write('Client: "' . $clientIp . '" attempted to login with incorrect credentials.');
-        }
+        $logger = new SqlLogger('auth');
+        $logger->write('Client: "' . $request->getClientIp() . '" attempted to login with incorrect credentials.');
 
         return new RedirectResponse(
             '/login?success=false',

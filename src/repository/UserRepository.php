@@ -95,6 +95,7 @@ class UserRepository
                 ['type' => 's', 'value' => $firstname],
                 ['type' => 's', 'value' => $lastname]
         ]);
+
     }
 
     /**
@@ -120,13 +121,8 @@ class UserRepository
         $firstname = trim($userdata['firstname']);
         $lastname = trim($userdata['lastname']);
         $this->client->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
-            VALUES (NULL, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE 
-            `password` = ?, 
-            `username` = ?, 
-            `firstname` = ?, 
-            `lastname` = ?", [
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (NULL, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
                 ['type' => 's', 'value' => $email],
                 ['type' => 's', 'value' => $password],
                 ['type' => 's', 'value' => $username],

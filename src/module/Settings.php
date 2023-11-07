@@ -15,13 +15,13 @@ class Settings
      * @package Vector
      * Vector\Module\Settings::get()
      * @param string $key
-     * @return string
+     * @return ?string
      */
     public static function get(string $key): ?string
     {
         $sql = SqlClient::getInstance();
         $result = $sql->getResults("SELECT `value` FROM `settings` WHERE `key` = ?", [
-            ['type' => 'd', 'value' => $key]
+            ['type' => 's', 'value' => $key]
         ]);
         if ($result['success'] && !empty($data = $result['data'])) {
             return $data['value'];

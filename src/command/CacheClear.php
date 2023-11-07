@@ -86,5 +86,4 @@ class CacheClear extends AbstractCommand
     {
         return 'vector:cache-clear';
     }
-
 }

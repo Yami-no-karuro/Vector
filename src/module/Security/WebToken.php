@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class WebToken
 {
+
     /**
      * @package Vector
      * Vector\Module\Security\WebToken::generate()
@@ -126,8 +127,7 @@ class WebToken
      */
     protected static function generateHeaders(): string
     {
-        $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256'
-        ]);
+        $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256']);
         return str_replace(
             ['+', '/', '='],
             ['-', '_', ''],

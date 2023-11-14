@@ -44,14 +44,13 @@ class CreateUser extends AbstractCommand
         if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $userdata['email'] = $email;
         } else {
-            Application::out('Invalid email address: "' . $email .  '"');
+            Application::out('Command failed, invalid email address.');
             return self::EXIT_FAILURE;
         }
-
         $userdata['password'] = Application::in('Password:');
-        $userdata['username'] = Application::in('Username: (press Enter to leave empty)');
-        $userdata['firstname'] = Application::in('Firstname: (press Enter to leave empty)');
-        $userdata['lastname'] = Application::in('Lastname: (press Enter to leave empty)');
+        $userdata['username'] = Application::in('Username:');
+        $userdata['firstname'] = Application::in('Firstname:');
+        $userdata['lastname'] = Application::in('Lastname:');
 
         /**
          * @var array $user
@@ -59,7 +58,7 @@ class CreateUser extends AbstractCommand
          */
         $user = $this->repository->getByEmail($email);
         if (null !== $user) {
-            Application::out('User (email: "' . $email . '") already exists on the database.');
+            Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;
         }
 

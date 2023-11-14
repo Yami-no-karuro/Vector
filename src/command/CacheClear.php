@@ -43,10 +43,8 @@ class CacheClear extends AbstractCommand
     {
 
         /**
-         * @var string $dir
-         * @var RecursiveDirectoryIterator $cacheDir
-         * @var RecursiveIteratorIterator $iterator
-         * Empty the transient table than proceed to remove everything from the cache directory.
+         * @var Exception $e
+         * Empty the database transients table.
          */
         try {
             $this->sql->exec('DELETE FROM `transients`');
@@ -55,6 +53,13 @@ class CacheClear extends AbstractCommand
             $this->logger->write($e);
             return self::EXIT_FAILURE;
         }
+
+        /**
+         * @var string $dir
+         * @var RecursiveDirectoryIterator $cacheDir
+         * @var RecursiveIteratorIterator $iterator
+         * Empty the transient table than proceed to remove everything from the cache directory.
+         */
         $dir = Kernel::getProjectRoot() . 'var/cache/';
         if (file_exists($dir) && is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);

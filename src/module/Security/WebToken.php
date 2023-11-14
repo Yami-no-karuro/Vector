@@ -126,8 +126,7 @@ class WebToken
      */
     protected static function generateHeaders(): string
     {
-        $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256'
-        ]);
+        $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256']);
         return str_replace(
             ['+', '/', '='],
             ['-', '_', ''],

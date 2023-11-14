@@ -66,40 +66,6 @@ class UserRepository
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->insert()
-     * @param array $userdata
-     * @return void
-     */
-    public function insert(array $userdata): void
-    {
-
-        /**
-         * @var string $email
-         * @var string $password
-         * @var string $username
-         * @var string $firstname
-         * @var string $lastname
-         * User variables are created.
-         */
-        $email = trim($userdata['email']);
-        $password = hash('sha256', trim($userdata['password']));
-        $username = trim($userdata['username']);
-        $firstname = trim($userdata['firstname']);
-        $lastname = trim($userdata['lastname']);
-        $this->client->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
-            VALUES (NULL, ?, ?, ?, ?, ?)", [
-                ['type' => 's', 'value' => $email],
-                ['type' => 's', 'value' => $password],
-                ['type' => 's', 'value' => $username],
-                ['type' => 's', 'value' => $firstname],
-                ['type' => 's', 'value' => $lastname]
-        ]);
-
-    }
-
-    /**
-     * @package Vector
      * Vector\Repository\UserRepository->upsert()
      * @param array $userdata
      * @return void

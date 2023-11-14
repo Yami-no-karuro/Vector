@@ -23,7 +23,7 @@ class Crypt
         $iv = Settings::get('crypt_iv');
         $startSalt = openssl_random_pseudo_bytes(32);
         $endSalt = openssl_random_pseudo_bytes(32);
-        $data = $startSalt . $data . $endSalt; 
+        $data = $startSalt . $data . $endSalt;
         return openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
     }
 

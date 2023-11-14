@@ -66,7 +66,7 @@ class CreateUser extends AbstractCommand
          * @param array $result
          * Proceed to insert the new record.
          */
-        $this->repository->insert($userdata);
+        $this->repository->upsert($userdata);
         Application::out('User (email: "' . $email .  '") was succesfully created!');
 
         return self::EXIT_SUCCESS;

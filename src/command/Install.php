@@ -44,14 +44,6 @@ class Install extends AbstractCommand
     {
 
         /**
-         * Install command is only executable once.
-         */
-        if (null !== Settings::get('installed')) {
-            Application::out('Vector is already installed!');
-            return self::EXIT_FAILURE;
-        }
-
-        /**
          * @var string $dir
          * @var RecursiveDirectoryIterator $sqlDir
          * @var RecursiveIteratorIterator $iterator

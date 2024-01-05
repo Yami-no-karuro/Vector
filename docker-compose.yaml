@@ -96,6 +96,19 @@ services:
     networks:
       - vector-network
 
+  minio:
+    image: quay.io/minio/minio
+    container_name: vector-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - vector-minio:/data
+    networks:
+      - vector-network
+
 networks:
   vector-network:
 
@@ -103,3 +116,4 @@ volumes:
   vector-database:
   vector-mongodb:
   vector-redis:
+  vector-minio:

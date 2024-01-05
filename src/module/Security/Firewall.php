@@ -59,7 +59,7 @@ class Firewall
          * Verify request headers if set in global configuration.
          * "onHeaders" event is dispatched.
          */
-        if (true === $config->firewall->headers) {
+        if (true === $config->security->firewall->headers) {
             if (null !== ($headers = $request->headers->all())) {
                 $this->verifyPayload($headers);
             }
@@ -70,7 +70,7 @@ class Firewall
          * Verify request cookies if set in global configuration.
          * "onCookies" event is dispatched.
          */
-        if (true === $config->firewall->cookies) {
+        if (true === $config->security->firewall->cookies) {
             if (null !== ($cookies = $request->cookies->all())) {
                 $this->verifyPayload($cookies);
             }
@@ -81,7 +81,7 @@ class Firewall
          * Verify request query if set in global configuration.
          * "onQuery" event is dispatched.
          */
-        if (true === $config->firewall->query) {
+        if (true === $config->security->firewall->query) {
             if (null !== ($query = $request->query->all())) {
                 $this->verifyPayload($query);
             }
@@ -92,7 +92,7 @@ class Firewall
          * Verify request body if set in global configuration.
          * "onBody" event is dispatched.
          */
-        if (true === $config->firewall->body) {
+        if (true === $config->security->firewall->body) {
             if (null !== ($body = $request->request->all())) {
                 $this->verifyPayload($body);
             }

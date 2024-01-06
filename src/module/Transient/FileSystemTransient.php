@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemTransient extends AbstractTransient
 {
+
     protected string $path;
     protected ?array $content = null;
 

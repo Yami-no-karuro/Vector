@@ -17,6 +17,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
+
     protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
@@ -203,4 +204,5 @@ class Application
         $handle = fopen('php://stdin', 'r');
         return trim(fgets($handle));
     }
+
 }

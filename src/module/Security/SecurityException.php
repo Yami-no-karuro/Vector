@@ -11,6 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SecurityException extends Exception
 {
+
     protected string $content;
 
     /**

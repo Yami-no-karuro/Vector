@@ -9,6 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class EventDispatcher
 {
+
     /**
      * @package Vector
      * Vector\Module\EventDispatcher::dispatch()

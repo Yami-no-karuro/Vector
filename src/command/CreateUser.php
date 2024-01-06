@@ -47,6 +47,7 @@ class CreateUser extends AbstractCommand
             Application::out('Command failed, invalid email address.');
             return self::EXIT_FAILURE;
         }
+
         $userdata['password'] = Application::in('Password:');
         $userdata['username'] = Application::in('Username:');
         $userdata['firstname'] = Application::in('Firstname:');

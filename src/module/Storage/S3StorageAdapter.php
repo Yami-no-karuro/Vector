@@ -36,18 +36,18 @@ class S3StorageAdapter
          */
         global $config;
         $client = new S3Client([
-            'region' => $config->assets_storage->region,
-            'version' => $config->assets_storage->version,
-            'endpoint' => $config->assets_storage->endpoint,
+            'region' => $config->s3_storage->region,
+            'version' => $config->s3_storage->version,
+            'endpoint' => $config->s3_storage->endpoint,
             'use_path_style_endpoint' => true,
             'credentials' => new Credentials(
-                $config->assets_storage->access_key, 
-                $config->assets_storage->access_secret
+                $config->s3_storage->access_key, 
+                $config->s3_storage->access_secret
             )
         ]);
 
         $converter = new PortableVisibilityConverter(Visibility::PUBLIC);
-        $adapter = new AwsS3V3Adapter($client, $config->assets_storage->bucket, '/', $converter);
+        $adapter = new AwsS3V3Adapter($client, $config->s3_storage->bucket, '/', $converter);
         $this->filesystem = new Filesystem($adapter);
     }
 

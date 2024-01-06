@@ -11,6 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Settings
 {
+
     /**
      * @package Vector
      * Vector\Module\Settings::get()

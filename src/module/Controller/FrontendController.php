@@ -14,6 +14,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class FrontendController extends AbstractController
 {
+
     protected Environment $template;
 
     /**
@@ -37,4 +38,5 @@ abstract class FrontendController extends AbstractController
 
         parent::__construct($direct);
     }
+
 }

@@ -11,6 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class UnauthorizedException extends Exception
 {
+
     protected string $content;
 
     /**

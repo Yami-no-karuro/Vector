@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class MongoClient
 {
+
     protected Client $client;
     protected mixed $database;
     private static mixed $instance = null;

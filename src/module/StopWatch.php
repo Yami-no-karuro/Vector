@@ -9,6 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class StopWatch
 {
+
     protected float $startTime;
     protected float $endTime;
 

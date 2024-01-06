@@ -11,6 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Crypt
 {
+
     /**
      * @package Vector
      * Vector\Module\Crypt::encrypt()

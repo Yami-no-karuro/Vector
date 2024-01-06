@@ -9,6 +9,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Slugger
 {
+
     /**
      * @package Vector
      * Vector\Module\Slugger::fromString()

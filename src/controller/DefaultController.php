@@ -75,6 +75,7 @@ class DefaultController extends FrontendController
                 'png' => 'image/png',
                 'gif' => 'image/gif',
                 'webp' => 'image/webp',
+                'pdf' => 'application/pdf',
                 'mp4' => 'video/mp4',
                 'webm' => 'video/webm',
                 'avi' => 'video/x-msvideo',

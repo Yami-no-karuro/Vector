@@ -12,13 +12,13 @@
 /var/cache/transients/*
 !/var/cache/transients/.gitkeep
 
-# cache - transients
-/var/cache/router/*
-!/var/cache/router/.gitkeep
-
 # logs
 /var/logs/*
 !/var/logs/.gitkeep
+
+# storage
+/var/storage/*
+!/var/storage/.gitkeep
 
 # node_modules
 node_modules

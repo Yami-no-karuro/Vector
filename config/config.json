@@ -20,6 +20,7 @@
         "db_name": "vector_mongodb"
     },
     "s3_storage": {
+        "enabled": true,
         "bucket": "vector",
         "access_key": "OZeLPN0TOPz29uOjX3ES",
         "access_secret": "ia7h02pjvHyqzEhGRAOiIYdKQYBUJuQoe5kCEMiJ",

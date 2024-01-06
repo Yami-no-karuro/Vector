@@ -70,7 +70,7 @@ class DefaultController extends FrontendController
              */
             $headers = [];
             $fileinfo = pathinfo($filepath);
-            $headers['Content-Type'] = match ($fileinfo['extension']) {
+            $headers['Content-Type'] = match($fileinfo['extension']) {
                 'jpg', 'jpeg' => 'image/jpeg',
                 'png' => 'image/png',
                 'gif' => 'image/gif',

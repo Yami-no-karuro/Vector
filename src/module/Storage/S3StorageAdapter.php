@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module;
+namespace Vector\Module\Storage;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Visibility;
@@ -45,6 +45,7 @@ class S3StorageAdapter
                 $config->assets_storage->access_secret
             )
         ]);
+
         $converter = new PortableVisibilityConverter(Visibility::PUBLIC);
         $adapter = new AwsS3V3Adapter($client, $config->assets_storage->bucket, '/', $converter);
         $this->filesystem = new Filesystem($adapter);

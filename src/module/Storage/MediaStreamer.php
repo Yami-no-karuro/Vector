@@ -51,7 +51,8 @@ class MediaStreamer
                 $localHandle = fopen($fullpath, 'wb');
                 $remoteHandle = $filesystem->readStream($filepath);
                 stream_copy_to_stream($remoteHandle, $localHandle);
-                return $localHandle;
+                fclose($localHandle);
+                return false !== ($handle = fopen($fullpath, 'r')) ? $handle : null;
             }
         }
 

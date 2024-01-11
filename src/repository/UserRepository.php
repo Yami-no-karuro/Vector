@@ -69,16 +69,17 @@ class UserRepository
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->update()
+     * Vector\Repository\UserRepository->save()
      * @param array $data
      * @return void
      */
-    public function update(array $data): void
+    public function save(array $data): void
     {
         $password = hash('sha256', trim($data['password']));
         $this->client->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (NULL, ?, ?, ?, ?, ?)
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
+                ['type' => 's', 'value' => isset($data['ID']) ? $data['ID'] : null],
                 ['type' => 's', 'value' => $data['email']],
                 ['type' => 's', 'value' => $password],
                 ['type' => 's', 'value' => $data['username']],

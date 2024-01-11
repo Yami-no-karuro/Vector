@@ -54,15 +54,16 @@ class AssetRepository
 
     /**
      * @package Vector
-     * Vector\Repository\AssetRepository->update()
+     * Vector\Repository\AssetRepository->save()
      * @param array $data
      * @return void
      */
-    public function update(array $data): void
+    public function save(array $data): void
     {
         $this->client->exec("INSERT INTO `assets` 
-            (`ID`, `path`, `modified_at`, `mimetype`, `size`) VALUES (NULL, ?, ?, ?, ?)
+            (`ID`, `path`, `modified_at`, `mimetype`, `size`) VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `path` = ?, `modified_at` = ?, `mimetype` = ?, `size` = ?", [
+                ['type' => 's', 'value' => isset($data['ID']) ? $data['ID'] : null],
                 ['type' => 's', 'value' => $data['path']],
                 ['type' => 's', 'value' => $data['modified_at']],
                 ['type' => 's', 'value' => $data['mimetype']],

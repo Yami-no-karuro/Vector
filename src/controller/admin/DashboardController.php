@@ -11,11 +11,12 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class AdminController extends FrontendController
+class DashboardController extends FrontendController
 {
+
     protected function register(): void
     {
-        Router::route(['GET'], '^/admin/?$', [$this, 'adminViewAction']);
+        Router::route(['GET'], '^/admin/?$', [$this, 'dashboardViewAction']);
     }
 
     /**
@@ -23,7 +24,7 @@ class AdminController extends FrontendController
      * Methods: GET
      * @return Response
      */
-    public function adminViewAction(): Response
+    public function dashboardViewAction(): Response
     {
 
         /**
@@ -31,8 +32,8 @@ class AdminController extends FrontendController
          * Builds the view raw html.
          */
         $html = $this->template->render('admin/admin.html.twig', [
-            'title' => 'Vector',
-            'description' => 'A simple HttpFoundation framework for PHP.'
+            'title' => 'Vector - Dashboard',
+            'description' => ''
         ]);
 
         return new Response($html, Response::HTTP_OK);

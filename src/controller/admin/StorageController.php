@@ -49,21 +49,10 @@ class StorageController extends FrontendController
      * Route: '/admin/storage/upload'
      * Methods: POST 
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function storageUploadAction(Request $request): Response
+    public function storageUploadAction(Request $request): RedirectResponse
     {
-
-        /**
-         * @var S3StorageAdapter $adapter
-         * @var FileSystem $filesystem
-         * The S3 filesystem component is initialized.
-         */
-        global $config;
-        if ($config->s3_storage->enabled === true) {
-            $adapter = S3StorageAdapter::getInstance();
-            $filesystem = $adapter->getFileSystemComponent();
-        }
 
         /**
          * @var array $files
@@ -73,13 +62,24 @@ class StorageController extends FrontendController
         if (is_array($files) && !empty($files)) {
 
             /**
+            * @var S3StorageAdapter $adapter
+            * @var FileSystem $filesystem
+            * The S3 filesystem component is initialized.
+            */
+            global $config;
+            if ($config->s3_storage->enabled === true) {
+                $adapter = S3StorageAdapter::getInstance();
+                $filesystem = $adapter->getFileSystemComponent();
+            }
+
+            /**
              * @var AssetRepository $repository
              * The asset repository instance is retrived to handle database updates.
              */
             $repository = AssetRepository::getInstance();
             foreach ($files as $file) {
                 $repository->save([
-                    'path' => $file->getClientOriginalName(),
+                    'path' => '/' . $file->getClientOriginalName(),
                     'mimetype' => $file->getMimeType(),
                     'size' => $file->getSize(),
                     'modified_at' => time()
@@ -90,9 +90,9 @@ class StorageController extends FrontendController
                  * If the remote storage is configured the file is directly uploaded.
                  */
                 if ($config->s3_storage->enabled === true) {
-                    $filesystem->write($file->getClientOriginalName(), $file->getContent());
+                    $filesystem->write('/' . $file->getClientOriginalName(), $file->getContent());
                 } else { 
-                    $filepath = Kernel::getProjectRoot() . 'var/storage/' . $file->getClientOriginalName(); 
+                    $filepath = Kernel::getProjectRoot() . 'var/storage/' . $file->getClientOriginalName();
                     file_put_contents($filepath, $file->getContent()); 
                 }
             }

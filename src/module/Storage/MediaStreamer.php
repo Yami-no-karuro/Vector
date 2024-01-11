@@ -22,12 +22,17 @@ class MediaStreamer
     {
 
         /**
-         * @var string $fullpath
-         * Looks for the file inside the local storage. 
+         * @var string $local
+         * Looks for the media inside the local storage. 
          */
-        $fullpath = Kernel::getProjectRoot() . 'var/storage' . $filepath;
-        if (file_exists($fullpath)) {
-            return false !== ($handle = fopen($fullpath, 'r')) ? $handle : null;
+        $local = Kernel::getProjectRoot() . 'var/storage' . $filepath;
+        if (file_exists($local)) {
+            return false !== ($localHandle = fopen($local, 'r')) ? 
+                [
+                    'handle' => $localHandle,
+                    'mimeType' => mime_content_type($local),
+                    'fileSize' => filesize($local)
+                ] : null;
         }
 
         global $config;
@@ -37,7 +42,7 @@ class MediaStreamer
              * @var S3StorageAdapter $adapter
              * @var FileSystem $filesystem
              * The S3 filesystem component is initialized.
-             * Looks for the file inside the remote storage.
+             * Looks for the media on the remote storage.
              */
             $adapter = S3StorageAdapter::getInstance();
             $filesystem = $adapter->getFileSystemComponent();
@@ -48,11 +53,17 @@ class MediaStreamer
                  * @var resource $remoteHandle
                  * The retrived file is copied into the local storage.
                  */
-                $localHandle = fopen($fullpath, 'wb');
+                $localHandle = fopen($local, 'wb');
                 $remoteHandle = $filesystem->readStream($filepath);
                 stream_copy_to_stream($remoteHandle, $localHandle);
                 fclose($localHandle);
-                return false !== ($handle = fopen($fullpath, 'r')) ? $handle : null;
+
+                return false !== ($localHandle = fopen($local, 'r')) ? 
+                    [
+                        'handle' => $localHandle,
+                        'mimeType' => mime_content_type($local),
+                        'fileSize' => filesize($local)
+                    ] : null;
             }
         }
 

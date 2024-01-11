@@ -57,43 +57,15 @@ class DefaultController extends FrontendController
 
         /**
          * @var string $filepath
-         * @var resource $stream
+         * @var ?array $stream
          * Retrives the resource handle via MediaStreamer.
          */
         $filepath = '/' . $params['path'];
         if (null !== ($stream = MediaStreamer::getStream($filepath))) {
-
-            /**
-             * @var array $headers
-             * @var array $fileinfo
-             * The file mimetype is guessed based on filename.
-             */
-            $headers = [];
-            $fileinfo = pathinfo($filepath);
-            $headers['Content-Type'] = match($fileinfo['extension']) {
-                'jpg', 'jpeg' => 'image/jpeg',
-                'png' => 'image/png',
-                'gif' => 'image/gif',
-                'webp' => 'image/webp',
-                'pdf' => 'application/pdf',
-                'mp4' => 'video/mp4',
-                'webm' => 'video/webm',
-                'avi' => 'video/x-msvideo',
-                'mov' => 'video/quicktime',
-                default => 'application/octet-stream',
-            };
-
-            /**
-             * @var array|false $filestats
-             * The filesize is retrived via fstat on the stream itself.
-             */
-            $filestats = fstat($stream);
-            if (is_array($filestats) && array_key_exists('size', $filestats)) {
-                $headers['Content-Length'] = $filestats['size'];
-            }
-
+            $headers['Content-Type'] = $stream['mimeType'];
+            $headers['Content-Length'] = $stream['fileSize'];
             return new StreamedResponse(function() use ($stream) {
-                fpassthru($stream);
+                fpassthru($stream['handle']);
             }, Response::HTTP_OK, $headers);
         }
 

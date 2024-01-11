@@ -13,6 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CreateUser extends AbstractCommand
 {
+
     protected UserRepository $repository;
 
     /**
@@ -67,7 +68,7 @@ class CreateUser extends AbstractCommand
          * @param array $result
          * Proceed to insert the new record.
          */
-        $this->repository->upsert($userdata);
+        $this->repository->update($userdata);
         Application::out('User (email: "' . $email .  '") was succesfully created!');
 
         return self::EXIT_SUCCESS;

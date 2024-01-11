@@ -69,25 +69,25 @@ class UserRepository
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->upsert()
-     * @param array $userdata
+     * Vector\Repository\UserRepository->update()
+     * @param array $data
      * @return void
      */
-    public function upsert(array $userdata): void
+    public function update(array $data): void
     {
-        $password = hash('sha256', trim($userdata['password']));
+        $password = hash('sha256', trim($data['password']));
         $this->client->exec("INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (NULL, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
-                ['type' => 's', 'value' => $userdata['email']],
+                ['type' => 's', 'value' => $data['email']],
                 ['type' => 's', 'value' => $password],
-                ['type' => 's', 'value' => $userdata['username']],
-                ['type' => 's', 'value' => $userdata['firstname']],
-                ['type' => 's', 'value' => $userdata['lastname']],
+                ['type' => 's', 'value' => $data['username']],
+                ['type' => 's', 'value' => $data['firstname']],
+                ['type' => 's', 'value' => $data['lastname']],
                 ['type' => 's', 'value' => $password],
-                ['type' => 's', 'value' => $userdata['username']],
-                ['type' => 's', 'value' => $userdata['firstname']],
-                ['type' => 's', 'value' => $userdata['lastname']]
+                ['type' => 's', 'value' => $data['username']],
+                ['type' => 's', 'value' => $data['firstname']],
+                ['type' => 's', 'value' => $data['lastname']]
         ]);
     }
 

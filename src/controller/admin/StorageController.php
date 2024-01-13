@@ -2,14 +2,16 @@
 
 namespace Vector\Controller;
 
+use Vector\Kernel;
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
+use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\Storage\S3StorageAdapter;
+use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Vector\Kernel;
-use Vector\Repository\AssetRepository;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -55,50 +57,71 @@ class StorageController extends FrontendController
     {
 
         /**
+         * @var FileSystemLogger $logger
          * @var array $files
          * Uploaded files are retrived from the request object.
+         * No file contraints are applied.
          */
+        $logger = new FileSystemLogger('controller');
         $files = $request->files->get('files');
-        if (is_array($files) && !empty($files)) {
+        if (!is_array($files) || empty($files)) {
+            return new RedirectResponse(
+                '/admin/storage?success=false', 
+                Response::HTTP_FOUND
+            );
+        }
+
+        /**
+        * @var S3StorageAdapter $adapter
+        * @var FileSystem $filesystem
+        * If the remote storage is enabled the filesystem component is initialized.
+        */
+        global $config;
+        if ($config->s3_storage->enabled === true) {
+            $adapter = S3StorageAdapter::getInstance();
+            $filesystem = $adapter->getFileSystemComponent();
+        }
+
+        /**
+         * @var AssetRepository $repository
+         * The asset repository instance is retrived to handle database updates.
+         */
+        $repository = AssetRepository::getInstance();
+        foreach ($files as $file) {
+            $repository->save([
+                'path' => '/' . $file->getClientOriginalName(),
+                'mimetype' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'modified_at' => time()
+            ]);
 
             /**
-            * @var S3StorageAdapter $adapter
-            * @var FileSystem $filesystem
-            * The S3 filesystem component is initialized.
-            */
-            global $config;
-            if ($config->s3_storage->enabled === true) {
-                $adapter = S3StorageAdapter::getInstance();
-                $filesystem = $adapter->getFileSystemComponent();
-            }
-
-            /**
-             * @var AssetRepository $repository
-             * The asset repository instance is retrived to handle database updates.
+             * @var string $filepath
+             * If the remote storage is enabled the file is directly uploaded to the bucket.
+             * Local storage is used otherwise.
              */
-            $repository = AssetRepository::getInstance();
-            foreach ($files as $file) {
-                $repository->save([
-                    'path' => '/' . $file->getClientOriginalName(),
-                    'mimetype' => $file->getMimeType(),
-                    'size' => $file->getSize(),
-                    'modified_at' => time()
-                ]);
-
-                /**
-                 * @var string $filepath
-                 * If the remote storage is configured the file is directly uploaded.
-                 */
+            try {
                 if ($config->s3_storage->enabled === true) {
                     $filesystem->write('/' . $file->getClientOriginalName(), $file->getContent());
                 } else { 
-                    $filepath = Kernel::getProjectRoot() . 'var/storage/' . $file->getClientOriginalName();
-                    file_put_contents($filepath, $file->getContent()); 
+                    file_put_contents(
+                        Kernel::getProjectRoot() . 'var/storage/' . $file->getClientOriginalName(), 
+                        $file->getContent()
+                    ); 
                 }
+            } catch (Exception $e) {
+                $logger->write($e);
+                return new RedirectResponse(
+                    '/admin/storage?success=false', 
+                    Response::HTTP_FOUND
+                );
             }
         }
 
-        return new RedirectResponse('/admin/storage', Response::HTTP_FOUND);
+        return new RedirectResponse(
+            '/admin/storage?success=true', 
+            Response::HTTP_FOUND
+        );
     }
 
 }

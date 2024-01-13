@@ -19,6 +19,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class LoginController extends FrontendController
 {
+
     protected function register(): void
     {
         Router::route(['GET'], '^/login/?$', [$this, 'loginViewAction']);
@@ -81,7 +82,7 @@ class LoginController extends FrontendController
 
                     /**
                      * @var Cookie $cookie
-                     * Authentication cookie is set.
+                     * Authentication cookie is set here.
                      */
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
                         'rsid' => $user['ID'],

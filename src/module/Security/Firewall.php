@@ -58,7 +58,6 @@ class Firewall
         /**
          * @var array $headers
          * Verify request headers if set in global configuration.
-         * "onHeaders" event is dispatched.
          */
         if (true === $config->security->firewall->headers) {
             if (null !== ($headers = $request->headers->all())) {
@@ -69,7 +68,6 @@ class Firewall
         /**
          * @var array $cookies
          * Verify request cookies if set in global configuration.
-         * "onCookies" event is dispatched.
          */
         if (true === $config->security->firewall->cookies) {
             if (null !== ($cookies = $request->cookies->all())) {
@@ -80,7 +78,6 @@ class Firewall
         /**
          * @var array $query
          * Verify request query if set in global configuration.
-         * "onQuery" event is dispatched.
          */
         if (true === $config->security->firewall->query) {
             if (null !== ($query = $request->query->all())) {
@@ -91,7 +88,6 @@ class Firewall
         /**
          * @var array $body
          * Verify request body if set in global configuration.
-         * "onBody" event is dispatched.
          */
         if (true === $config->security->firewall->body) {
             if (null !== ($body = $request->request->all())) {

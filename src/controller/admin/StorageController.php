@@ -30,10 +30,24 @@ class StorageController extends FrontendController
     /**
      * Route: '/admin/storage'
      * Methods: GET
+     * @param Request $request
      * @return Response
      */
-    public function storageViewAction(): Response
+    public function storageViewAction(Request $request): Response
     {
+
+        /**
+         * @var AssetRepository $repository
+         * @var ?array $assets 
+         * Stored assets are retrived.
+         */
+        $repository = AssetRepository::getInstance();
+        $assets = $repository->getList([
+            'offset' => 0 < ($offset = $request->query->get('offset', 0)) ? 
+                $offset : 0,
+            'limit' => 32 < ($limit = $request->query->get('limit', 32)) ? 
+                $limit : 32
+        ]);
 
         /**
          * @var string $html
@@ -41,7 +55,8 @@ class StorageController extends FrontendController
          */
         $html = $this->template->render('admin/storage.html.twig', [
             'title' => 'Vector - Storage',
-            'description' => 'Storage administration area.'
+            'description' => 'Storage administration area.',
+            'assets' => $assets
         ]);
 
         return new Response($html, Response::HTTP_OK);
@@ -89,7 +104,7 @@ class StorageController extends FrontendController
         $repository = AssetRepository::getInstance();
         foreach ($files as $file) {
             $repository->save([
-                'path' => '/' . $file->getClientOriginalName(),
+                'path' => $file->getClientOriginalName(),
                 'mimetype' => $file->getMimeType(),
                 'size' => $file->getSize(),
                 'modified_at' => time()

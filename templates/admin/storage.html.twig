@@ -18,6 +18,34 @@
           </div> 
         </div>
       </section>
+      <section>
+        <div class="container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col"> # </th>
+                <th scope="col"> File </th>
+                <th scope="col"> Modified Date </th>
+                <th scope="col"> Mime-Type </th>
+                <th scope="col"> Size (bytes) </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if assets is not null %}
+                {% for asset in assets %}
+                  <tr>
+                    <th scope="row"> {{ asset.ID }} </th>
+                    <td> {{ asset.path }} </td>
+                    <td> {{ asset.modified_at|date("d/m/Y h:m:s") }}  </td>
+                    <td> {{ asset.mimetype }} </td>
+                    <td> {{ asset.size }} </td>
+                  </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
     <footer></footer>
   </body>

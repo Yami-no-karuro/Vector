@@ -54,6 +54,23 @@ class AssetRepository
 
     /**
      * @package Vector
+     * Vector\Repository\AssetRepository->getList()
+     * @return ?array
+     */
+    public function getList(array $params): ?array
+    {
+        $result = $this->client->getResults("SELECT * FROM `assets` LIMIT ? OFFSET ?", [
+            ['type' => 'd', 'value' => array_key_exists('limit', $params) ? 
+                $params['limit'] : 32],
+            ['type' => 'd', 'value' => array_key_exists('offset', $params) ? 
+                $params['offset'] : 0]
+        ]);
+        return ($result['success'] && !empty($result['data'])) ? 
+            $result['data'] : null;
+    }
+
+    /**
+     * @package Vector
      * Vector\Repository\AssetRepository->save()
      * @param array $data
      * @return void

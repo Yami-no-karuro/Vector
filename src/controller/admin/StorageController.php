@@ -2,17 +2,13 @@
 
 namespace Vector\Controller;
 
-use Vector\Kernel;
 use Vector\Router;
 use Vector\DataObject\Asset;
 use Vector\Module\Controller\FrontendController;
-use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Vector\Module\Storage\S3StorageAdapter;
 use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');

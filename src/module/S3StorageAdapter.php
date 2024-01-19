@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\Storage;
+namespace Vector\Module;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Visibility;

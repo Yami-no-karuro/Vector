@@ -3,10 +3,9 @@
 namespace Vector\Controller;
 
 use Vector\Router;
-use Vector\Module\Controller\FrontendController;
-use Vector\Module\Storage\MediaStreamer;
-use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\DataObject\Asset;
+use Vector\Module\Controller\FrontendController;
+use Vector\Module\ApplicationLogger\SqlLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;

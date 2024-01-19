@@ -35,7 +35,7 @@
                 {% for asset in assets %}
                   <tr>
                     <th scope="row"> {{ asset.get('ID') }} </th>
-                    <td> {{ asset.get('path') }} </td>
+                    <td> <a href="{{ asset.getRoute() }}" target="_blank"> {{ asset.get('path') }} </a> </td>
                     <td> {{ asset.get('modifiedAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>
                     <td> {{ asset.get('size') }} </td>

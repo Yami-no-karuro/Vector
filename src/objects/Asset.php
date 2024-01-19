@@ -4,7 +4,7 @@ namespace Vector\DataObject;
 
 use Vector\Kernel;
 use Vector\Module\SqlClient;
-use Vector\Module\Storage\S3StorageAdapter;
+use Vector\Module\S3StorageAdapter;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -53,8 +53,18 @@ class Asset
 
     /**
      * @package Vector
-     * Vector\DataObject\Asset->getSize()
-     * @return ?int 
+     * Vector\DataObject\Asset->getRoute()
+     * @return string
+     */
+    public function getRoute(): string
+    {
+        return '/storage/' . $this->get('path');
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->getMimeType()
+     * @return ?string
      */
     public function getMimeType(): ?string
     {

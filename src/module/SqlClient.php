@@ -74,13 +74,15 @@ class SqlClient
         $result = [
             'success' => false,
             'data' => [
-                'inserted_id' => $cleanSql->insert_id,
-                'affected_rows' => $cleanSql->affected_rows
+                'inserted_id' => null,
+                'affected_rows' => null 
             ]
         ];
         if (!$cleanSql->execute()) {
             return $result;
         }
+        $result['data']['inserted_id'] = $cleanSql->insert_id;
+        $result['data']['affected_rows'] = $cleanSql->affected_rows;
         $result['success'] = true;
         return $result;
     }

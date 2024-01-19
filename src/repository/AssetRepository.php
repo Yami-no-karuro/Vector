@@ -66,8 +66,11 @@ class AssetRepository
             ['type' => 'd', 'value' => array_key_exists('offset', $params) ? 
                 $params['offset'] : 0]
         ]);
-        return ($result['success'] && !empty($result['data'])) ? 
-            array_map(fn($el) => new Asset($el), $result['data']) : null;
+        if ($result['success'] && !empty($result['data'])) {
+            $data = isset($result['data'][0]) ? $result['data'] : [$result['data']];
+            return array_map(fn($el) => new Asset($el), $data);
+        }
+        return null;
     }
 
 }

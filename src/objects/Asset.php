@@ -51,10 +51,10 @@ class Asset
     public function save(): void
     {
         $now = time();
-        $this->client->exec("INSERT INTO `assets` 
+        $result = $this->client->exec("INSERT INTO `assets` 
             (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-                ['type' => 's', 'value' => $this->get('ID')],
+                ['type' => 'd', 'value' => $this->get('ID')],
                 ['type' => 's', 'value' => $this->get('path')],
                 ['type' => 's', 'value' => $now],
                 ['type' => 's', 'value' => $this->get('mimeType')],
@@ -64,6 +64,23 @@ class Asset
                 ['type' => 's', 'value' => $this->get('mimeType')],
                 ['type' => 's', 'value' => $this->get('size')],
         ]);
+        if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
+            $this->ID = $insertedId;
+        }
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->delete()
+     * @return void 
+     */
+    public function delete(): void
+    {
+        if (null !== $this->get('ID')) {
+            $this->client->exec("DELETE FROM `assets` WHERE `ID` = ?", [
+                ['type' => 'd', 'value' => $this->get('ID')],
+            ]);
+        }
     }
 
 }

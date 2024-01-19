@@ -34,7 +34,7 @@
               {% if assets is not null %}
                 {% for asset in assets %}
                   <tr>
-                    <th scope="row"> {{ asset.ID }} </th>
+                    <th scope="row"> {{ asset.get('ID') }} </th>
                     <td> {{ asset.get('path') }} </td>
                     <td> {{ asset.get('modifiedAt') | date("d/m/Y h:m:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>

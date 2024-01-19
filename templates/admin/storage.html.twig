@@ -36,11 +36,19 @@
                   <tr>
                     <th scope="row"> {{ asset.get('ID') }} </th>
                     <td> {{ asset.get('path') }} </td>
-                    <td> {{ asset.get('modifiedAt') | date("d/m/Y h:m:s") }}  </td>
+                    <td> {{ asset.get('modifiedAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>
                     <td> {{ asset.get('size') }} </td>
                   </tr>
                 {% endfor %}
+              {% else %}
+                <tr>
+                  <th scope="row"> 0 </th>
+                  <td> Still nothing... </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
               {% endif %}
             </tbody>
           </table>

@@ -73,29 +73,16 @@ class StorageController extends FrontendController
     {
 
         /**
-         * @var FileSystemLogger $logger
          * @var array $files
          * Uploaded files are retrived from the request object.
          * No file contraints are applied.
          */
-        $logger = new FileSystemLogger('controller');
         $files = $request->files->get('files');
         if (!is_array($files) || empty($files)) {
             return new RedirectResponse(
                 '/admin/storage?success=false', 
                 Response::HTTP_FOUND
             );
-        }
-
-        /**
-        * @var S3StorageAdapter $adapter
-        * @var FileSystem $filesystem
-        * If the remote storage is enabled the filesystem component is initialized.
-        */
-        global $config;
-        if ($config->s3_storage->enabled === true) {
-            $adapter = S3StorageAdapter::getInstance();
-            $filesystem = $adapter->getFileSystemComponent();
         }
 
         /**
@@ -107,30 +94,9 @@ class StorageController extends FrontendController
                 'path' => $file->getClientOriginalName(),
                 'mimeType' => $file->getMimeType(),
                 'size' => $file->getSize(),
+                'content' => $file->getContent()
             ]);
             $asset->save();
-
-            /**
-             * @var string $filepath
-             * If the remote storage is enabled the file is directly uploaded to the bucket.
-             * Local storage is used otherwise.
-             */
-            try {
-                if ($config->s3_storage->enabled === true) {
-                    $filesystem->write('/' . $file->getClientOriginalName(), $file->getContent());
-                } else { 
-                    file_put_contents(
-                        Kernel::getProjectRoot() . 'var/storage/' . $file->getClientOriginalName(), 
-                        $file->getContent()
-                    ); 
-                }
-            } catch (Exception $e) {
-                $logger->write($e);
-                return new RedirectResponse(
-                    '/admin/storage?success=false', 
-                    Response::HTTP_FOUND
-                );
-            }
         }
 
         return new RedirectResponse(

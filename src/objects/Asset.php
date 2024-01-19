@@ -4,7 +4,9 @@ namespace Vector\DataObject;
 
 use Vector\Kernel;
 use Vector\Module\SqlClient;
+use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\S3StorageAdapter;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,14 +16,45 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Asset 
 {
 
+    protected FileSystemLogger $logger;
     protected SqlClient $client;
     protected ?S3StorageAdapter $adapter = null;
 
+    /**
+     * @var ?int $ID
+     * Asset's ID, autogenerate on creation.
+     */
     protected ?int $ID = null;
+
+    /**
+     * @var string $path
+     * Asset's filepath, required.
+     */
     protected string $path;
+
+    /**
+     * @var ?int $modifiedAt
+     * Asset's modification date.
+     */
     protected ?int $modifiedAt = null;
+
+    /**
+     * @var ?string $mimeType
+     * Asset's mimetype.
+     */
     protected ?string $mimeType = null;
+
+    /**
+     * @var ?int $size
+     * Asset's file size.
+     */
     protected ?int $size = null;
+
+    /**
+     * @var ?string $content
+     * Asset's file content.
+     */
+    protected ?string $content = null;
 
     /**
      * @package Vector
@@ -33,32 +66,12 @@ class Asset
         if ($config->s3_storage->enabled === true) {
             $this->adapter = S3StorageAdapter::getInstance();
         }
-
+        
+        $this->logger = new FileSystemLogger('storage');
         $this->client = SqlClient::getInstance();
         foreach (array_keys($data) as $key) {
             $this->$key = $data[$key];
         }
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->get()
-     * @param string $key
-     * @return mixed
-     */
-    public function get(string $key): mixed
-    {
-        return isset($this->$key) ? $this->$key : null;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->getRoute()
-     * @return string
-     */
-    public function getRoute(): string
-    {
-        return '/storage/' . $this->get('path');
     }
 
     /**
@@ -129,6 +142,16 @@ class Asset
 
     /**
      * @package Vector
+     * Vector\DataObject\Asset->getRoute()
+     * @return string
+     */
+    public function getRoute(): string
+    {
+        return '/storage/' . $this->get('path');
+    }
+
+    /**
+     * @package Vector
      * Vector\DataObject\Asset->getStream()
      * @return mixed 
      */
@@ -192,11 +215,28 @@ class Asset
 
     /**
      * @package Vector
+     * Vector\DataObject\Asset->get()
+     * @param string $key
+     * @return mixed
+     */
+    public function get(string $key): mixed
+    {
+        return isset($this->$key) ? $this->$key : null;
+    }
+
+    /**
+     * @package Vector
      * Vector\DataObject\Asset->save()
      * @return void 
      */
     public function save(): void
     {
+
+        /**
+         * @var int $time
+         * @var array $result
+         * The record is saved on the database (upsert).
+         */
         $now = time();
         $result = $this->client->exec("INSERT INTO `assets` 
             (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
@@ -214,6 +254,27 @@ class Asset
         if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
             $this->ID = $insertedId;
         }
+
+        /**
+         * @var Filesystem $filesystem
+         * If the remote storage is enabled the file is directly uploaded to the bucket.
+         * Local storage is used by default.
+         */
+        if (null !== $this->content) {
+            try {
+                if (null !== $this->adapter) {
+                    $filesystem = $this->adapter->getFileSystemComponent();
+                    $filesystem->write('/' . $this->get('path'), $this->get('content'));
+                } else { 
+                    file_put_contents(
+                        Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'), 
+                        $this->get('content')
+                    ); 
+                }
+            } catch (Exception $e) {
+                $this->logger->write($e);
+            }
+        }
     }
 
     /**
@@ -227,6 +288,20 @@ class Asset
             $this->client->exec("DELETE FROM `assets` WHERE `ID` = ?", [
                 ['type' => 'd', 'value' => $this->get('ID')],
             ]);
+
+            /**
+             * @var Filesystem $filesystem
+             * The media is deleted from local and remote storage.
+             */
+            try {
+                unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'));
+                if (null !== $this->adapter) {
+                    $filesystem = $this->adapter->getFileSystemComponent();
+                    $filesystem->delete($this->get('path'));
+                } 
+            } catch (Exception $e) {
+                $this->logger->write($e);
+            }
         }
     }
 

@@ -8,6 +8,7 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\Storage\S3StorageAdapter;
 use Vector\Repository\AssetRepository;
+use Vector\DataObject\Asset;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,7 +39,7 @@ class StorageController extends FrontendController
 
         /**
          * @var AssetRepository $repository
-         * @var ?array $assets 
+         * @var ?array<Asset> $assets 
          * Stored assets are retrived.
          */
         $repository = AssetRepository::getInstance();
@@ -98,17 +99,16 @@ class StorageController extends FrontendController
         }
 
         /**
-         * @var AssetRepository $repository
-         * The asset repository instance is retrived to handle database updates.
+         * @var Asset $asset
+         * Asset object instances are created to handle database updates. 
          */
-        $repository = AssetRepository::getInstance();
         foreach ($files as $file) {
-            $repository->save([
+            $asset = new Asset([
                 'path' => $file->getClientOriginalName(),
-                'mimetype' => $file->getMimeType(),
+                'mimeType' => $file->getMimeType(),
                 'size' => $file->getSize(),
-                'modified_at' => time()
             ]);
+            $asset->save();
 
             /**
              * @var string $filepath

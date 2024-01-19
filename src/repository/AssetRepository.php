@@ -3,6 +3,7 @@
 namespace Vector\Repository;
 
 use Vector\Module\SqlClient;
+use Vector\DataObject\Asset;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -40,22 +41,22 @@ class AssetRepository
     /**
      * @package Vector
      * Vector\Repository\AssetRepository->getById()
-     * @return ?array
+     * @return ?Asset
      */
-    public function getById(int $id): ?array
+    public function getById(int $id): ?Asset
     {
         $result = $this->client->getResults("SELECT * FROM `assets` 
             WHERE `ID` = ? LIMIT 1", [
                 ['type' => 'd', 'value' => $id]
         ]);
         return ($result['success'] && !empty($result['data'])) ? 
-            $result['data'] : null;
+            new Asset($result['data']) : null;
     }
 
     /**
      * @package Vector
      * Vector\Repository\AssetRepository->getList()
-     * @return ?array
+     * @return ?array<Asset>
      */
     public function getList(array $params): ?array
     {
@@ -66,30 +67,7 @@ class AssetRepository
                 $params['offset'] : 0]
         ]);
         return ($result['success'] && !empty($result['data'])) ? 
-            $result['data'] : null;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Repository\AssetRepository->save()
-     * @param array $data
-     * @return void
-     */
-    public function save(array $data): void
-    {
-        $this->client->exec("INSERT INTO `assets` 
-            (`ID`, `path`, `modified_at`, `mimetype`, `size`) VALUES (?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE `path` = ?, `modified_at` = ?, `mimetype` = ?, `size` = ?", [
-                ['type' => 's', 'value' => isset($data['ID']) ? $data['ID'] : null],
-                ['type' => 's', 'value' => $data['path']],
-                ['type' => 's', 'value' => $data['modified_at']],
-                ['type' => 's', 'value' => $data['mimetype']],
-                ['type' => 's', 'value' => $data['size']],
-                ['type' => 's', 'value' => $data['path']],
-                ['type' => 's', 'value' => $data['modified_at']],
-                ['type' => 's', 'value' => $data['mimetype']],
-                ['type' => 's', 'value' => $data['size']]
-        ]);
+            array_map(fn($el) => new Asset($el), $result['data']) : null;
     }
 
 }

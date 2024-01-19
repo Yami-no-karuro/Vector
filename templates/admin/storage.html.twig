@@ -35,10 +35,10 @@
                 {% for asset in assets %}
                   <tr>
                     <th scope="row"> {{ asset.ID }} </th>
-                    <td> {{ asset.path }} </td>
-                    <td> {{ asset.modified_at|date("d/m/Y h:m:s") }}  </td>
-                    <td> {{ asset.mimetype }} </td>
-                    <td> {{ asset.size }} </td>
+                    <td> {{ asset.get('path') }} </td>
+                    <td> {{ asset.get('modifiedAt') | date("d/m/Y h:m:s") }}  </td>
+                    <td> {{ asset.get('mimeType') }} </td>
+                    <td> {{ asset.get('size') }} </td>
                   </tr>
                 {% endfor %}
               {% endif %}

@@ -6,9 +6,11 @@ use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Vector\Module\Storage\MediaStreamer;
 use Vector\Module\ApplicationLogger\SqlLogger;
+use Vector\DataObject\Asset;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Vector\Repository\AssetRepository;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -56,17 +58,22 @@ class DefaultController extends FrontendController
     {
 
         /**
-         * @var string $filepath
-         * @var ?array $stream
-         * Retrives the resource handle via MediaStreamer.
+         * @var AssetRepository $repository
+         * @var Asset $asset
+         * The asset repository is retrived.
+         * If the media actually exists the raw resource handler is retrived. 
          */
-        $filepath = '/' . $params['path'];
-        if (null !== ($stream = MediaStreamer::getStream($filepath))) {
-            $headers['Content-Type'] = $stream['mimeType'];
-            $headers['Content-Length'] = $stream['fileSize'];
-            return new StreamedResponse(function() use ($stream) {
-                fpassthru($stream['handle']);
-            }, Response::HTTP_OK, $headers);
+        $repository = AssetRepository::getInstance();
+        if (null !== ($asset = $repository->getByPath($params['path']))) {
+            $stream = $asset->getStream();
+            if (is_resource($stream)) {
+                return new StreamedResponse(function() use ($stream) {
+                    fpassthru($stream);
+                }, Response::HTTP_OK, [
+                    'Content-Type' => $asset->getMimeType(),
+                    'Content-Length' => $asset->getSize()
+                ]);
+            }
         }
 
         return new Response(null, Response::HTTP_NOT_FOUND);

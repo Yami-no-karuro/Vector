@@ -41,6 +41,7 @@ class AssetRepository
     /**
      * @package Vector
      * Vector\Repository\AssetRepository->getById()
+     * @param int $id
      * @return ?Asset
      */
     public function getById(int $id): ?Asset
@@ -55,7 +56,24 @@ class AssetRepository
 
     /**
      * @package Vector
+     * Vector\Repository\AssetRepository->getByPath()
+     * @param string $path
+     * @return ?Asset
+     */
+    public function getByPath(string $path): ?Asset
+    {
+        $result = $this->client->getResults("SELECT * FROM `assets` 
+            WHERE `path` = ? LIMIT 1", [
+                ['type' => 's', 'value' => $path]
+        ]);
+        return ($result['success'] && !empty($result['data'])) ? 
+            new Asset($result['data']) : null;
+    }
+
+    /**
+     * @package Vector
      * Vector\Repository\AssetRepository->getList()
+     * @param array $params
      * @return ?array<Asset>
      */
     public function getList(array $params): ?array

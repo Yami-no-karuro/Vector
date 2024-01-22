@@ -91,4 +91,18 @@ class AssetRepository
         return null;
     }
 
+    /**
+     * @package Vector
+     * Vector\Repository\AssetRepository->getTotalCount()
+     * @return int 
+     */
+    public function getTotalCount(): int
+    {
+        $result = $this->client->getResults("SELECT COUNT(ID) AS `total` FROM `assets`");
+        if ($result['success'] && !empty($result['data'])) {
+            return $result['data']['total'];
+        }
+        return 0;
+    }
+
 }

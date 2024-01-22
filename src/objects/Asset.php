@@ -253,26 +253,26 @@ class Asset
         ]);
         if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
             $this->ID = $insertedId;
-        }
 
-        /**
-         * @var Filesystem $filesystem
-         * If the remote storage is enabled the file is directly uploaded to the bucket.
-         * Local storage is used by default.
-         */
-        if (null !== $this->content) {
-            try {
-                if (null !== $this->adapter) {
-                    $filesystem = $this->adapter->getFileSystemComponent();
-                    $filesystem->write('/' . $this->get('path'), $this->get('content'));
-                } else { 
-                    file_put_contents(
-                        Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'), 
-                        $this->get('content')
-                    ); 
+            /**
+            * @var Filesystem $filesystem
+            * If the remote storage is enabled the file is directly uploaded to the bucket.
+            * Local storage is used by default.
+            */
+            if (null !== $this->content) {
+                try {
+                    if (null !== $this->adapter) {
+                        $filesystem = $this->adapter->getFileSystemComponent();
+                        $filesystem->write('/' . $this->get('path'), $this->get('content'));
+                    } else { 
+                        file_put_contents(
+                            Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'), 
+                            $this->get('content')
+                        ); 
+                    }
+                } catch (Exception $e) {
+                    $this->logger->write($e);
                 }
-            } catch (Exception $e) {
-                $this->logger->write($e);
             }
         }
     }

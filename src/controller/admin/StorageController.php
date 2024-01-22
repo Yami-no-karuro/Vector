@@ -18,6 +18,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class StorageController extends FrontendController
 {
 
+    protected const ITEMS_PER_PAGE = 32;
+
     protected function register(): void
     {
         Router::route(['GET'], '^/admin/storage?$', [$this, 'storageViewAction']);
@@ -35,15 +37,27 @@ class StorageController extends FrontendController
 
         /**
          * @var AssetRepository $repository
+         * @var int $totalCount
+         * @var int $page
+         * The page parameter is retrived from the current request.
+         * If invalid values are passed page will default to 0 or max.
+         */
+        $repository = AssetRepository::getInstance();
+        $totalCount = $repository->getTotalCount();
+        $page = intval((0 >= ($page = $request->get('page', 1))) ? 1 : (int) $page);
+        if ($page > ($pageCount = ceil($totalCount / self::ITEMS_PER_PAGE))) {
+            $page = intval($pageCount);
+        }
+
+        /**
+         * @var AssetRepository $repository
          * @var ?array<Asset> $assets 
          * Stored assets are retrived.
          */
         $repository = AssetRepository::getInstance();
         $assets = $repository->getList([
-            'offset' => 0 < ($offset = $request->query->get('offset', 0)) ? 
-                $offset : 0,
-            'limit' => 32 < ($limit = $request->query->get('limit', 32)) ? 
-                $limit : 32
+            'offset' => $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE,
+            'limit' => self::ITEMS_PER_PAGE
         ]);
 
         /**
@@ -53,7 +67,10 @@ class StorageController extends FrontendController
         $html = $this->template->render('admin/storage.html.twig', [
             'title' => 'Vector - Storage',
             'description' => 'Storage administration area.',
-            'assets' => $assets
+            'assets' => $assets,
+            'currentPage' => $page,
+            'prevPage' => ($page > 1) ? ($page - 1) : 1,
+            'nextPage' => ($page < $pageCount) ? ($page + 1) : $pageCount
         ]);
 
         return new Response($html, Response::HTTP_OK);

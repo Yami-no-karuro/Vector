@@ -52,6 +52,23 @@
               {% endif %}
             </tbody>
           </table>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item">
+                <a class="page-link {% if prevPage == currentPage %} disabled {% endif %}" href="?page={{ prevPage }}" aria-label="Previous">
+                  <span aria-hidden="true"> &laquo; </span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link disabled" href="javascript:void(0)"> {{ currentPage }} </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link {% if nextPage == currentPage %} disabled {% endif %}" href="?page={{ nextPage }}" aria-label="Next">
+                  <span aria-hidden="true"> &raquo; </span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </section>
     </main>

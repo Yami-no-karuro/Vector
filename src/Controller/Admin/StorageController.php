@@ -8,6 +8,7 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -24,6 +25,7 @@ class StorageController extends FrontendController
     {
         Router::route(['GET'], '^/admin/storage?$', [$this, 'storageViewAction']);
         Router::route(['POST'], '^/admin/storage/upload?$', [$this, 'storageUploadAction']);
+        Router::route(['POST'], '^/admin/storage/delete/(?<id>\d+)?$', [$this, 'storageDeleteAction']);
     }
 
     /**
@@ -116,6 +118,36 @@ class StorageController extends FrontendController
             '/admin/storage?success=true', 
             Response::HTTP_FOUND
         );
+    }
+
+    /**
+     * Route: '/admin/storage/delete/{id}'
+     * Methods: POST 
+     * @param Request $request
+     * @param array $params
+     * @return JsonResponse 
+     */
+    public function storageDeleteAction(Request $request, array $params): JsonResponse
+    {
+
+        /**
+         * @var AssetRepository $repository
+         * @var Asset|null $asset
+         * The retrived media is deleted.
+         */
+        $repository = AssetRepository::getInstance();
+        if (null !== ($asset = $repository->getById($params['id']))) {
+            $asset->delete();
+            return new JsonResponse([
+                'success' => true,
+                'data' => [ 'ID' => $params['id'] ]
+            ], Response::HTTP_OK);
+        }
+
+        return new JsonResponse([
+            'success' => false,
+            'data' => null
+        ], Response::HTTP_NOT_FOUND);
     }
 
 }

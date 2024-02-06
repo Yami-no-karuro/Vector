@@ -28,6 +28,7 @@
                 <th scope="col"> Modified Date </th>
                 <th scope="col"> Mime-Type </th>
                 <th scope="col"> Size (bytes) </th>
+                <th scope="col">  </th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +40,13 @@
                     <td> {{ asset.get('modifiedAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>
                     <td> {{ asset.get('size') }} </td>
+                    <td>  
+                      <button type="button" 
+                        data-media-id="{{ asset.get('ID') }}" 
+                        class="btn-close delete" 
+                        aria-label="Close">
+                      </button> 
+                    </td>
                   </tr>
                 {% endfor %}
               {% else %}
@@ -69,6 +77,28 @@
               </li>
             </ul>
           </nav>
+          <script type="text/javascript" defer>
+            (function() {
+              'use-strict'
+              document.addEventListener('DOMContentLoaded', function() {
+                const $ = jQuery.noConflict();
+                const deleteBtns = $('table.table button.delete');
+                deleteBtns.each(function() {
+                  this.addEventListener('click', function(event) {
+                    const mediaId = this.getAttribute('data-media-id');
+                    const route = `/admin/storage/delete/${mediaId}`;
+                    $.ajax({
+                      url: route,
+                      type: 'POST',
+                      complete: function() {
+                        window.location.reload();
+                      }
+                    });
+                  });
+                });
+              });
+            })();
+          </script>
         </div>
       </section>
     </main>

@@ -82,21 +82,24 @@ class Application
                  * Command data is cached for future runs.
                  */
                 $class = Kernel::getClassNamespace($file->getPathname());
-                $command = new $class($this->args);
-                $commandName = $command->getCommandName();
-                $registeredCommands[] = $commandName;
-                if ($commandName === $this->command) {
-                    $this->transient->setData([
-                        'command' => $this->command,
-                        'handler' => $class
-                    ]);
-                    $this->stopWatch->start();
-                    $exitCode = $command->execute();
-                    $this->stopWatch->stop();
-                    self::out('Exitcode: ' . $exitCode);
-                    self::out('Executed for: ' . $this->stopWatch->getElapsed());
-                    exit($exitCode);
+                if (class_exists($class)) {
+                    $command = new $class($this->args);
+                    $commandName = $command->getCommandName();
+                    $registeredCommands[] = $commandName;
+                    if ($commandName === $this->command) {
+                        $this->transient->setData([
+                            'command' => $this->command,
+                            'handler' => $class
+                        ]);
+                        $this->stopWatch->start();
+                        $exitCode = $command->execute();
+                        $this->stopWatch->stop();
+                        self::out('Exitcode: ' . $exitCode);
+                        self::out('Executed for: ' . $this->stopWatch->getElapsed());
+                        exit($exitCode);
+                    }   
                 }
+                
             }
         }
 

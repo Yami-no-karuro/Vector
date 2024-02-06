@@ -21,6 +21,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CacheClear extends AbstractCommand
 {
+
     protected SqlClient $sql;
     protected ?MongoClient $mongo = null;
     protected ?RedisClient $redis = null;

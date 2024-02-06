@@ -142,9 +142,10 @@ class Kernel
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
-                require_once($file->getPathname());
                 $controller = self::getClassNamespace($file->getPathname());
-                new $controller();
+                if (class_exists($controller)) {
+                    new $controller();
+                }
             }
         }
     }

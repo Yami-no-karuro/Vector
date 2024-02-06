@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Controller;
+namespace Vector\Controller\Admin;
 
 use Vector\Router;
 use Vector\DataObject\Asset;

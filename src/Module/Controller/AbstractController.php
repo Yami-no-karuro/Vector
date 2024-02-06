@@ -34,7 +34,6 @@ abstract class AbstractController
 
     }
 
-
     /**
      * @package Vector
      * Vector\Module\AbstractController->register()

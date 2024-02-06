@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemLogger extends AbstractLogger
 {
+
     protected string $path;
 
     /**
@@ -35,7 +36,7 @@ class FileSystemLogger extends AbstractLogger
     {
         $prefix = '[' . date('Y-m-d h:m:s') . ']';
         $log = $prefix . ' ' . $log . ' ' . PHP_EOL;
-        file_put_contents($this->path, $log, FILE_APPEND | LOCK_EX);
+        file_put_contents($this->path, $log, FILE_APPEND);
     }
 
 }

@@ -13,6 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router
 {
+
     /**
      * @package Vector
      * Vector\Router->route()

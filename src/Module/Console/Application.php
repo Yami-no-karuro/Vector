@@ -66,7 +66,7 @@ class Application
          * If nothing is found matching the given criteria prints out the available command.
          */
         $registeredCommands = [];
-        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/command');
+        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/Command');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
@@ -81,7 +81,7 @@ class Application
                  * If the current input matches the command will be executed.
                  * Command data is cached for future runs.
                  */
-                $class = 'Vector\\Command\\' . basename($fname, '.php');
+                $class = Kernel::getClassNamespace($file->getPathname());
                 $command = new $class($this->args);
                 $commandName = $command->getCommandName();
                 $registeredCommands[] = $commandName;

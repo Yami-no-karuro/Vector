@@ -106,4 +106,5 @@ class DefaultController extends FrontendController
 
         return new Response($html, Response::HTTP_OK);
     }
+
 }

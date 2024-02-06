@@ -86,7 +86,8 @@ class LoginController extends FrontendController
                      * Authentication cookie is set here.
                      */
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
-                        'rsid' => $user['ID'],
+                        'rsid' => $user->getId(),
+                        'scope' => 'write',
                         'time' => microtime()
                     ], $request));
 

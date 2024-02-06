@@ -60,10 +60,7 @@ class User
     {
         $this->client = SqlClient::getInstance();
         foreach (array_keys($data) as $key) {
-            $setter = 'set' . ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $this->$setter($data[$key]);
-            }
+            $this->$key = $data[$key];
         }
     }
 
@@ -127,9 +124,7 @@ class User
      */
     public function setPassword(string $password): void
     {
-        $this->password = $this->isPasswordHash($password) ?
-            $password :
-            hash('sha256', trim($password));
+        $this->password = hash('sha256', $password);
     }
 
     /**
@@ -234,19 +229,4 @@ class User
             ]);
         }
     }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->isPasswordHash()
-     * @param string $string
-     * @return bool 
-     */
-    protected function isPasswordHash(string $string): bool
-    {
-        if (strlen($string) !== 64 || ctype_xdigit($string)) {
-            return false;
-        }
-        return true;
-    }
 }
-

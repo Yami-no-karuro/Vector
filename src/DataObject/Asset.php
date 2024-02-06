@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Asset 
+class Asset
 {
 
     protected FileSystemLogger $logger;
@@ -66,14 +66,11 @@ class Asset
         if ($config->s3_storage->enabled === true) {
             $this->adapter = S3StorageAdapter::getInstance();
         }
-        
+
         $this->logger = new FileSystemLogger('storage');
         $this->client = SqlClient::getInstance();
         foreach (array_keys($data) as $key) {
-            $setter = 'set' . ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $this->$setter($data[$key]);
-            }
+            $this->$key = $data[$key];
         }
     }
 
@@ -133,8 +130,8 @@ class Asset
          * The media is retrived and the mimeType is returned.
          */
         if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($this->mimeType = mime_content_type($filepath)) ? 
-                $this->mimeType : 
+            return false !== ($this->mimeType = mime_content_type($filepath)) ?
+                $this->mimeType :
                 null;
         }
 
@@ -166,8 +163,8 @@ class Asset
          * The media is retrived and the filesize is returned.
          */
         if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($this->size = filesize($filepath)) ? 
-                $this->size : 
+            return false !== ($this->size = filesize($filepath)) ?
+                $this->size :
                 null;
         }
 
@@ -199,8 +196,8 @@ class Asset
          * The media is fopened and the full content is returned.
          */
         if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($localHandle = fopen($filepath, 'r')) ? 
-                fread($localHandle, filesize($filepath)) : 
+            return false !== ($localHandle = fopen($filepath, 'r')) ?
+                fread($localHandle, filesize($filepath)) :
                 null;
         }
 
@@ -233,7 +230,7 @@ class Asset
      * Vector\DataObject\Asset->getStream()
      * @return mixed 
      */
-    public function getStream(): mixed 
+    public function getStream(): mixed
     {
 
         /**
@@ -242,8 +239,8 @@ class Asset
          * The media is fopened and the resource handler is returned.
          */
         if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($localHandle = fopen($filepath, 'r')) ? 
-                $localHandle : 
+            return false !== ($localHandle = fopen($filepath, 'r')) ?
+                $localHandle :
                 null;
         }
 
@@ -308,34 +305,34 @@ class Asset
         $result = $this->client->exec("INSERT INTO `assets` 
             (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-                ['type' => 'd', 'value' => $this->getId()],
-                ['type' => 's', 'value' => $this->getPath()],
-                ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->getMimeType()],
-                ['type' => 's', 'value' => $this->getSize()],
-                ['type' => 's', 'value' => $this->getPath()],
-                ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->getMimeType()],
-                ['type' => 's', 'value' => $this->getSize()],
+            ['type' => 'd', 'value' => $this->getId()],
+            ['type' => 's', 'value' => $this->getPath()],
+            ['type' => 's', 'value' => $now],
+            ['type' => 's', 'value' => $this->getMimeType()],
+            ['type' => 's', 'value' => $this->getSize()],
+            ['type' => 's', 'value' => $this->getPath()],
+            ['type' => 's', 'value' => $now],
+            ['type' => 's', 'value' => $this->getMimeType()],
+            ['type' => 's', 'value' => $this->getSize()],
         ]);
         if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
             $this->ID = $insertedId;
 
             /**
-            * @var Filesystem $filesystem
-            * If the remote storage is enabled the file is directly uploaded to the bucket.
-            * Local storage is used by default.
-            */
+             * @var Filesystem $filesystem
+             * If the remote storage is enabled the file is directly uploaded to the bucket.
+             * Local storage is used by default.
+             */
             if (null !== $this->content) {
                 try {
                     if (null !== $this->adapter) {
                         $filesystem = $this->adapter->getFileSystemComponent();
                         $filesystem->write('/' . $this->get('path'), $this->get('content'));
-                    } else { 
+                    } else {
                         file_put_contents(
-                            Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'), 
+                            Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'),
                             $this->get('content')
-                        ); 
+                        );
                     }
                 } catch (Exception $e) {
                     $this->logger->write($e);
@@ -365,11 +362,11 @@ class Asset
                 if (null !== $this->adapter) {
                     $filesystem = $this->adapter->getFileSystemComponent();
                     $filesystem->delete($this->get('path'));
-                } 
+                }
             } catch (Exception $e) {
                 $this->logger->write($e);
             }
         }
     }
-
 }
+

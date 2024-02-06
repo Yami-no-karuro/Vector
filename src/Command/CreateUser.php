@@ -51,6 +51,7 @@ class CreateUser extends AbstractCommand
         }
 
         $userdata['password'] = Application::in('Password:');
+        $userdata['password'] = hash('sha256', $userdata['password']);
         $userdata['username'] = Application::in('Username:');
         $userdata['firstname'] = Application::in('Firstname:');
         $userdata['lastname'] = Application::in('Lastname:');
@@ -79,5 +80,4 @@ class CreateUser extends AbstractCommand
     {
         return 'vector:create-user';
     }
-
 }

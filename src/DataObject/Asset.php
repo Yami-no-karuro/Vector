@@ -70,7 +70,10 @@ class Asset
         $this->logger = new FileSystemLogger('storage');
         $this->client = SqlClient::getInstance();
         foreach (array_keys($data) as $key) {
-            $this->$key = $data[$key];
+            $setter = 'set' . ucfirst($key);
+            if (method_exists($this, $setter)) {
+                $this->$setter($data[$key]);
+            }
         }
     }
 
@@ -113,7 +116,7 @@ class Asset
      */
     public function setPath(string $path): void
     {
-        $this->path = $path;
+        $this->path = trim($path);
     }
 
     /**
@@ -146,7 +149,7 @@ class Asset
      */
     public function setMimeType(string $type): void
     {
-        $this->mimeType = $type;
+        $this->mimeType = trim($type);
     }
 
     /**
@@ -179,7 +182,7 @@ class Asset
      */
     public function setSize(int $size): void
     {
-        $this->size = $size;
+        $this->size = trim($size);
     }
 
     /**
@@ -212,7 +215,7 @@ class Asset
      */
     public function setContent(string $content): void
     {
-        $this->content = $content;
+        $this->content = trim($content);
     }
 
     /**
@@ -305,15 +308,15 @@ class Asset
         $result = $this->client->exec("INSERT INTO `assets` 
             (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-                ['type' => 'd', 'value' => $this->get('ID')],
-                ['type' => 's', 'value' => $this->get('path')],
+                ['type' => 'd', 'value' => $this->getId()],
+                ['type' => 's', 'value' => $this->getPath()],
                 ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->get('mimeType')],
-                ['type' => 's', 'value' => $this->get('size')],
-                ['type' => 's', 'value' => $this->get('path')],
+                ['type' => 's', 'value' => $this->getMimeType()],
+                ['type' => 's', 'value' => $this->getSize()],
+                ['type' => 's', 'value' => $this->getPath()],
                 ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->get('mimeType')],
-                ['type' => 's', 'value' => $this->get('size')],
+                ['type' => 's', 'value' => $this->getMimeType()],
+                ['type' => 's', 'value' => $this->getSize()],
         ]);
         if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
             $this->ID = $insertedId;
@@ -348,9 +351,9 @@ class Asset
      */
     public function delete(): void
     {
-        if (null !== $this->get('ID')) {
+        if (null !== $this->getId()) {
             $this->client->exec("DELETE FROM `assets` WHERE `ID` = ?", [
-                ['type' => 'd', 'value' => $this->get('ID')],
+                ['type' => 'd', 'value' => $this->getId()],
             ]);
 
             /**

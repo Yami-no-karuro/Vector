@@ -7,6 +7,7 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Security\WebToken;
 use Vector\Repository\UserRepository;
+use Vector\DataObject\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -67,7 +68,7 @@ class LoginController extends FrontendController
         if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
             /**
-             * @var array $user
+             * @var User $user
              * Looks for valid users by email.
              */
             if (null !== ($user = $repository->getByEmail($email))) {
@@ -77,8 +78,8 @@ class LoginController extends FrontendController
                  * On password match set the autentication cookie and redirect to /admin.
                  * Redirect back with "?success=false" on failure.
                  */
-                $password = $user['password'];
-                if (hash('sha256', $request->get('password', '')) === $password) {
+                $password = $user->getPassword();
+                if (hash('sha256', trim($request->get('password', ''))) === $password) {
 
                     /**
                      * @var Cookie $cookie
@@ -123,5 +124,4 @@ class LoginController extends FrontendController
         $response->headers->clearCookie('Auth-Token');
         return $response;
     }
-
 }

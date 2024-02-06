@@ -3,6 +3,7 @@
 namespace Vector\Module\Security;
 
 use Vector\Repository\UserRepository;
+use Vector\DataObject\User;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -29,9 +30,9 @@ class UserAuthBadge
     /**
      * @package Vector
      * Vector\Module\Security\UserAuthBadge->getUserId()
-     * @return ?array
+     * @return ?User
      */
-    public function getUser(): ?array
+    public function getUser(): ?User
     {
         if (array_key_exists('rsid', $this->payload)) {
             return $this->repository->getById($this->payload['rsid']);
@@ -58,5 +59,4 @@ class UserAuthBadge
     {
         return array_key_exists('user_agent', $this->payload) ? $this->payload['user_agent'] : null;
     }
-
 }

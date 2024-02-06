@@ -3,6 +3,7 @@
 namespace Vector\Repository;
 
 use Vector\Module\SqlClient;
+use Vector\DataObject\User;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -40,56 +41,65 @@ class UserRepository
     /**
      * @package Vector
      * Vector\Repository\UserRepository->getById()
-     * @return ?array
+     * @return ?User
      */
-    public function getById(int $id): ?array
+    public function getById(int $id): ?User
     {
         $result = $this->client->getResults("SELECT * FROM `users` 
             WHERE `ID` = ? LIMIT 1", [
-                ['type' => 'd', 'value' => $id]
+            ['type' => 'd', 'value' => $id]
         ]);
-        return ($result['success'] && !empty($result['data'])) ? 
-            $result['data'] : null;
+        return ($result['success'] && !empty($result['data'])) ?
+            new User($result['data']) : null;
     }
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->getById()
-     * @return ?array
+     * Vector\Repository\UserRepository->getByEmail()
+     * @return ?User
      */
-    public function getByEmail(string $email): ?array
+    public function getByEmail(string $email): ?User
     {
         $result = $this->client->getResults("SELECT * FROM `users` 
             WHERE `email` = ? LIMIT 1", [
-                ['type' => 's', 'value' => $email]
+            ['type' => 's', 'value' => $email]
         ]);
-        return ($result['success'] && !empty($result['data'])) ? 
-            $result['data'] : null;
+        return ($result['success'] && !empty($result['data'])) ?
+            new User($result['data']) : null;
     }
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->save()
-     * @param array $data
-     * @return void
+     * Vector\Repository\UserRepository->getList()
+     * @param array $params
+     * @return ?array<User>
      */
-    public function save(array $data): void
+    public function getList(array $params): ?array
     {
-        $password = hash('sha256', trim($data['password']));
-        $this->client->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
-                ['type' => 's', 'value' => isset($data['ID']) ? $data['ID'] : null],
-                ['type' => 's', 'value' => $data['email']],
-                ['type' => 's', 'value' => $password],
-                ['type' => 's', 'value' => $data['username']],
-                ['type' => 's', 'value' => $data['firstname']],
-                ['type' => 's', 'value' => $data['lastname']],
-                ['type' => 's', 'value' => $password],
-                ['type' => 's', 'value' => $data['username']],
-                ['type' => 's', 'value' => $data['firstname']],
-                ['type' => 's', 'value' => $data['lastname']]
+        $result = $this->client->getResults("SELECT * FROM `users` LIMIT ? OFFSET ?", [
+            ['type' => 'd', 'value' => array_key_exists('limit', $params) ?
+                $params['limit'] : 32],
+            ['type' => 'd', 'value' => array_key_exists('offset', $params) ?
+                $params['offset'] : 0]
         ]);
+        if ($result['success'] && !empty($result['data'])) {
+            $data = isset($result['data'][0]) ? $result['data'] : [$result['data']];
+            return array_map(fn ($el) => new User($el), $data);
+        }
+        return null;
     }
 
+    /**
+     * @package Vector
+     * Vector\Repository\UserRepository->getTotalCount()
+     * @return int 
+     */
+    public function getTotalCount(): int
+    {
+        $result = $this->client->getResults("SELECT COUNT(ID) AS `total` FROM `users`");
+        if ($result['success'] && !empty($result['data'])) {
+            return $result['data']['total'];
+        }
+        return 0;
+    }
 }

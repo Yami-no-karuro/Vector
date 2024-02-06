@@ -5,6 +5,7 @@ namespace Vector\Command;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\Console\Application;
 use Vector\Repository\UserRepository;
+use Vector\DataObject\User;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -55,22 +56,17 @@ class CreateUser extends AbstractCommand
         $userdata['lastname'] = Application::in('Lastname:');
 
         /**
-         * @var array $user
+         * @var ?User $user
          * Looks for already existing users by email.
          */
-        $user = $this->repository->getByEmail($email);
-        if (null !== $user) {
+        if (null !== $this->repository->getByEmail($email)) {
             Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;
         }
+        $user = new User($userdata);
+        $user->save();
 
-        /**
-         * @param array $result
-         * Proceed to insert the new record.
-         */
-        $this->repository->save($userdata);
-        Application::out('User (email: "' . $email .  '") was succesfully created!');
-
+        Application::out('User (email: "' . $user->getEmail() .  '") was succesfully created!');
         return self::EXIT_SUCCESS;
     }
 

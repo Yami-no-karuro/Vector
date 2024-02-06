@@ -259,7 +259,7 @@ class Kernel
         $path = explode('/', $filepath);
         $path[count($path) - 1] = pathinfo($path[count($path) - 1])['filename'];
         $namespace = array_slice($path, (array_search($root, $path) + 1));
-        return implode('/', ['Vector', ...$namespace]);
+        return implode('\\', ['\\Vector', ...$namespace]);
     }
 
     /**

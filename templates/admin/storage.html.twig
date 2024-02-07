@@ -9,9 +9,9 @@
       <section class="container pt-5 pb-3">
         <div class="row">
           <div class="col-lg-6 col-md-8 col-sm-12">
-            <form method="POST" enctype="multipart/form-data" action="/admin/storage/upload">
+            <form method="POST" enctype="multipart/form-data" action="/admin/storage/upload" id="media-upload">
               <div class="mb-3 d-flex flex-row">
-                <input class="form-control" type="file" name="files[]" id="upload" multiple>
+                <input class="form-control" type="file" name="files[]" multiple>
                 <button type="submit" class="btn btn-primary ms-2"> Upload </button>
               </div>
             </form>
@@ -84,17 +84,20 @@
           <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="delete-modal-label"> Are you sure? </h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body"> 
-                  Are you sure you want to <b>delete</b> the selected media? 
-                  </br> Please <b>confirm</b> using the button below.
-                </div>
-                <div class="modal-footer">
-                  <button type="button" id="delete-modal-confirm" class="btn btn-primary "> Confirm </button>
-                </div>
+                <form method="POST" enctype="multipart/form-data" action="/admin/storage/delete" id="media-delete">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delete-modal-label"> Are you sure? </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body"> 
+                    <input type="hidden" name="media">
+                    Are you sure you want to <b>delete</b> the selected media? 
+                    </br> Please <b>confirm</b> using the button below.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"> Confirm </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -103,23 +106,12 @@
               'use-strict'
               document.addEventListener('DOMContentLoaded', function() {
                 const $ = jQuery.noConflict();
-                const deleteTriggers = $('table.table button.delete-modal-trigger');
-                const deleteConfirm = $('button#delete-modal-confirm');
+                const mediaDeleteField = $('form#media-delete input[name="media"]');
+                const deleteTriggers = $('button.delete-modal-trigger');
                 deleteTriggers.each(function() {
                   this.addEventListener('click', function(event) {
                     const media = this.getAttribute('data-media-id');
-                    $('button#delete-modal-confirm')
-                      .attr('data-media-id', media);
-                  });
-                });
-                deleteConfirm.click('click', function() {
-                  const media = this.getAttribute('data-media-id');
-                  $.ajax({
-                    url: `/admin/storage/delete/${media}`,
-                    type: 'POST',
-                    complete: function() {
-                      window.location.reload();
-                    }
+                    mediaDeleteField.val(media);
                   });
                 });
               });

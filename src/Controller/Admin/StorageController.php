@@ -25,7 +25,7 @@ class StorageController extends FrontendController
     {
         Router::route(['GET'], '^/admin/storage?$', [$this, 'storageViewAction']);
         Router::route(['POST'], '^/admin/storage/upload?$', [$this, 'storageUploadAction']);
-        Router::route(['POST'], '^/admin/storage/delete/(?<id>\d+)?$', [$this, 'storageDeleteAction']);
+        Router::route(['POST'], '^/admin/storage/delete?$', [$this, 'storageDeleteAction']);
     }
 
     /**
@@ -95,7 +95,7 @@ class StorageController extends FrontendController
         $files = $request->files->get('files');
         if (!is_array($files) || empty($files)) {
             return new RedirectResponse(
-                '/admin/storage?success=false', 
+                '/admin/storage', 
                 Response::HTTP_FOUND
             );
         }
@@ -115,39 +115,42 @@ class StorageController extends FrontendController
         }
 
         return new RedirectResponse(
-            '/admin/storage?success=true', 
+            '/admin/storage', 
             Response::HTTP_FOUND
         );
     }
 
     /**
-     * Route: '/admin/storage/delete/{id}'
+     * Route: '/admin/storage/delete'
      * Methods: POST 
      * @param Request $request
      * @param array $params
-     * @return JsonResponse 
+     * @return RedirectResponse
      */
-    public function storageDeleteAction(Request $request, array $params): JsonResponse
+    public function storageDeleteAction(Request $request): RedirectResponse
     {
 
         /**
+         * @var int $media
          * @var AssetRepository $repository
          * @var Asset|null $asset
          * The retrived media is deleted.
          */
-        $repository = AssetRepository::getInstance();
-        if (null !== ($asset = $repository->getById($params['id']))) {
-            $asset->delete();
-            return new JsonResponse([
-                'success' => true,
-                'data' => [ 'ID' => $params['id'] ]
-            ], Response::HTTP_OK);
+        if (null !== ($media = $request->request->get('media', null))) {
+            $repository = AssetRepository::getInstance();
+            if (null !== ($asset = $repository->getById($media))) {
+                $asset->delete();
+                return new RedirectResponse(
+                    '/admin/storage', 
+                    Response::HTTP_FOUND
+                );
+            }
         }
 
-        return new JsonResponse([
-            'success' => false,
-            'data' => null
-        ], Response::HTTP_NOT_FOUND);
+        return new RedirectResponse(
+            '/admin/storage', 
+            Response::HTTP_FOUND
+        );
     }
 
 }

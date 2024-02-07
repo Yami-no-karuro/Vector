@@ -9,6 +9,7 @@ use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -101,6 +102,7 @@ class StorageController extends FrontendController
 
         /**
          * @var Asset $asset
+         * @var UploadedFile $file
          * Asset object instances are created to handle database updates. 
          */
         foreach ($files as $file) {

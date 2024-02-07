@@ -129,13 +129,15 @@ class Asset
          * @var false|resource $localHandle
          * The media is retrived and the mimeType is returned.
          */
-        if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($this->mimeType = mime_content_type($filepath)) ?
-                $this->mimeType :
-                null;
+        if (null === $this->mimeType) {
+            if (null !== ($filepath = $this->getFullpath())) {
+                return false !== ($this->mimeType = mime_content_type($filepath)) ?
+                    $this->mimeType :
+                    null;
+            }
         }
 
-        return null;
+        return $this->mimeType;
     }
 
     /**
@@ -162,13 +164,15 @@ class Asset
          * @var false|resource $localHandle
          * The media is retrived and the filesize is returned.
          */
-        if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($this->size = filesize($filepath)) ?
-                $this->size :
-                null;
+        if (null === $this->size) {
+            if (null !== ($filepath = $this->getFullpath())) {
+                return false !== ($this->size = filesize($filepath)) ?
+                    $this->size :
+                    null;
+            }
         }
 
-        return null;
+        return $this->size;
     }
 
     /**
@@ -184,7 +188,7 @@ class Asset
 
     /**
      * @package Vector
-     * Vector\DataObject\Asset->getContent()
+     * Vector\DataObject\Asset->getMediaContent()
      * @return ?string 
      */
     public function getContent(): ?string
@@ -195,13 +199,14 @@ class Asset
          * @var false|resource $localHandle
          * The media is fopened and the full content is returned.
          */
-        if (null !== ($filepath = $this->getFullpath())) {
-            return false !== ($localHandle = fopen($filepath, 'r')) ?
-                fread($localHandle, filesize($filepath)) :
-                null;
+        if (null === $this->content) {
+            if (null !== ($filepath = $this->getFullpath()) && false !== ($localHandle = fopen($filepath, 'r'))) {
+                $this->content = fread($localHandle, filesize($filepath));
+                return $this->content;
+            }
         }
-
-        return null;
+        
+        return $this->content;
     }
 
     /**

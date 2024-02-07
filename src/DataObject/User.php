@@ -56,7 +56,7 @@ class User
      * @package Vector
      * __construct()
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         $this->client = SqlClient::getInstance();
         foreach (array_keys($data) as $key) {

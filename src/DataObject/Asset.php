@@ -60,7 +60,7 @@ class Asset
      * @package Vector
      * __construct()
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         global $config;
         if ($config->s3_storage->enabled === true) {

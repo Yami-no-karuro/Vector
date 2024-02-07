@@ -12,6 +12,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
+use Vector\DataObject\User;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -69,18 +70,18 @@ class Install extends AbstractCommand
         }
 
         /**
-         * Defaults settings are created.
+         * @var User $admin;
+         * Defaults settings and administrator user are created.
          */
-        try {
-            Settings::set('installed', true);
-            Settings::set('web_token_secret', bin2hex(random_bytes(32)));
-            Settings::set('crypt_key', bin2hex(random_bytes(32)));
-            Settings::set('crypt_iv', bin2hex(random_bytes(8)));
-        } catch (Exception $e) {
-            Application::out($e);
-            $this->logger->write($e);
-            return self::EXIT_FAILURE;
-        }
+        Settings::set('installed', true);
+        Settings::set('web_token_secret', bin2hex(random_bytes(32)));
+        Settings::set('crypt_key', bin2hex(random_bytes(32)));
+        Settings::set('crypt_iv', bin2hex(random_bytes(8)));
+        $admin = new User();
+        $admin->setEmail('admin@admin.com');
+        $admin->setPassword('Administrator');
+        $admin->setUsername('Admin');
+        $admin->save();
 
         Application::out('Vector installed succesfully!');
         return self::EXIT_SUCCESS;

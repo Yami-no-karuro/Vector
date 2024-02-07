@@ -286,6 +286,8 @@ class Asset
                 return $local;
             }
         }
+
+        return null;
     }
 
     /**

@@ -299,46 +299,47 @@ class Asset
     {
 
         /**
-         * @var int $time
-         * @var array $result
-         * The record is saved on the database (upsert).
+         * @var Filesystem $filesystem
+         * If the remote storage is enabled the file is directly uploaded to the bucket.
+         * Local storage is used by default.
          */
-        $now = time();
-        $result = $this->client->exec("INSERT INTO `assets` 
-            (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-            ['type' => 'd', 'value' => $this->getId()],
-            ['type' => 's', 'value' => $this->getPath()],
-            ['type' => 's', 'value' => $now],
-            ['type' => 's', 'value' => $this->getMimeType()],
-            ['type' => 's', 'value' => $this->getSize()],
-            ['type' => 's', 'value' => $this->getPath()],
-            ['type' => 's', 'value' => $now],
-            ['type' => 's', 'value' => $this->getMimeType()],
-            ['type' => 's', 'value' => $this->getSize()],
-        ]);
-        if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
-            $this->ID = $insertedId;
+        if (null !== $this->getContent()) {
+            try {
+                if (null !== $this->adapter) {
+                    $filesystem = $this->adapter->getFileSystemComponent();
+                    $filesystem->write('/' . $this->getPath(), $this->getContent());
+                } else {
+                    file_put_contents(
+                        Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
+                        $this->getContent()
+                    );
+                }
+            } catch (Exception $e) {
+                $this->logger->write($e);
+                return;
+            }
 
             /**
-             * @var Filesystem $filesystem
-             * If the remote storage is enabled the file is directly uploaded to the bucket.
-             * Local storage is used by default.
+             * @var int $time
+             * @var array $result
+             * The record is saved on the database (upsert).
              */
-            if (null !== $this->content) {
-                try {
-                    if (null !== $this->adapter) {
-                        $filesystem = $this->adapter->getFileSystemComponent();
-                        $filesystem->write('/' . $this->get('path'), $this->get('content'));
-                    } else {
-                        file_put_contents(
-                            Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'),
-                            $this->get('content')
-                        );
-                    }
-                } catch (Exception $e) {
-                    $this->logger->write($e);
-                }
+            $now = time();
+            $result = $this->client->exec("INSERT INTO `assets` 
+                (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
+                ['type' => 'd', 'value' => $this->getId()],
+                ['type' => 's', 'value' => $this->getPath()],
+                ['type' => 's', 'value' => $now],
+                ['type' => 's', 'value' => $this->getMimeType()],
+                ['type' => 's', 'value' => $this->getSize()],
+                ['type' => 's', 'value' => $this->getPath()],
+                ['type' => 's', 'value' => $now],
+                ['type' => 's', 'value' => $this->getMimeType()],
+                ['type' => 's', 'value' => $this->getSize()],
+            ]);
+            if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
+                $this->ID = $insertedId;
             }
         }
     }
@@ -360,10 +361,10 @@ class Asset
              * The media is deleted from local and remote storage.
              */
             try {
-                unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->get('path'));
+                unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
                 if (null !== $this->adapter) {
                     $filesystem = $this->adapter->getFileSystemComponent();
-                    $filesystem->delete($this->get('path'));
+                    $filesystem->delete($this->getPath());
                 }
             } catch (Exception $e) {
                 $this->logger->write($e);

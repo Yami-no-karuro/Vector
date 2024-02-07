@@ -8,7 +8,6 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 if (!defined('NO_DIRECT_ACCESS')) {

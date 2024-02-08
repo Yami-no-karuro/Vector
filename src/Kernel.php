@@ -24,6 +24,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Kernel
 {
+
     protected Request $request;
     protected FileSystemLogger $logger;
     protected SqlLogger $sqlLogger;
@@ -136,14 +137,15 @@ class Kernel
          * @var RecursiveIteratorIterator $iterator
          * Recursively initialize controller, request will be parsed trough the Router instance.
          */
-        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/controller');
+        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/Controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
-                require_once($file->getPathname());
-                $controller = 'Vector\\Controller\\' . basename($fname, '.php');
-                new $controller();
+                $controller = self::getClassNamespace($file->getPathname());
+                if (class_exists($controller)) {
+                    new $controller();
+                }
             }
         }
     }
@@ -232,6 +234,36 @@ class Kernel
 
     /**
      * @package Vector
+     * Vector\Kernel::getNamespaceFromPath()
+     * @param string $filepath
+     * @param string $rootDirectory
+     * @return ?string
+     */
+    public static function getClassNamespace(string $filepath, string $root = 'src'): string
+    {
+
+        /**
+         * @var string $filename
+         * If the file is not inside the namespace root directory early return.
+         */
+        $filepath = trim($filepath, '\\');
+        if (!str_contains($filepath, $root)) {
+            return null;
+        }
+
+        /**
+         * @var array $path
+         * @var string $namespace
+         * The namespace part of the fullpath is extracted.
+         */
+        $path = explode('/', $filepath);
+        $path[count($path) - 1] = pathinfo($path[count($path) - 1])['filename'];
+        $namespace = array_slice($path, (array_search($root, $path) + 1));
+        return implode('\\', ['\\Vector', ...$namespace]);
+    }
+
+    /**
+     * @package Vector
      * Vector\Kernel::getProjectRoot()
      * @return string
      */
@@ -280,4 +312,5 @@ class Kernel
         $scheme = $request->getScheme();
         return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
     }
+
 }

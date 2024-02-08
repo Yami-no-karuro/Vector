@@ -5,7 +5,10 @@
         "captainhook/captainhook": "^5.16",
         "phpstan/phpstan": "^1.10",
         "predis/predis": "^2.1",
-        "mongodb/mongodb": "^1.16"
+        "mongodb/mongodb": "^1.16",
+        "league/flysystem": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "symfony/mime": "^7.0"
     },
     "config": {
         "allow-plugins": {

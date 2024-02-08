@@ -3,30 +3,38 @@
     "debug_log": true,
     "dockerized": true,
     "database": {
-        "enabled": true,
         "db_host": "mariadb",
         "db_user": "vector_usr",
         "db_password": "vector_pwd",
         "db_name": "vector_db"
     },
     "redis": {
-        "enabled": false,
+        "enabled": true,
         "scheme": "tcp",
         "host": "redis",
         "port": "6379"
     },
     "mongodb": {
-        "enabled": false,
+        "enabled": true,
         "dsn": "mongodb://mongodb:27017",
         "db_name": "vector_mongodb"
     },
-    "firewall": {
-        "headers": true,
-        "cookies": true,
-        "query": true,
-        "body": true
+    "s3_storage": {
+        "enabled": false,
+        "bucket": "vector",
+        "access_key": "key",
+        "access_secret": "secret",
+        "region": "eu-west-1",
+        "version": "latest",
+        "endpoint": "http://minio:9000"
     },
     "security": {
+        "firewall": {
+            "headers": true,
+            "cookies": true,
+            "query": true,
+            "body": true
+        },
         "authenticated_routes": [
             "/admin",
             "/api"

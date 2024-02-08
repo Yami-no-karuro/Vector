@@ -5,7 +5,7 @@ namespace Vector\Module\Security;
 use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Security\WebToken;
-use Vector\Module\Security\UserAuthBadge;
+use Vector\Module\Security\Authentication;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,25 +143,27 @@ class Firewall
 
                 /**
                  * @var ?string $authToken
-                 * Look for "authToken" in request cookies and headers.
+                 * Look for "Auth-Token" in request cookies and headers.
                  */
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
+                    $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken) {
 
                     /**
-                     * @var UserAuthBadge $authBadge
+                     * @var array $payload
+                     * @var Authentication $authBadge
                      * The retrived token is validated.
                      */
-                    global $authBadge;
+                    global $authentication;
                     if (true === WebToken::isValid($authToken, $request)) {
                         $payload = WebToken::getPayload($authToken);
-                        $authBadge = new UserAuthBadge($payload);
+                        $authentication = new Authentication($payload);
                         return;
                     }
 
                 }
 
-                throw new UnauthorizedException('Unauthorized.');
+                throw new UnauthorizedException('Unauthorized');
             }
         }
     }

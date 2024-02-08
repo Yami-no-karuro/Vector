@@ -80,4 +80,5 @@ class CreateUser extends AbstractCommand
     {
         return 'vector:create-user';
     }
+
 }

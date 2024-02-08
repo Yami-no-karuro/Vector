@@ -20,10 +20,10 @@
         "db_name": "vector_mongodb"
     },
     "s3_storage": {
-        "enabled": true,
+        "enabled": false,
         "bucket": "vector",
-        "access_key": "OZeLPN0TOPz29uOjX3ES",
-        "access_secret": "ia7h02pjvHyqzEhGRAOiIYdKQYBUJuQoe5kCEMiJ",
+        "access_key": "key",
+        "access_secret": "secret",
         "region": "eu-west-1",
         "version": "latest",
         "endpoint": "http://minio:9000"

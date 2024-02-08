@@ -32,7 +32,7 @@
               </tr>
             </thead>
             <tbody>
-              {% if assets is not null %}
+              {% if assets is not empty %}
                 {% for asset in assets %}
                   <tr>
                     <th scope="row"> {{ asset.getId() }} </th>

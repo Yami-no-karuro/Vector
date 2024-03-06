@@ -37,24 +37,30 @@ class CreateUser extends AbstractCommand
     {
 
         /**
-         * @var array $userdata
+         * @var string $email
          * Collect user data from command line input interface.
          * Email address must be validated.
          */
-        $userdata = [];
         $email = Application::in('Email address:');
-        if (false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $userdata['email'] = $email;
-        } else {
+        if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
             Application::out('Command failed, invalid email address.');
             return self::EXIT_FAILURE;
         }
 
-        $userdata['password'] = Application::in('Password:');
-        $userdata['password'] = hash('sha256', $userdata['password']);
-        $userdata['username'] = Application::in('Username:');
-        $userdata['firstname'] = Application::in('Firstname:');
-        $userdata['lastname'] = Application::in('Lastname:');
+        $user = new User();
+        $user->setEmail($email);
+
+        $password = Application::in('Password:');
+        $user->setPassword($password);
+        
+        $username = Application::in('Username:');
+        $user->setUsername($username);
+
+        $firstname = Application::in('Firstname:');
+        $user->setFirstname($firstname);
+
+        $lastname = Application::in('Lastname:');
+        $user->setLastname($lastname);
 
         /**
          * @var ?User $user
@@ -64,9 +70,8 @@ class CreateUser extends AbstractCommand
             Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;
         }
-        $user = new User($userdata);
-        $user->save();
 
+        $user->save();
         Application::out('User (email: "' . $user->getEmail() .  '") was succesfully created!');
         return self::EXIT_SUCCESS;
     }

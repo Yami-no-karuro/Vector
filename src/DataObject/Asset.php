@@ -3,7 +3,7 @@
 namespace Vector\DataObject;
 
 use Vector\Kernel;
-use Vector\Module\SqlClient;
+use Vector\Module\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\S3StorageAdapter;
 use Exception;
@@ -13,11 +13,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Asset
+class Asset extends AbstractObject
 {
 
     protected FileSystemLogger $logger;
-    protected SqlClient $client;
     protected ?S3StorageAdapter $adapter = null;
 
     /**
@@ -68,21 +67,7 @@ class Asset
         }
 
         $this->logger = new FileSystemLogger('storage');
-        $this->client = SqlClient::getInstance();
-        foreach (array_keys($data) as $key) {
-            $this->$key = $data[$key];
-        }
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->get()
-     * @param string $key
-     * @return mixed
-     */
-    public function get(string $key): mixed
-    {
-        return isset($this->$key) ? $this->$key : null;
+        parent::__construct($data);
     }
 
     /**
@@ -333,15 +318,15 @@ class Asset
             $result = $this->client->exec("INSERT INTO `assets` 
                 (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-                ['type' => 'd', 'value' => $this->getId()],
-                ['type' => 's', 'value' => $this->getPath()],
-                ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->getMimeType()],
-                ['type' => 's', 'value' => $this->getSize()],
-                ['type' => 's', 'value' => $this->getPath()],
-                ['type' => 's', 'value' => $now],
-                ['type' => 's', 'value' => $this->getMimeType()],
-                ['type' => 's', 'value' => $this->getSize()],
+                    ['type' => 'd', 'value' => $this->getId()],
+                    ['type' => 's', 'value' => $this->getPath()],
+                    ['type' => 's', 'value' => $now],
+                    ['type' => 's', 'value' => $this->getMimeType()],
+                    ['type' => 's', 'value' => $this->getSize()],
+                    ['type' => 's', 'value' => $this->getPath()],
+                    ['type' => 's', 'value' => $now],
+                    ['type' => 's', 'value' => $this->getMimeType()],
+                    ['type' => 's', 'value' => $this->getSize()]
             ]);
             if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
                 $this->ID = $insertedId;
@@ -376,5 +361,6 @@ class Asset
             }
         }
     }
+
 }
 

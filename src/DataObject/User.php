@@ -2,19 +2,15 @@
 
 namespace Vector\DataObject;
 
-use Vector\Module\SqlClient;
-use Vector\Module\ApplicationLogger\FileSystemLogger;
+use Vector\Module\AbstractObject;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-class User
+class User extends AbstractObject
 {
-
-    protected FileSystemLogger $logger;
-    protected SqlClient $client;
 
     /**
      * @var ?int $ID
@@ -51,29 +47,6 @@ class User
      * User lastname.
      */
     protected ?string $lastname = null;
-
-    /**
-     * @package Vector
-     * __construct()
-     */
-    public function __construct(array $data = [])
-    {
-        $this->client = SqlClient::getInstance();
-        foreach (array_keys($data) as $key) {
-            $this->$key = $data[$key];
-        }
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->get()
-     * @param string $key
-     * @return mixed
-     */
-    public function get(string $key): mixed
-    {
-        return isset($this->$key) ? $this->$key : null;
-    }
 
     /**
      * @package Vector
@@ -200,16 +173,16 @@ class User
         $result = $this->client->exec("INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
-            ['type' => 's', 'value' => $this->getId()],
-            ['type' => 's', 'value' => $this->getEmail()],
-            ['type' => 's', 'value' => $this->getPassword()],
-            ['type' => 's', 'value' => $this->getUsername()],
-            ['type' => 's', 'value' => $this->getFirstname()],
-            ['type' => 's', 'value' => $this->getLastname()],
-            ['type' => 's', 'value' => $this->getPassword()],
-            ['type' => 's', 'value' => $this->getUsername()],
-            ['type' => 's', 'value' => $this->getFirstname()],
-            ['type' => 's', 'value' => $this->getLastname()]
+                ['type' => 's', 'value' => $this->getId()],
+                ['type' => 's', 'value' => $this->getEmail()],
+                ['type' => 's', 'value' => $this->getPassword()],
+                ['type' => 's', 'value' => $this->getUsername()],
+                ['type' => 's', 'value' => $this->getFirstname()],
+                ['type' => 's', 'value' => $this->getLastname()],
+                ['type' => 's', 'value' => $this->getPassword()],
+                ['type' => 's', 'value' => $this->getUsername()],
+                ['type' => 's', 'value' => $this->getFirstname()],
+                ['type' => 's', 'value' => $this->getLastname()]
         ]);
         if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
             $this->ID = $insertedId;
@@ -229,4 +202,5 @@ class User
             ]);
         }
     }
+
 }

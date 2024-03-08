@@ -4,6 +4,7 @@ namespace Vector\Repository;
 
 use Vector\Module\SqlClient;
 use Vector\DataObject\User;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,7 +15,7 @@ class UserRepository
 {
 
     private static mixed $instance = null;
-    protected SqlClient $client;
+    protected PDO $sql;
 
     /**
      * @package Vector
@@ -22,7 +23,8 @@ class UserRepository
      */
     private function __construct()
     {
-        $this->client = SqlClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
     }
 
     /**
@@ -35,6 +37,7 @@ class UserRepository
         if (self::$instance == null) {
             self::$instance = new UserRepository();
         }
+
         return self::$instance;
     }
 
@@ -45,47 +48,63 @@ class UserRepository
      */
     public function getById(int $id): ?User
     {
-        $result = $this->client->getResults("SELECT * FROM `users` 
-            WHERE `ID` = ? LIMIT 1", [
-            ['type' => 'd', 'value' => $id]
-        ]);
-        return ($result['success'] && !empty($result['data'])) ?
-            new User($result['data']) : null;
+        $query = "SELECT * FROM `users` WHERE `ID` = :id LIMIT 1";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('id', $id, PDO::PARAM_INT);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return new User($results);
+        }
+
+        return null;
     }
 
     /**
      * @package Vector
-     * Vector\Repository\UserRepository->getByEmail()
+     * Vector\Repository\UserRepository->getBy()
+     * @param string $field
+     * @param mixed $value
+     * @param int $type
      * @return ?User
      */
-    public function getByEmail(string $email): ?User
+    public function getBy(string $field, mixed $value, int $type): ?User
     {
-        $result = $this->client->getResults("SELECT * FROM `users` 
-            WHERE `email` = ? LIMIT 1", [
-            ['type' => 's', 'value' => $email]
-        ]);
-        return ($result['success'] && !empty($result['data'])) ?
-            new User($result['data']) : null;
+        $query = "SELECT * FROM `users` WHERE `{$field}` = :value LIMIT 1";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('value', $value, $type);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return new User($results);
+        }
+
+        return null;
     }
 
     /**
      * @package Vector
      * Vector\Repository\UserRepository->getList()
-     * @param array $params
-     * @return ?array<User>
+     * @param string $condition
+     * @param int $limit
+     * @param int $offset 
+     * @return ?array
      */
-    public function getList(array $params): ?array
+    public function getList(string $condition = '1 = 1', int $limit = 32, int $offset = 0): ?array
     {
-        $result = $this->client->getResults("SELECT * FROM `users` LIMIT ? OFFSET ?", [
-            ['type' => 'd', 'value' => array_key_exists('limit', $params) ?
-                $params['limit'] : 32],
-            ['type' => 'd', 'value' => array_key_exists('offset', $params) ?
-                $params['offset'] : 0]
-        ]);
-        if ($result['success'] && !empty($result['data'])) {
-            $data = isset($result['data'][0]) ? $result['data'] : [$result['data']];
-            return array_map(fn ($el) => new User($el), $data);
+        $query = "SELECT * FROM `users` WHERE {$condition} LIMIT :limit OFFSET :offset";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('limit', $limit, PDO::PARAM_INT);
+        $q->bindParam('offset', $offset, PDO::PARAM_INT);
+        $q->execute();
+
+        if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {
+            return array_map(fn($el) => new User($el), $results);
         }
+
         return null;
     }
 
@@ -96,10 +115,15 @@ class UserRepository
      */
     public function getTotalCount(): int
     {
-        $result = $this->client->getResults("SELECT COUNT(ID) AS `total` FROM `users`");
-        if ($result['success'] && !empty($result['data'])) {
-            return $result['data']['total'];
+        $query = "SELECT COUNT(ID) AS `total` FROM `users`";
+        $q = $this->sql->prepare($query);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return $results['total'];
         }
+
         return 0;
     }
+
 }

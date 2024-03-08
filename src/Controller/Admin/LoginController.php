@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -71,7 +72,7 @@ class LoginController extends FrontendController
              * @var User $user
              * Looks for valid users by email.
              */
-            if (null !== ($user = $repository->getByEmail($email))) {
+            if (null !== ($user = $repository->getBy('email', $email, PDO::PARAM_STR))) {
 
                 /**
                  * @var string $password

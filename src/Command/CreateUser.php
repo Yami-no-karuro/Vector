@@ -6,6 +6,7 @@ use Vector\Module\Console\AbstractCommand;
 use Vector\Module\Console\Application;
 use Vector\Repository\UserRepository;
 use Vector\DataObject\User;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -66,7 +67,7 @@ class CreateUser extends AbstractCommand
          * @var ?User $user
          * Looks for already existing users by email.
          */
-        if (null !== $this->repository->getByEmail($email)) {
+        if (null !== $this->repository->getBy('email', $email, PDO::PARAM_STR)) {
             Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;
         }

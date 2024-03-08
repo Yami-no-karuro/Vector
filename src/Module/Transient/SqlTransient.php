@@ -4,6 +4,7 @@ namespace Vector\Module\Transient;
 
 use Vector\Module\Transient\AbstractTransient;
 use Vector\Module\SqlClient;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -13,7 +14,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlTransient extends AbstractTransient
 {
 
-    protected SqlClient $sql;
+    protected PDO $sql;
     protected ?array $content = null;
 
     /**
@@ -24,15 +25,17 @@ class SqlTransient extends AbstractTransient
     public function __construct(string $name)
     {
         parent::__construct($name);
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
 
-        $this->sql = SqlClient::getInstance();
-        $result = $this->sql->getResults("SELECT `content` 
-            FROM `transients` 
-            WHERE `name` = ? LIMIT 1", [
-                ['type' => 's', 'value' => $this->name]
-        ]);
-        if ($result['success'] && !empty($result['data'])) {
-            $this->content = unserialize($result['data']['content']);
+        $query = "SELECT `content` FROM `transients` WHERE `name` = :name LIMIT 1";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('name', $name, PDO::PARAM_STR);
+        $q->execute();
+
+        if (false !== ($result = $q->fetch(PDO::FETCH_ASSOC))) {
+            $this->content = unserialize($result['content']);
         }
     }
 
@@ -82,13 +85,13 @@ class SqlTransient extends AbstractTransient
         ];
         $this->content = $content;
         $serialized = serialize($content);
-        $this->sql->exec("INSERT INTO `transients` 
-            (`name`, `content`) VALUES (?, ?) 
-            ON DUPLICATE KEY UPDATE `content` = ?", [
-                ['type' => 's', 'value' => $this->name],
-                ['type' => 's', 'value' => $serialized],
-                ['type' => 's', 'value' => $serialized]
-        ]);
+
+        $query = "INSERT INTO `transients` (`name`, `content`) VALUES (:name, :content) ON DUPLICATE KEY UPDATE `content` = :content";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('name', $this->name, PDO::PARAM_STR);
+        $q->bindParam('content', $serialized, PDO::PARAM_STR);
+        $q->execute();
     }
 
     /**
@@ -98,9 +101,11 @@ class SqlTransient extends AbstractTransient
      */
     public function delete(): void
     {
-        $this->sql->exec("DELETE FROM `transients` WHERE `name` = ?", [
-            ['type' => 's', 'value' => $this->name]
-        ]);
+        $query = "DELETE FROM `transients` WHERE `name` = :name";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('name', $this->name, PDO::PARAM_STR);
+        $q->execute();
     }
 
 }

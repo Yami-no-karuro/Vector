@@ -13,6 +13,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -22,7 +23,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class CacheClear extends AbstractCommand
 {
 
-    protected SqlClient $sql;
+    protected PDO $sql;
     protected ?MongoClient $mongo = null;
     protected ?RedisClient $redis = null;
     protected FileSystemLogger $logger;
@@ -38,12 +39,14 @@ class CacheClear extends AbstractCommand
         parent::__construct($args);
 
         $this->logger = new FileSystemLogger('command');
-        $this->sql = SqlClient::getInstance();
-        if ($config->mongodb->enabled === true) {
-            $this->mongo = MongoClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
+
+        if ($config->mongodb->enabled === true) { 
+            $this->mongo = MongoClient::getInstance(); 
         }
-        if ($config->redis->enabled === true) {
-            $this->redis = RedisClient::getInstance();
+        if ($config->redis->enabled === true) { 
+            $this->redis = RedisClient::getInstance(); 
         }
     }
 

@@ -3,6 +3,7 @@
 namespace Vector\Command;
 
 use Vector\Kernel;
+use Vector\DataObject\User;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
@@ -12,7 +13,7 @@ use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Exception;
-use Vector\DataObject\User;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -22,7 +23,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Install extends AbstractCommand
 {
 
-    protected SqlClient $sql;
+    protected PDO $sql;
     protected FileSystemLogger $logger;
 
     /**
@@ -33,7 +34,9 @@ class Install extends AbstractCommand
     public function __construct(?array $args)
     {
         parent::__construct($args);
-        $this->sql = SqlClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
+
         $this->logger = new FileSystemLogger('command');
     }
 

@@ -2,7 +2,7 @@
 
 namespace Vector\Module;
 
-use Vector\Module\SqlClient;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -20,13 +20,19 @@ class Settings
      */
     public static function get(string $key): ?string
     {
-        $sql = SqlClient::getInstance();
-        $result = $sql->getResults("SELECT `value` FROM `settings` WHERE `key` = ?", [
-            ['type' => 's', 'value' => $key]
-        ]);
-        if ($result['success'] && !empty($data = $result['data'])) {
-            return $data['value'];
+        $sql = SqlClient::getInstance()
+            ->getClient();
+
+        $query = "SELECT `value` FROM `settings` WHERE `key` = :key";
+        $q = $sql->prepare($query);
+
+        $q->bindParam('key', $key, PDO::PARAM_STR);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return $results['value'];
         }
+
         return null;
     }
 
@@ -39,14 +45,15 @@ class Settings
      */
     public static function set(string $key, string $value): void
     {
-        $sql = SqlClient::getInstance();
-        $sql->exec("INSERT INTO `settings` 
-            (`key`, `value`) VALUES (?, ?) 
-            ON DUPLICATE KEY UPDATE `value` = ?", [
-                ['type' => 's', 'value' => $key],
-                ['type' => 's', 'value' => $value],
-                ['type' => 's', 'value' => $value]
-        ]);
+        $sql = SqlClient::getInstance()
+            ->getClient();
+
+        $query = "INSERT INTO `settings` (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = :value";
+        $q = $sql->prepare($query);
+
+        $q->bindParam('key', $key, PDO::PARAM_STR);
+        $q->bindParam('value', $value, PDO::PARAM_STR);
+        $q->execute();
     }
 
     /**
@@ -57,10 +64,14 @@ class Settings
      */
     public static function delete(string $key): void
     {
-        $sql = SqlClient::getInstance();
-        $sql->exec("DELETE FROM `settings` WHERE `key` = ?", [
-            ['type' => 's', 'value' => $key]
-        ]);
+        $sql = SqlClient::getInstance()
+            ->getClient();
+
+        $query = "DELETE FROM `settings` WHERE `key` = :key";
+        $q = $sql->prepare($query);
+
+        $q->bindParam('key', $key, PDO::PARAM_STR);
+        $q->execute();
     }
 
 }

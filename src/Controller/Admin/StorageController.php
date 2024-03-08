@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -57,10 +58,11 @@ class StorageController extends FrontendController
          * Stored assets are retrived.
          */
         $repository = AssetRepository::getInstance();
-        $assets = $repository->getList([
-            'offset' => $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE,
-            'limit' => self::ITEMS_PER_PAGE
-        ]);
+        $assets = $repository->getList(
+            '1 = 1', 
+            self::ITEMS_PER_PAGE, 
+            $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE
+        );
 
         /**
          * @var string $html

@@ -4,6 +4,7 @@ namespace Vector\Repository;
 
 use Vector\Module\SqlClient;
 use Vector\DataObject\Asset;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,7 +15,7 @@ class AssetRepository
 {
 
     private static mixed $instance = null;
-    protected SqlClient $client;
+    protected PDO $sql;
 
     /**
      * @package Vector
@@ -22,7 +23,8 @@ class AssetRepository
      */
     private function __construct()
     {
-        $this->client = SqlClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
     }
 
     /**
@@ -35,6 +37,7 @@ class AssetRepository
         if (self::$instance == null) {
             self::$instance = new AssetRepository();
         }
+
         return self::$instance;
     }
 
@@ -46,48 +49,63 @@ class AssetRepository
      */
     public function getById(int $id): ?Asset
     {
-        $result = $this->client->getResults("SELECT * FROM `assets` 
-            WHERE `ID` = ? LIMIT 1", [
-                ['type' => 'd', 'value' => $id]
-        ]);
-        return ($result['success'] && !empty($result['data'])) ? 
-            new Asset($result['data']) : null;
+        $query = "SELECT * FROM `assets` WHERE `ID` = :id LIMIT 1";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('id', $id, PDO::PARAM_INT);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return new Asset($results);
+        }
+
+        return null;
     }
 
     /**
      * @package Vector
-     * Vector\Repository\AssetRepository->getByPath()
-     * @param string $path
+     * Vector\Repository\AssetRepository->getBy()
+     * @param string $field
+     * @param mixed $value
+     * @param int $type
      * @return ?Asset
      */
-    public function getByPath(string $path): ?Asset
+    public function getBy(string $field, mixed $value, int $type): ?Asset
     {
-        $result = $this->client->getResults("SELECT * FROM `assets` 
-            WHERE `path` = ? LIMIT 1", [
-                ['type' => 's', 'value' => $path]
-        ]);
-        return ($result['success'] && !empty($result['data'])) ? 
-            new Asset($result['data']) : null;
+        $query = "SELECT * FROM `assets` WHERE `{$field}` = :value LIMIT 1";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('value', $value, $type);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return new Asset($results);
+        }
+
+        return null;
     }
 
     /**
      * @package Vector
      * Vector\Repository\AssetRepository->getList()
-     * @param array $params
-     * @return ?array<Asset>
+     * @param string $condition
+     * @param int $limit
+     * @param int $offset 
+     * @return ?array
      */
-    public function getList(array $params): ?array
+    public function getList(string $condition = '1 = 1', int $limit = 32, int $offset = 0): ?array
     {
-        $result = $this->client->getResults("SELECT * FROM `assets` LIMIT ? OFFSET ?", [
-            ['type' => 'd', 'value' => array_key_exists('limit', $params) ? 
-                $params['limit'] : 32],
-            ['type' => 'd', 'value' => array_key_exists('offset', $params) ? 
-                $params['offset'] : 0]
-        ]);
-        if ($result['success'] && !empty($result['data'])) {
-            $data = isset($result['data'][0]) ? $result['data'] : [$result['data']];
-            return array_map(fn($el) => new Asset($el), $data);
+        $query = "SELECT * FROM `assets` WHERE {$condition} LIMIT :limit OFFSET :offset";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('limit', $limit, PDO::PARAM_INT);
+        $q->bindParam('offset', $offset, PDO::PARAM_INT);
+        $q->execute();
+
+        if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {
+            return array_map(fn($el) => new Asset($el), $results);
         }
+
         return null;
     }
 
@@ -98,10 +116,14 @@ class AssetRepository
      */
     public function getTotalCount(): int
     {
-        $result = $this->client->getResults("SELECT COUNT(ID) AS `total` FROM `assets`");
-        if ($result['success'] && !empty($result['data'])) {
-            return $result['data']['total'];
+        $query = "SELECT COUNT(ID) AS `total` FROM `assets`";
+        $q = $this->sql->prepare($query);
+        $q->execute();
+
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+            return $results['total'];
         }
+
         return 0;
     }
 

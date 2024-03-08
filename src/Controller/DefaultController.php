@@ -10,6 +10,7 @@ use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -63,7 +64,7 @@ class DefaultController extends FrontendController
          * If the media actually exists the raw resource handler is retrived. 
          */
         $repository = AssetRepository::getInstance();
-        if (null !== ($asset = $repository->getByPath($params['path']))) {
+        if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
             $stream = $asset->getStream();
             if (is_resource($stream)) {
                 return new StreamedResponse(function() use ($stream) {

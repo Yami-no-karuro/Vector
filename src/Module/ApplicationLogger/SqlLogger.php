@@ -4,6 +4,7 @@ namespace Vector\Module\ApplicationLogger;
 
 use Vector\Module\ApplicationLogger\AbstractLogger;
 use Vector\Module\SqlClient;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -13,7 +14,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlLogger extends AbstractLogger
 {
 
-    protected SqlClient $sql;
+    protected PDO $sql;
 
     /**
      * @package Vector
@@ -23,7 +24,8 @@ class SqlLogger extends AbstractLogger
     public function __construct(string $type)
     {
         parent::__construct($type);
-        $this->sql = SqlClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
     }
 
     /**
@@ -34,13 +36,14 @@ class SqlLogger extends AbstractLogger
      */
     public function write(string $log): void
     {
-        $this->sql->exec("INSERT INTO `logs` 
-            (`ID`, `domain`, `time`, `log`) 
-            VALUES (NULL, ?, ?, ?)", [
-                ['type' => 's', 'value' => $this->domain],
-                ['type' => 's', 'value' => time()],
-                ['type' => 's', 'value' => $log]
-        ]);
+        $query = "INSERT INTO `logs` (`ID`, `domain`, `time`, `log`) VALUES (NULL, :domain, :time, :log)";
+        $q = $this->sql->prepare($query);
+
+        $time = time();
+        $q->bindParam('domain', $this->domain, PDO::PARAM_STR);
+        $q->bindParam('time', $time, PDO::PARAM_INT);
+        $q->bindParam('log', $log, PDO::PARAM_STR);
+        $q->execute();
     }
 
 }

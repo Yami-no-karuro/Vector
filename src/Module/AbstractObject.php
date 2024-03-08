@@ -2,7 +2,7 @@
 
 namespace Vector\Module;
 
-use Vector\Module\SqlClient;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractObject
 {
 
-    protected SqlClient $client;
+    protected PDO $sql;
 
     /**
      * @package Vector
@@ -20,7 +20,9 @@ abstract class AbstractObject
      */
     public function __construct(array $data = [])
     {
-        $this->client = SqlClient::getInstance();
+        $this->sql = SqlClient::getInstance()
+            ->getClient();
+
         foreach (array_keys($data) as $key) {
             $this->$key = $data[$key];
         }

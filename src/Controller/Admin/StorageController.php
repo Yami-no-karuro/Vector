@@ -35,7 +35,6 @@ class StorageController extends FrontendController
      */
     public function storageViewAction(Request $request): Response
     {
-
         $repository = AssetRepository::getInstance();
         $totalCount = $repository->getTotalCount();
         $page = intval((0 >= ($page = $request->get('page', 1))) ? 1 : (int) $page);

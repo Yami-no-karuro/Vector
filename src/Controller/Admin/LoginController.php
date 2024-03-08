@@ -35,11 +35,6 @@ class LoginController extends FrontendController
      */
     public function loginViewAction(): Response
     {
-
-        /**
-         * @var string $html
-         * Retrive raw view html from the twig template engine.
-         */
         $html = $this->template->render('admin/login.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.',

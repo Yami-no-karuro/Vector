@@ -227,42 +227,42 @@ class Asset extends AbstractObject
      */
     public function save(): void
     {
+        if (null === $this->getContent()) { return; }
 
-        if (null !== $this->getContent()) {
-            try {
-                file_put_contents(
-                    Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
-                    $this->getContent()
-                );
-            } catch (Exception $e) {
-                $this->logger->write($e);
-                return;
-            }
+        try {
+            file_put_contents(
+                Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
+                $this->getContent()
+            );
+        } catch (Exception $e) {
+            $this->logger->write($e);
+            return;
+        }
 
-            $query = "INSERT INTO `assets` (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) 
-                VALUES (:ID, :path, :modifiedAt, :mimeType, :size)
-                ON DUPLICATE KEY UPDATE `path` = :path, 
-                    `modifiedAt` = :modifiedAt, 
-                    `mimeType` = :mimeType, 
-                    `size` = :size";
-            $q = $this->sql->prepare($query);
+        $query = "INSERT INTO `assets` (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) 
+            VALUES (:ID, :path, :modifiedAt, :mimeType, :size)
+            ON DUPLICATE KEY UPDATE `path` = :path, 
+                `modifiedAt` = :modifiedAt, 
+                `mimeType` = :mimeType, 
+                `size` = :size";
 
-            $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
-            $q->bindParam('path', $this->path, PDO::PARAM_STR);
+        $q = $this->sql->prepare($query);
 
-            $now = time();
-            $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
+        $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
+        $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
-            $mime = $this->getMimeType();
-            $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
+        $now = time();
+        $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
 
-            $size = $this->getSize();
-            $q->bindParam('size', $size, PDO::PARAM_INT);
-            $q->execute();
+        $mime = $this->getMimeType();
+        $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
 
-            if (null !== ($id = $this->sql->lastInsertId())) {
-                $this->ID = $id;
-            }
+        $size = $this->getSize();
+        $q->bindParam('size', $size, PDO::PARAM_INT);
+        $q->execute();
+
+        if (null !== ($id = $this->sql->lastInsertId())) {
+            $this->ID = $id;
         }
     }
 
@@ -273,18 +273,17 @@ class Asset extends AbstractObject
      */
     public function delete(): void
     {
-        if (null !== $this->getId()) {
-            $query = "DELETE FROM `assets` WHERE `ID` = :id";
-            $q = $this->sql->prepare($query);
+        if (null === $this->getId()) { return; }
+        $query = "DELETE FROM `assets` WHERE `ID` = :id";
+        $q = $this->sql->prepare($query);
 
-            $q->bindParam('id', $this->ID, PDO::PARAM_INT);
-            $q->execute();
+        $q->bindParam('id', $this->ID, PDO::PARAM_INT);
+        $q->execute();
 
-            try {
-                unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
-            } catch (Exception $e) {
-                $this->logger->write($e);
-            }
+        try {
+            unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
+        } catch (Exception $e) {
+            $this->logger->write($e);
         }
     }
 

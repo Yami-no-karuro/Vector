@@ -22,6 +22,7 @@ class Slugger
         $input = strtolower($input);
         $input = str_replace(' ', '-', $input);
         $input = preg_replace('/-+/', '-', $input);
+
         return trim($input, '-');
     }
 

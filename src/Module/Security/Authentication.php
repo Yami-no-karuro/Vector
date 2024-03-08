@@ -14,7 +14,13 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Authentication 
 {
 
-    protected const REQUIRED_PAYLOAD_SCHEMA = ['rsid', 'scope', 'time', 'ip_address', 'user_agent'];
+    protected const REQUIRED_PAYLOAD_SCHEMA = [
+        'rsid', 
+        'scope', 
+        'time', 
+        'ip_address', 
+        'user_agent'
+    ];
 
     protected UserRepository $repository;
     protected User $user;

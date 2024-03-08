@@ -41,6 +41,7 @@ class RedisTransient extends AbstractTransient
         if (null === $this->content) {
             return false;
         }
+
         return true;
     }
 
@@ -54,6 +55,7 @@ class RedisTransient extends AbstractTransient
         if (null !== $this->content) {
             return $this->content;
         }
+
         return null;
     }
 

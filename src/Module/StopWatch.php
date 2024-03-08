@@ -44,6 +44,7 @@ class StopWatch
         $minutes = floor($timePassed / 60);
         $seconds = $timePassed % 60;
         $milliseconds = ($timePassed - floor($timePassed)) * 1000;
+
         return sprintf("%02d:%02d:%02d", $minutes, $seconds, $milliseconds);
     }
 
@@ -58,6 +59,7 @@ class StopWatch
         $minutes = floor($timePassed / 60);
         $seconds = $timePassed % 60;
         $milliseconds = ($timePassed - floor($timePassed)) * 1000;
+
         return sprintf("%02d:%02d:%02d", $minutes, $seconds, $milliseconds);
     }
 

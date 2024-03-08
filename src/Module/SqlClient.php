@@ -27,6 +27,7 @@ class SqlClient
             $config->database->db_user, 
             $config->database->db_password
         );
+
         $this->client->setAttribute(
             PDO::ATTR_ERRMODE, 
             PDO::ERRMODE_EXCEPTION

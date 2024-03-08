@@ -45,13 +45,12 @@ class MongoDBTransient extends AbstractTransient
      */
     public function isValid(): bool
     {
-        if (null === $this->content) {
-            return false;
-        }
+        if (null === $this->content) { return false; }
         if ($this->content['ttl'] === 0 or
             time() - $this->content['time'] < $this->content['ttl']) {
             return true;
         }
+
         return false;
     }
 
@@ -65,6 +64,7 @@ class MongoDBTransient extends AbstractTransient
         if (null !== $this->content) {
             return $this->content['data'];
         }
+
         return null;
     }
 
@@ -82,6 +82,7 @@ class MongoDBTransient extends AbstractTransient
             'ttl' => $ttl,
             'data' => $data
         ];
+
         $this->collection->updateOne(
             ['name' => $this->name],
             ['$set' => [

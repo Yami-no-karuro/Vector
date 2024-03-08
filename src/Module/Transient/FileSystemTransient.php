@@ -40,13 +40,12 @@ class FileSystemTransient extends AbstractTransient
      */
     public function isValid(): bool
     {
-        if (null === $this->content) {
-            return false;
-        }
-        if ($this->content['ttl'] === 0 or
+        if (null === $this->content) { return false; }
+        if ($this->content['ttl'] === 0 ||
             time() - $this->content['time'] < $this->content['ttl']) {
             return true;
         }
+
         return false;
     }
 
@@ -60,6 +59,7 @@ class FileSystemTransient extends AbstractTransient
         if (null !== $this->content) {
             return $this->content['data'];
         }
+
         return null;
     }
 
@@ -77,6 +77,7 @@ class FileSystemTransient extends AbstractTransient
             'ttl' => $ttl,
             'data' => $data
         ];
+
         $this->content = $content;
         $serialized = serialize($content);
         file_put_contents($this->path, $serialized, LOCK_EX);

@@ -29,6 +29,7 @@ class WebToken
                 $payload['ip_address'] = $request->getClientIp();
                 $payload['user_agent'] = $request->headers->get('User-Agent', 'unknown');
             }
+
             $payload = self::generatePayload($payload);
             $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $encodedSignature = str_replace(

@@ -23,6 +23,7 @@ class ProcessRunner
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w']
         ], $pipes);
+
         if (is_resource($process)) {
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
@@ -35,6 +36,7 @@ class ProcessRunner
                 'return_value' => $returnValue
             ];
         }
+
         return null;
     }
 

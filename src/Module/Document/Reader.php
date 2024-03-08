@@ -42,6 +42,7 @@ class Reader
         if (!feof($this->fileHandle)) {
             return fgetcsv($this->fileHandle, 0, $this->delimiter);
         }
+
         return false;
     }
 

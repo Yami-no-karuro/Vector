@@ -7,7 +7,6 @@ use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Security\WebToken;
 use Vector\Repository\UserRepository;
-use Vector\DataObject\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;

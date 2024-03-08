@@ -23,12 +23,6 @@ class MongoClient
      */
     private function __construct()
     {
-
-        /**
-         * @var string $dsn
-         * @var string $dbName
-         * Use the DSN and the database configured in config.json
-         */
         global $config;
         $dbName = $config->mongodb->db_name;
         $dsn = $config->mongodb->dsn;
@@ -47,6 +41,7 @@ class MongoClient
         if (self::$instance == null) {
             self::$instance = new MongoClient();
         }
+
         return self::$instance;
     }
 

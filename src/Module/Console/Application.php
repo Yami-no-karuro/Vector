@@ -58,29 +58,13 @@ class Application
     {
         $this->directRun();
 
-        /**
-         * @var array $registeredCommand
-         * @var RecursiveDirectoryIterator $dir
-         * @var RecursiveIteratorIterator $iterator
-         * Iterate thorough command classes looking for registered command.
-         * If nothing is found matching the given criteria prints out the available command.
-         */
         $registeredCommands = [];
         $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/Command');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
+
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
-
-                /**
-                 * @var string $class
-                 * @var AbstractCommand $command
-                 * @var string $commandName
-                 * @var array $registeredCommands
-                 * Initialize class to retrive command informations.
-                 * If the current input matches the command will be executed.
-                 * Command data is cached for future runs.
-                 */
                 $class = Kernel::getClassNamespace($file->getPathname());
                 if (class_exists($class)) {
                     $command = new $class($this->args);
@@ -91,9 +75,11 @@ class Application
                             'command' => $this->command,
                             'handler' => $class
                         ]);
+
                         $this->stopWatch->start();
                         $exitCode = $command->execute();
                         $this->stopWatch->stop();
+
                         self::out('Exitcode: ' . $exitCode);
                         self::out('Executed for: ' . $this->stopWatch->getElapsed());
                         exit($exitCode);
@@ -118,20 +104,16 @@ class Application
      */
     protected function directRun(): void
     {
-
-        /**
-         * @var string $cache
-         * @var string $class
-         * @var AbstractCommand $command
-         */
         if ($this->transient->isValid(HOUR_IN_SECONDS)) {
             $cache = $this->transient->getData();
             $class = $cache['handler'];
+
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
                 $this->stopWatch->start();
                 $exitCode = $command->execute();
                 $this->stopWatch->stop();
+
                 self::out('Exitcode: ' . $exitCode);
                 self::out('Executed for: ' . $this->stopWatch->getElapsed());
                 exit($exitCode);
@@ -146,13 +128,9 @@ class Application
      */
     protected function loadConfig(): void
     {
-
-        /**
-         * @var FileSystemTransient $transient
-         * @var object $config
-         */
         global $config;
         $transient = new FileSystemTransient('vct-config');
+
         if ($transient->isValid()) {
             $data = $transient->getData();
         } else {
@@ -160,6 +138,7 @@ class Application
             $data = json_decode(file_get_contents($path));
             $transient->setData($data);
         }
+
         $config = $data;
     }
 

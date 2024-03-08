@@ -5,7 +5,6 @@ namespace Vector\DataObject;
 use Vector\Kernel;
 use Vector\Module\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Vector\Module\S3StorageAdapter;
 use Exception;
 use PDO;
 
@@ -18,7 +17,6 @@ class Asset extends AbstractObject
 {
 
     protected FileSystemLogger $logger;
-    protected ?S3StorageAdapter $adapter = null;
 
     /**
      * @var ?int $ID
@@ -62,11 +60,6 @@ class Asset extends AbstractObject
      */
     public function __construct(array $data = [])
     {
-        global $config;
-        if ($config->s3_storage->enabled === true) {
-            $this->adapter = S3StorageAdapter::getInstance();
-        }
-
         $this->logger = new FileSystemLogger('storage');
         parent::__construct($data);
     }

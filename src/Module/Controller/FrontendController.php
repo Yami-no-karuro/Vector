@@ -24,12 +24,6 @@ abstract class FrontendController extends AbstractController
      */
     public function __construct(bool $direct = false)
     {
-
-        /**
-         * @var Envoirment $template
-         * @var FilesystemLoader
-         * Load the twig Envoirment.
-         */
         $filesystemLoader = new FilesystemLoader(__DIR__ . '/../../../templates');
         $this->template = new Environment($filesystemLoader, [
             'cache'       => Kernel::getProjectRoot() . '/var/cache/twig',

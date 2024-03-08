@@ -25,9 +25,9 @@ class MongoDBTransient extends AbstractTransient
     public function __construct(string $name)
     {
         parent::__construct($name);
-
         $client = MongoClient::getInstance();
         $this->collection = $client->getCollection('transients');
+
         if (null !== ($content = $this->collection->findOne(['name' => $this->name]))) {
             $data = $content->getArrayCopy();
             $this->content = [

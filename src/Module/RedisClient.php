@@ -48,6 +48,7 @@ class RedisClient
         if (self::$instance == null) {
             self::$instance = new RedisClient();
         }
+
         return self::$instance;
     }
 

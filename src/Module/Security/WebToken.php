@@ -53,10 +53,6 @@ class WebToken
     public static function isValid(string $token, Request &$request, bool $ignoreRequestInfo = false): bool
     {
 
-        /**
-         * @var ?array $parts
-         * Token parts are retrived and decoded.
-         */
         if (null === ($parts = self::getTokenParts($token))) {
             return false;
         }
@@ -69,23 +65,17 @@ class WebToken
             )
         ), true);
 
-        /**
-         * @param bool $ignoreRequestInfo
-         * Checks requests informations validity if necessary.
-         */
         if (false === $ignoreRequestInfo) {
-            if (!array_key_exists('ip_address', $decodedPayload) || $decodedPayload['ip_address'] !== $request->getClientIp()) {
-                return false;
+            if (!array_key_exists('ip_address', $decodedPayload) || 
+                $decodedPayload['ip_address'] !== $request->getClientIp()) {
+                    return false;
             }
-            if (!array_key_exists('user_agent', $decodedPayload) || $decodedPayload['user_agent'] !== $request->headers->get('User-Agent')) {
-                return false;
+            if (!array_key_exists('user_agent', $decodedPayload) || 
+                $decodedPayload['user_agent'] !== $request->headers->get('User-Agent')) {
+                    return false;
             }
         }
 
-        /**
-         * @var ?string $secret
-         * The hash is validated against the "web_token_secret" option.
-         */
         if (null !== ($secret = Settings::get('web_token_secret'))) {
             $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $expectedSignature = str_replace(

@@ -88,11 +88,6 @@ class Authentication
      */
     protected function verifyPayload(array $payload): bool
     {
-
-        /**
-         * @var array $schema
-         * The payload is verified and validated.
-         */
         $schema = array_keys($payload);
         if (count(array_intersect(self::REQUIRED_PAYLOAD_SCHEMA, $schema)) <= 0) {
             return false;

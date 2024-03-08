@@ -25,6 +25,7 @@ class Crypt
         $startSalt = openssl_random_pseudo_bytes(32);
         $endSalt = openssl_random_pseudo_bytes(32);
         $data = $startSalt . $data . $endSalt;
+
         return openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
     }
 
@@ -39,6 +40,7 @@ class Crypt
         $key = Settings::get('crypt_key');
         $iv = Settings::get('crypt_iv');
         $decrypted = openssl_decrypt($data, 'aes-256-cbc', $key, 0, $iv);
+
         return substr($decrypted, 32, (strlen($decrypted) - 64));
     }
 

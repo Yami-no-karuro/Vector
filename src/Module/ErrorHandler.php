@@ -3,7 +3,6 @@
 namespace Vector\Module;
 
 use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -36,13 +35,6 @@ class ErrorHandler
      */
     public function handleError(int $errno, string $errstr, string $errfile, int $errline): void
     {
-
-        /**
-         * @var object $config
-         * @var string $exceptionMessage
-         * Load global configuration.
-         * If debug is enabled $errorMessage is logged, displayed or both.
-         */
         global $config;
         $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
         if (true === $config->debug) {
@@ -63,13 +55,6 @@ class ErrorHandler
      */
     public function handleException(mixed $exception): void
     {
-
-        /**
-         * @var object $config
-         * @var string $exceptionMessage
-         * Load global configuration.
-         * If debug is enabled $exceptionMessage is logged, displayed or both.
-         */
         global $config;
         $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
         if (true === $config->debug) {
@@ -89,13 +74,6 @@ class ErrorHandler
      */
     public function handleShutdown(): void
     {
-
-        /**
-         * @var object $config
-         * @var string $exceptionMessage
-         * Load global configuration.
-         * If debug is enabled $errorMessage is logged, displayed or both.
-         */
         global $config;
         $lastError = error_get_last();
         if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -107,10 +85,6 @@ class ErrorHandler
                 $this->logger->write($errorMessage);
             }
 
-            /**
-             * @var Request $request
-             * Load global $request, responde and die.
-             */
             global $request;
             $response = new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
             $response->prepare($request);

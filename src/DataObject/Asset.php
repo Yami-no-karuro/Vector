@@ -273,7 +273,7 @@ class Asset extends AbstractObject
     public function delete(): void
     {
         if (null !== $this->getId()) {
-            $query = "DELETE FROM `assets` WHERE `ID` :id";
+            $query = "DELETE FROM `assets` WHERE `ID` = :id";
             $q = $this->sql->prepare($query);
 
             $q->bindParam('id', $this->ID, PDO::PARAM_INT);

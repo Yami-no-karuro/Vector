@@ -35,12 +35,6 @@ class Kernel
      */
     public function __construct()
     {
-
-        /**
-         * @var Request $request
-         * The global request object is initialized here.
-         * "onRequest" event is dispatched.
-         */
         global $request;
         $request = Request::createFromGlobals();
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
@@ -70,12 +64,6 @@ class Kernel
      */
     protected function handleCallback(): void
     {
-
-        /**
-         * @var Request $request
-         * @var SqlTransient $transient
-         * Try to load route data from cache
-         */
         global $request;
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         if (!$transient->isValid()) {
@@ -85,20 +73,10 @@ class Kernel
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
 
-        /**
-         * @var array|null $matches
-         * @var array $params
-         * Match request against route regex and allowed requests methods,
-         * retrive matched params if any were passed on the request.
-         */
         $matches = null;
         $params = [];
-        if (!in_array($request->getMethod(), $httpMethods)) {
-            return;
-        }
-        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) {
-            return;
-        }
+        if (!in_array($request->getMethod(), $httpMethods)) { return; }
+        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) {
@@ -107,12 +85,6 @@ class Kernel
             }
         }
 
-        /**
-         * @var Vector\Controller $controller
-         * @var callable $method
-         * Execute controller callback, send the response and die.
-         * "onCallback" and "onResponse" events are dispatched.
-         */
         $controller = new $cacheData['controller'](true);
         $method = $cacheData['callback'];
         EventDispatcher::dispatch('KernelListener', 'onCallback', [&$request, $controller, $method, &$params]);
@@ -131,12 +103,6 @@ class Kernel
      */
     protected function routeRegister(): void
     {
-
-        /**
-         * @var RecursiveDirectoryIterator $dir
-         * @var RecursiveIteratorIterator $iterator
-         * Recursively initialize controller, request will be parsed trough the Router instance.
-         */
         $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/Controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
@@ -157,13 +123,6 @@ class Kernel
      */
     protected function loadConfig(): void
     {
-
-        /**
-         * @var FileSystemTransient $transient
-         * @var object $config
-         * Loads global configuration.
-         * "onConfiguration" event is dispatched.
-         */
         global $config;
         $transient = new FileSystemTransient('vct-config');
         if ($transient->isValid()) {
@@ -185,12 +144,6 @@ class Kernel
      */
     protected function registerShutdownFunctions(): void
     {
-
-        /**
-         * @var ErrorHandler $errorHandler
-         * Errors, Exceptions and Shutdowns are delegated to the ErrorHandler class.
-         * "onErrorHandler" event is dispatched.
-         */
         $errorHandler = new ErrorHandler();
         EventDispatcher::dispatch('KernelListener', 'onErrorHandler', [&$errorHandler]);
 
@@ -206,13 +159,6 @@ class Kernel
      */
     protected function verifyRequest(): void
     {
-
-        /**
-         * @var Request $request
-         * @var Firewall $firewall
-         * Request is passed through application Firewall for approval.
-         * "onFirewall event is dispatched.
-         */
         global $request;
         $firewall = new Firewall();
         EventDispatcher::dispatch('KernelListener', 'onFirewall', [&$firewall]);
@@ -225,6 +171,7 @@ class Kernel
             } elseif ($e instanceof UnauthorizedException) {
                 $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" attempted to reach a secure route without being authenticated.');
             }
+
             $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();
@@ -241,21 +188,11 @@ class Kernel
      */
     public static function getClassNamespace(string $filepath, string $root = 'src'): string
     {
-
-        /**
-         * @var string $filename
-         * If the file is not inside the namespace root directory early return.
-         */
         $filepath = trim($filepath, '\\');
         if (!str_contains($filepath, $root)) {
             return null;
         }
 
-        /**
-         * @var array $path
-         * @var string $namespace
-         * The namespace part of the fullpath is extracted.
-         */
         $path = explode('/', $filepath);
         $path[count($path) - 1] = pathinfo($path[count($path) - 1])['filename'];
         $namespace = array_slice($path, (array_search($root, $path) + 1));
@@ -269,11 +206,6 @@ class Kernel
      */
     public static function getProjectRoot(): string
     {
-
-        /**
-         * @var string $workingDir
-         * Retriving workdir based on the execution mode.
-         */
         $workingDir = getcwd();
         if (str_contains($workingDir, 'public')) {
             return $workingDir . '/../';
@@ -290,23 +222,11 @@ class Kernel
      */
     public static function getRequestUrl(Request &$request): string
     {
-
-        /**
-         * @var object $config
-         * Preparing URL based on the machine envoirment.
-         * If the project is running on Docker the internal host will be used.
-         */
         global $config;
         if (true === $config->dockerized) {
             return 'http://php-apache:80' . $request->getRequestUri();
         }
 
-        /**
-         * @var string $host
-         * @var string $port
-         * @var string $scheme
-         * If the project is hosted natively we retrive url based on request informations.
-         */
         $host = $request->getHost();
         $port = $request->getPort();
         $scheme = $request->getScheme();

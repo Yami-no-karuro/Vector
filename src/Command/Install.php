@@ -48,12 +48,6 @@ class Install extends AbstractCommand
     public function execute(): int
     {
 
-        /**
-         * @var string $dir
-         * @var RecursiveDirectoryIterator $sqlDir
-         * @var RecursiveIteratorIterator $iterator
-         * Iterate through the sql directory, files will be executed as raw sql.
-         */
         $dir = Kernel::getProjectRoot() . 'var/sql/';
         if (file_exists($dir) && is_dir($dir)) {
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
@@ -73,14 +67,11 @@ class Install extends AbstractCommand
             }
         }
 
-        /**
-         * @var User $admin;
-         * Defaults settings and administrator user are created.
-         */
         Settings::set('installed', true);
         Settings::set('web_token_secret', bin2hex(random_bytes(32)));
         Settings::set('crypt_key', bin2hex(random_bytes(32)));
         Settings::set('crypt_iv', bin2hex(random_bytes(8)));
+
         $admin = new User();
         $admin->setEmail('admin@admin.com');
         $admin->setPassword('Administrator');

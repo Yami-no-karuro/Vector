@@ -59,33 +59,12 @@ class LoginController extends FrontendController
      */
     public function loginSubmitAction(Request $request): RedirectResponse
     {
-
-        /**
-         * @var UserRepository $repository
-         * @var string $email
-         * If the provided email is valid search for an existing user.
-         */
         $repository = UserRepository::getInstance();
         if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            /**
-             * @var User $user
-             * Looks for valid users by email.
-             */
             if (null !== ($user = $repository->getBy('email', $email, PDO::PARAM_STR))) {
 
-                /**
-                 * @var string $password
-                 * On password match set the autentication cookie and redirect to /admin.
-                 * Redirect back with "?success=false" on failure.
-                 */
                 $password = $user->getPassword();
                 if (hash('sha256', trim($request->get('password', ''))) === $password) {
-
-                    /**
-                     * @var Cookie $cookie
-                     * Authentication cookie is set here.
-                     */
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
                         'rsid' => $user->getId(),
                         'scope' => 'write',
@@ -102,10 +81,6 @@ class LoginController extends FrontendController
             }
         }
 
-        /**
-         * @var SqlLogger $logger
-         * Logging login attempt to keep track of user and bot activities.
-         */
         $logger = new SqlLogger('auth');
         $logger->write('Client: "' . $request->getClientIp() . '" attempted to login with incorrect credentials.');
 

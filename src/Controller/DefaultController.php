@@ -3,7 +3,6 @@
 namespace Vector\Controller;
 
 use Vector\Router;
-use Vector\DataObject\Asset;
 use Vector\Module\Controller\FrontendController;
 use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Repository\AssetRepository;
@@ -34,11 +33,6 @@ class DefaultController extends FrontendController
      */
     public function defaultAction(): Response
     {
-
-        /**
-         * @var string $html
-         * Builds the view raw html.
-         */
         $html = $this->template->render('default.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'
@@ -56,15 +50,9 @@ class DefaultController extends FrontendController
      */
     public function storageAction(Request $request, array $params): Response
     {
-
-        /**
-         * @var AssetRepository $repository
-         * @var Asset $asset
-         * The asset repository is retrived.
-         * If the media actually exists the raw resource handler is retrived. 
-         */
         $repository = AssetRepository::getInstance();
         if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
+
             $stream = $asset->getStream();
             if (is_resource($stream)) {
                 return new StreamedResponse(function() use ($stream) {
@@ -87,19 +75,9 @@ class DefaultController extends FrontendController
      */
     public function notFoundAction(Request $request): Response
     {
-
-        /**
-         * @var SqlLogger $logger
-         * @var string $clientIp
-         * Logging 404s to keep track of user and bot activities.
-         */
         $logger = new SqlLogger('auth');
         $logger->write('Client: "' . $request->getClientIp() . '" attempted to navigate an unknown route.');
 
-        /**
-         * @var string $html
-         * Builds the view raw html.
-         */
         $html = $this->template->render('not-found.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.'

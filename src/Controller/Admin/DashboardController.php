@@ -26,11 +26,6 @@ class DashboardController extends FrontendController
      */
     public function dashboardViewAction(): Response
     {
-
-        /**
-         * @var string $html
-         * Builds the view raw html.
-         */
         $html = $this->template->render('admin/admin.html.twig', [
             'title' => 'Vector - Dashboard',
             'description' => ''

@@ -3,6 +3,7 @@
 namespace Vector\DataObject;
 
 use Vector\Module\AbstractObject;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -170,22 +171,25 @@ class User extends AbstractObject
      */
     public function save(): void
     {
-        $result = $this->client->exec("INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) VALUES (?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE `password` = ?, `username` = ?, `firstname` = ?, `lastname` = ?", [
-                ['type' => 's', 'value' => $this->getId()],
-                ['type' => 's', 'value' => $this->getEmail()],
-                ['type' => 's', 'value' => $this->getPassword()],
-                ['type' => 's', 'value' => $this->getUsername()],
-                ['type' => 's', 'value' => $this->getFirstname()],
-                ['type' => 's', 'value' => $this->getLastname()],
-                ['type' => 's', 'value' => $this->getPassword()],
-                ['type' => 's', 'value' => $this->getUsername()],
-                ['type' => 's', 'value' => $this->getFirstname()],
-                ['type' => 's', 'value' => $this->getLastname()]
-        ]);
-        if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
-            $this->ID = $insertedId;
+        $query = "INSERT INTO `users` 
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
+            VALUES (:ID, :email, :password, :username, :firstname, :lastname)
+            ON DUPLICATE KEY UPDATE `password` = :password,
+                `username` = :username, 
+                `firstname` = :firstname, 
+                `lastname` = :lastname";
+        $q = $this->sql->prepare($query);
+
+        $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
+        $q->bindParam('email', $this->email, PDO::PARAM_STR);
+        $q->bindParam('password', $this->password, PDO::PARAM_STR);
+        $q->bindParam('username', $this->username, PDO::PARAM_STR);
+        $q->bindParam('firstname', $this->firstname, PDO::PARAM_STR);
+        $q->bindParam('lastname', $this->lastname, PDO::PARAM_STR);
+        $q->execute();
+
+        if (null !== ($id = $this->sql->lastInsertId())) {
+            $this->ID = $id;
         }
     }
 
@@ -197,9 +201,11 @@ class User extends AbstractObject
     public function delete(): void
     {
         if (null !== $this->getId()) {
-            $this->client->exec("DELETE FROM `users` WHERE `ID` = ?", [
-                ['type' => 'd', 'value' => $this->getId()],
-            ]);
+            $query = "DELETE FROM `users` WHERE `ID` :id";
+            $q = $this->sql->prepare($query);
+
+            $q->bindParam('id', $this->ID, PDO::PARAM_INT);
+            $q->execute();
         }
     }
 

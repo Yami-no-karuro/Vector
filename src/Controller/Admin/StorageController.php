@@ -38,13 +38,6 @@ class StorageController extends FrontendController
     public function storageViewAction(Request $request): Response
     {
 
-        /**
-         * @var AssetRepository $repository
-         * @var int $totalCount
-         * @var int $page
-         * The page parameter is retrived from the current request.
-         * If invalid values are passed page will default to 0 or max.
-         */
         $repository = AssetRepository::getInstance();
         $totalCount = $repository->getTotalCount();
         $page = intval((0 >= ($page = $request->get('page', 1))) ? 1 : (int) $page);
@@ -52,11 +45,6 @@ class StorageController extends FrontendController
             $page = intval($pageCount);
         }
 
-        /**
-         * @var AssetRepository $repository
-         * @var ?array<Asset> $assets 
-         * Stored assets are retrived.
-         */
         $repository = AssetRepository::getInstance();
         $assets = $repository->getList(
             '1 = 1', 
@@ -64,10 +52,6 @@ class StorageController extends FrontendController
             $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE
         );
 
-        /**
-         * @var string $html
-         * Builds the view raw html.
-         */
         $html = $this->template->render('admin/storage.html.twig', [
             'title' => 'Vector - Storage',
             'description' => 'Storage administration area.',
@@ -89,11 +73,6 @@ class StorageController extends FrontendController
     public function storageUploadAction(Request $request): RedirectResponse
     {
 
-        /**
-         * @var array $files
-         * Uploaded files are retrived from the request object.
-         * No file contraints are applied.
-         */
         $files = $request->files->get('files');
         if (!is_array($files) || empty($files)) {
             return new RedirectResponse(
@@ -102,11 +81,6 @@ class StorageController extends FrontendController
             );
         }
 
-        /**
-         * @var Asset $asset
-         * @var UploadedFile $file
-         * Asset object instances are created to handle database updates. 
-         */
         foreach ($files as $file) {
             $asset = new Asset([
                 'path' => $file->getClientOriginalName(),
@@ -133,12 +107,6 @@ class StorageController extends FrontendController
     public function storageDeleteAction(Request $request): RedirectResponse
     {
 
-        /**
-         * @var int $media
-         * @var AssetRepository $repository
-         * @var Asset|null $asset
-         * The retrived media is deleted.
-         */
         if (null !== ($media = $request->request->get('media', null))) {
             $repository = AssetRepository::getInstance();
             if (null !== ($asset = $repository->getById($media))) {

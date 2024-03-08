@@ -7,6 +7,7 @@ use Vector\Module\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\S3StorageAdapter;
 use Exception;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -108,18 +109,11 @@ class Asset extends AbstractObject
      */
     public function getMimeType(): ?string
     {
-
-        /**
-         * @var string $filepath
-         * @var false|resource $localHandle
-         * The media is retrived and the mimeType is returned.
-         */
-        if (null === $this->mimeType) {
-            if (null !== ($filepath = $this->getFullpath())) {
+        if (null === $this->mimeType && 
+            null !== ($filepath = $this->getFullpath())) {
                 return false !== ($this->mimeType = mime_content_type($filepath)) ?
                     $this->mimeType :
                     null;
-            }
         }
 
         return $this->mimeType;
@@ -143,18 +137,11 @@ class Asset extends AbstractObject
      */
     public function getSize(): ?int
     {
-
-        /**
-         * @var string $filepath
-         * @var false|resource $localHandle
-         * The media is retrived and the filesize is returned.
-         */
-        if (null === $this->size) {
-            if (null !== ($filepath = $this->getFullpath())) {
+        if (null === $this->size &&
+            null !== ($filepath = $this->getFullpath())) {
                 return false !== ($this->size = filesize($filepath)) ?
                     $this->size :
                     null;
-            }
         }
 
         return $this->size;
@@ -178,17 +165,11 @@ class Asset extends AbstractObject
      */
     public function getContent(): ?string
     {
-
-        /**
-         * @var string $filepath
-         * @var false|resource $localHandle
-         * The media is fopened and the full content is returned.
-         */
-        if (null === $this->content) {
-            if (null !== ($filepath = $this->getFullpath()) && false !== ($localHandle = fopen($filepath, 'r'))) {
+        if (null === $this->content && 
+            null !== ($filepath = $this->getFullpath()) && 
+            false !== ($localHandle = fopen($filepath, 'r'))) {
                 $this->content = fread($localHandle, filesize($filepath));
                 return $this->content;
-            }
         }
         
         return $this->content;
@@ -222,12 +203,6 @@ class Asset extends AbstractObject
      */
     public function getStream(): mixed
     {
-
-        /**
-         * @var string $filepath
-         * @var false|resource $localHandle
-         * The media is fopened and the resource handler is returned.
-         */
         if (null !== ($filepath = $this->getFullpath())) {
             return false !== ($localHandle = fopen($filepath, 'r')) ?
                 $localHandle :
@@ -244,37 +219,9 @@ class Asset extends AbstractObject
      */
     protected function getFullpath(): ?string
     {
-
-        /**
-         * @var string $local
-         * Looks for the media inside the local storage. 
-         */
         $local = Kernel::getProjectRoot() . 'var/storage/' . $this->get('path');
         if (file_exists($local)) {
             return $local;
-        }
-
-        /**
-         * @var FileSystem $filesystem
-         * The S3 filesystem component is initialized.
-         * Looks for the media on the remote storage.
-         */
-        if (null !== $this->adapter) {
-            $filesystem = $this->adapter->getFileSystemComponent();
-            if ($filesystem->has($this->get('path'))) {
-
-                /**
-                 * @var resource $localHandle
-                 * @var resource $remoteHandle
-                 * The retrived file is copied into the local storage.
-                 */
-                $localHandle = fopen($local, 'wb');
-                $remoteHandle = $filesystem->readStream($this->get('path'));
-                stream_copy_to_stream($remoteHandle, $localHandle);
-                fclose($localHandle);
-
-                return $local;
-            }
         }
 
         return null;
@@ -288,48 +235,39 @@ class Asset extends AbstractObject
     public function save(): void
     {
 
-        /**
-         * @var Filesystem $filesystem
-         * If the remote storage is enabled the file is directly uploaded to the bucket.
-         * Local storage is used by default.
-         */
         if (null !== $this->getContent()) {
             try {
-                if (null !== $this->adapter) {
-                    $filesystem = $this->adapter->getFileSystemComponent();
-                    $filesystem->write('/' . $this->getPath(), $this->getContent());
-                } else {
-                    file_put_contents(
-                        Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
-                        $this->getContent()
-                    );
-                }
+                file_put_contents(
+                    Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
+                    $this->getContent()
+                );
             } catch (Exception $e) {
                 $this->logger->write($e);
                 return;
             }
 
-            /**
-             * @var int $time
-             * @var array $result
-             * The record is saved on the database (upsert).
-             */
             $now = time();
-            $result = $this->client->exec("INSERT INTO `assets` 
-                (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) VALUES (?, ?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE `path` = ?, `modifiedAt` = ?, `mimeType` = ?, `size` = ?", [
-                    ['type' => 'd', 'value' => $this->getId()],
-                    ['type' => 's', 'value' => $this->getPath()],
-                    ['type' => 's', 'value' => $now],
-                    ['type' => 's', 'value' => $this->getMimeType()],
-                    ['type' => 's', 'value' => $this->getSize()],
-                    ['type' => 's', 'value' => $this->getPath()],
-                    ['type' => 's', 'value' => $now],
-                    ['type' => 's', 'value' => $this->getMimeType()],
-                    ['type' => 's', 'value' => $this->getSize()]
-            ]);
-            if ($result['success'] && null !== ($insertedId = $result['data']['inserted_id'])) {
-                $this->ID = $insertedId;
+            $query = "INSERT INTO `assets` (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) 
+                VALUES (:ID, :path, :modifiedAt, :mimeType, :size)
+                ON DUPLICATE KEY UPDATE `path` = :path, 
+                    `modifiedAt` = :modifiedAt, 
+                    `mimeType` = :mimeType, 
+                    `size` = :size";
+            $q = $this->sql->prepare($query);
+
+            $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
+            $q->bindParam('path', $this->path, PDO::PARAM_STR);
+            $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
+
+            $mime = $this->getMimeType();
+            $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
+
+            $size = $this->getSize();
+            $q->bindParam('size', $size, PDO::PARAM_INT);
+            $q->execute();
+
+            if (null !== ($id = $this->sql->lastInsertId())) {
+                $this->ID = $id;
             }
         }
     }
@@ -342,20 +280,14 @@ class Asset extends AbstractObject
     public function delete(): void
     {
         if (null !== $this->getId()) {
-            $this->client->exec("DELETE FROM `assets` WHERE `ID` = ?", [
-                ['type' => 'd', 'value' => $this->getId()],
-            ]);
+            $query = "DELETE FROM `assets` WHERE `ID` :id";
+            $q = $this->sql->prepare($query);
 
-            /**
-             * @var Filesystem $filesystem
-             * The media is deleted from local and remote storage.
-             */
+            $q->bindParam('id', $this->ID, PDO::PARAM_INT);
+            $q->execute();
+
             try {
                 unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
-                if (null !== $this->adapter) {
-                    $filesystem = $this->adapter->getFileSystemComponent();
-                    $filesystem->delete($this->getPath());
-                }
             } catch (Exception $e) {
                 $this->logger->write($e);
             }

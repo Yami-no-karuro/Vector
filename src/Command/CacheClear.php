@@ -45,6 +45,7 @@ class CacheClear extends AbstractCommand
         if ($config->mongodb->enabled === true) { 
             $this->mongo = MongoClient::getInstance(); 
         }
+
         if ($config->redis->enabled === true) { 
             $this->redis = RedisClient::getInstance(); 
         }
@@ -58,10 +59,6 @@ class CacheClear extends AbstractCommand
     public function execute(): int
     {
 
-        /**
-         * @var Exception $e
-         * Empty the database transients table.
-         */
         try {
             $this->sql->exec('DELETE FROM `transients`');
         } catch (Exception $e) {
@@ -74,16 +71,11 @@ class CacheClear extends AbstractCommand
             $collection = $this->mongo->getCollection('transients');
             $collection->drop();
         }
+
         if (null !== $this->redis) {
             $this->redis->flush();
         }
 
-        /**
-         * @var string $dir
-         * @var RecursiveDirectoryIterator $cacheDir
-         * @var RecursiveIteratorIterator $iterator
-         * Empty the transient table than proceed to remove everything from the cache directory.
-         */
         $dir = Kernel::getProjectRoot() . 'var/cache/';
         if (file_exists($dir) && is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);

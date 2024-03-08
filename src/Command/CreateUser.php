@@ -37,11 +37,6 @@ class CreateUser extends AbstractCommand
     public function execute(): int
     {
 
-        /**
-         * @var string $email
-         * Collect user data from command line input interface.
-         * Email address must be validated.
-         */
         $email = Application::in('Email address:');
         if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
             Application::out('Command failed, invalid email address.');
@@ -63,10 +58,6 @@ class CreateUser extends AbstractCommand
         $lastname = Application::in('Lastname:');
         $user->setLastname($lastname);
 
-        /**
-         * @var ?User $user
-         * Looks for already existing users by email.
-         */
         if (null !== $this->repository->getBy('email', $email, PDO::PARAM_STR)) {
             Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;

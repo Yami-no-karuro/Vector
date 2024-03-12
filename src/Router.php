@@ -4,7 +4,6 @@ namespace Vector;
 
 use Vector\Module\Transient\SqlTransient;
 use Vector\Module\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');

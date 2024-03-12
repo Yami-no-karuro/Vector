@@ -129,15 +129,8 @@ class Application
     protected function loadConfig(): void
     {
         global $config;
-        $transient = new FileSystemTransient('vct-config');
-
-        if ($transient->isValid()) {
-            $data = $transient->getData();
-        } else {
-            $path = Kernel::getProjectRoot() . 'config/config.json';
-            $data = json_decode(file_get_contents($path));
-            $transient->setData($data);
-        }
+        $path = Kernel::getProjectRoot() . 'config/config.json';
+        $data = json_decode(file_get_contents($path));
 
         $config = $data;
     }

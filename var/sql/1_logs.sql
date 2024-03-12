@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `logs` (
     `log` TEXT NOT NULL ,
     FULLTEXT (`log`) ,
     PRIMARY KEY (`ID`)
-) ENGINE = InnoDB;
+) ENGINE = MyISAM;

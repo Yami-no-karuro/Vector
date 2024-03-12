@@ -3,7 +3,7 @@
 namespace Vector\Module\Security;
 
 use Vector\Kernel;
-use Vector\Module\Transient\FileSystemTransient;
+use Vector\Module\Transient\SqlTransient;
 use Vector\Module\Security\WebToken;
 use Vector\Module\Security\Authentication;
 use Vector\Module\Security\SecurityException;
@@ -27,7 +27,7 @@ class Firewall
      */
     public function __construct()
     {
-        $transient = new FileSystemTransient('vct-firewall-patterns');
+        $transient = new SqlTransient('vct-firewall-patterns');
         if ($transient->isValid()) {
             $patterns = $transient->getData();
         } else {

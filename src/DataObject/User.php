@@ -178,6 +178,7 @@ class User extends AbstractObject
                 `username` = :username, 
                 `firstname` = :firstname, 
                 `lastname` = :lastname";
+
         $q = $this->sql->prepare($query);
 
         $q->bindParam('ID', $this->ID, PDO::PARAM_INT);

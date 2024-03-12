@@ -3,7 +3,6 @@
     "debug_log": true,
     "dockerized": true,
     "database": {
-        "enabled": true,
         "db_host": "mariadb",
         "db_user": "vector_usr",
         "db_password": "vector_pwd",
@@ -20,13 +19,13 @@
         "dsn": "mongodb://mongodb:27017",
         "db_name": "vector_mongodb"
     },
-    "firewall": {
-        "headers": true,
-        "cookies": true,
-        "query": true,
-        "body": true
-    },
     "security": {
+        "firewall": {
+            "headers": true,
+            "cookies": true,
+            "query": true,
+            "body": true
+        },
         "authenticated_routes": [
             "/admin",
             "/api"

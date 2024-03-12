@@ -13,6 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router
 {
+
     /**
      * @package Vector
      * Vector\Router->route()
@@ -23,29 +24,13 @@ class Router
      */
     public static function route(array $httpMethods, string $route, callable $callback): void
     {
-
-        /**
-         * @var Request $request
-         * Retrive the global request object initialized in the Kernel.
-         */
         global $request;
 
-        /**
-         * @var array|null $matches
-         * @var array $params
-         * @var string $regex
-         * Match request against route regex and allowed requests methods,
-         * retrive matched params if any were passed on the request.
-         */
         $matches = null;
         $params = [];
         $regex = '/' . str_replace('/', '\/', $route) . '/';
-        if (!in_array($request->getMethod(), (array) $httpMethods)) {
-            return;
-        }
-        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) {
-            return;
-        }
+        if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
+        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) { return; }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) {
@@ -54,12 +39,6 @@ class Router
             }
         }
 
-        /**
-         * @var object $controller
-         * @var callabled $method
-         * @var SqlTransient $transient
-         * Cache route data for future requests.
-         */
         $controller = get_class($callback[0]);
         $method = $callback[1];
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
@@ -71,12 +50,6 @@ class Router
             'callback' => $method
         ]);
 
-        /**
-         * @var Vector\Controller $controller
-         * @var callable $method
-         * Execute controller callback, send the response and die.
-         * "onCallback" and "onResponse" events are dispatched.
-         */
         EventDispatcher::dispatch('KernelListener', 'onCallback', [&$request, $controller, $method, &$params]);
         $response = $callback($request, $params);
         EventDispatcher::dispatch('KernelListener', 'onResponse', [&$request, &$response]);

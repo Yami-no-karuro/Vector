@@ -43,11 +43,10 @@ class StorageController extends FrontendController
         }
 
         $repository = AssetRepository::getInstance();
-        $assets = $repository->getList(
-            '1 = 1', 
-            self::ITEMS_PER_PAGE, 
-            $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE
-        );
+        $assets = $repository->getList([
+            'limit' => self::ITEMS_PER_PAGE,
+            'offset' => $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE
+        ]);
 
         $html = $this->template->render('admin/storage.html.twig', [
             'title' => 'Vector - Storage',

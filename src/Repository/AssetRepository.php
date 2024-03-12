@@ -88,18 +88,27 @@ class AssetRepository
     /**
      * @package Vector
      * Vector\Repository\AssetRepository->getList()
-     * @param string $condition
-     * @param int $limit
-     * @param int $offset 
+     * @param array $params
      * @return ?array
      */
-    public function getList(string $condition = '1 = 1', int $limit = 32, int $offset = 0): ?array
+    public function getList(array $params): ?array
     {
-        $query = "SELECT * FROM `assets` WHERE {$condition} LIMIT :limit OFFSET :offset";
+        $params = array_replace([
+            'condition' => '1 = 1',
+            'orderKey' => 'ID',
+            'order' => 'ASC',
+            'limit' => 32,
+            'offset' => 0
+        ], $params);
+
+        $query = "SELECT * FROM `assets` WHERE {$params['condition']} 
+            ORDER BY {$params['orderKey']} {$params['order']} 
+            LIMIT :limit OFFSET :offset";
+
         $q = $this->sql->prepare($query);
 
-        $q->bindParam('limit', $limit, PDO::PARAM_INT);
-        $q->bindParam('offset', $offset, PDO::PARAM_INT);
+        $q->bindParam('limit', $params['limit'], PDO::PARAM_INT);
+        $q->bindParam('offset', $params['offset'], PDO::PARAM_INT);
         $q->execute();
 
         if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {

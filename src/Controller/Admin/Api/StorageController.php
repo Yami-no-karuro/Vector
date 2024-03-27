@@ -58,10 +58,12 @@ class StorageController extends RestController
                         'ID' => $el->getId(),
                         'path' => $el->getPath(),
                         'route' => $el->getRoute(),
-                        'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt()),
                         'mimeType' => $el->getMimeType(),
-                        'size' => $el->getSize()
+                        'size' => $el->getSize(),
+                        'system' => [
+                            'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
+                            'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())                     
+                        ]
                     ];
                 }, $assets)
             ]
@@ -103,10 +105,12 @@ class StorageController extends RestController
                     'ID' => $el->getId(),
                     'path' => $el->getPath(),
                     'route' => $el->getRoute(),
-                    'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                    'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt()),
                     'mimeType' => $el->getMimeType(),
-                    'size' => $el->getSize()
+                    'size' => $el->getSize(),
+                    'system' => [
+                        'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
+                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())                     
+                    ]
                 ];
             }, $assets)
         ], Response::HTTP_CREATED);

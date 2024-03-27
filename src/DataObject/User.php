@@ -21,33 +21,51 @@ class User extends AbstractObject
 
     /**
      * @var string $email
-     * User email, required.
+     * User's email, required.
      */
     protected string $email;
 
     /**
      * @var string $password
-     * User password.
+     * User's password.
      */
     protected ?string $password = null;
 
     /**
      * @var ?string $username
-     * User username.
+     * User's username.
      */
     protected ?string $username = null;
 
     /**
      * @var ?string $firstname
-     * User firstname.
+     * User's firstname.
      */
     protected ?string $firstname = null;
 
     /**
      * @var ?string $lastname
-     * User lastname.
+     * User's lastname.
      */
     protected ?string $lastname = null;
+
+    /**
+     * @var ?int $createdAt
+     * User's creation date.
+     */
+    protected ?int $createdAt = null;
+
+    /**
+     * @var ?int $modifiedAt
+     * User's modification date.
+     */
+    protected ?int $modifiedAt = null;
+
+    /**
+     * @var ?int $lastLogin
+     * User's last login date or null.
+     */
+    protected ?int $lastLogin = null;
 
     /**
      * @package Vector
@@ -166,18 +184,82 @@ class User extends AbstractObject
 
     /**
      * @package Vector
+     * Vector\DataObject\User->getCreatedAt()
+     * @return ?int
+     */
+    public function getCreatedAt(): ?int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\User->setCreatedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setCreatedAt(?int $time): void
+    {
+        $this->createdAt = $time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\User->getModifiedAt()
+     * @return ?int
+     */
+    public function getModifiedAt(): ?int
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\User->setModifiedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setModifiedAt(?int $time): void
+    {
+        $this->modifiedAt = $time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\User->getLastLogin()
+     * @return ?int
+     */
+    public function getLastLogin(): ?int
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\User->setLastLogin()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setLastLogin(?int $time): void
+    {
+        $this->lastLogin = $time;
+    }
+
+    /**
+     * @package Vector
      * Vector\DataObject\User->save()
      * @return void 
      */
     public function save(): void
     {
         $query = "INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`) 
-            VALUES (:ID, :email, :password, :username, :firstname, :lastname)
+            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`, `last_login`, `created_at`, `modified_at`) 
+            VALUES (:ID, :email, :password, :username, :firstname, :lastname, :last_login, :created_at, :modified_at)
             ON DUPLICATE KEY UPDATE `password` = :password,
                 `username` = :username, 
                 `firstname` = :firstname, 
-                `lastname` = :lastname";
+                `lastname` = :lastname,
+                `modified_at` = :modified_at";
 
         $q = $this->sql->prepare($query);
 
@@ -187,6 +269,11 @@ class User extends AbstractObject
         $q->bindParam('username', $this->username, PDO::PARAM_STR);
         $q->bindParam('firstname', $this->firstname, PDO::PARAM_STR);
         $q->bindParam('lastname', $this->lastname, PDO::PARAM_STR);
+        $q->bindParam('last_login', $this->lastLogin, PDO::PARAM_NULL);
+
+        $now = time();
+        $q->bindParam('created_at', $now, PDO::PARAM_INT);
+        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
         $q->execute();
 
         if (null !== ($id = $this->sql->lastInsertId())) {

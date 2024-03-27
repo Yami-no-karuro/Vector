@@ -30,18 +30,6 @@ class Asset extends AbstractObject
     protected string $path;
 
     /**
-     * @var ?int $createdAt
-     * Asset's creation date.
-     */
-    protected ?int $createdAt = null;
-
-    /**
-     * @var ?int $modifiedAt
-     * Asset's modification date.
-     */
-    protected ?int $modifiedAt = null;
-
-    /**
      * @var ?string $mimeType
      * Asset's mimetype.
      */
@@ -58,6 +46,18 @@ class Asset extends AbstractObject
      * Asset's file content.
      */
     protected ?string $content = null;
+
+    /**
+     * @var ?int $createdAt
+     * Asset's creation date.
+     */
+    protected ?int $createdAt = null;
+
+    /**
+     * @var ?int $modifiedAt
+     * Asset's modification date.
+     */
+    protected ?int $modifiedAt = null;
 
     /**
      * @package Vector
@@ -98,48 +98,6 @@ class Asset extends AbstractObject
     public function setPath(string $path): void
     {
         $this->path = trim($path);
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->getCreatedAt()
-     * @return ?int
-     */
-    public function getCreatedAt(): ?int
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->setCreatedAt()
-     * @param ?int $time
-     * @return void
-     */
-    protected function setCreatedAt(?int $time): void
-    {
-        $this->createdAt = $time;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->getModifiedAt()
-     * @return ?int
-     */
-    public function getModifiedAt(): ?int
-    {
-        return $this->modifiedAt;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->setModifiedAt()
-     * @param ?int $time
-     * @return void
-     */
-    protected function setModifiedAt(?int $time): void
-    {
-        $this->modifiedAt = $time;
     }
 
     /**
@@ -269,6 +227,48 @@ class Asset extends AbstractObject
 
     /**
      * @package Vector
+     * Vector\DataObject\Asset->getCreatedAt()
+     * @return ?int
+     */
+    public function getCreatedAt(): ?int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setCreatedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setCreatedAt(?int $time): void
+    {
+        $this->createdAt = $time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->getModifiedAt()
+     * @return ?int
+     */
+    public function getModifiedAt(): ?int
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setModifiedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setModifiedAt(?int $time): void
+    {
+        $this->modifiedAt = $time;
+    }
+
+    /**
+     * @package Vector
      * Vector\DataObject\Asset->save()
      * @return void 
      */
@@ -286,27 +286,27 @@ class Asset extends AbstractObject
             return;
         }
 
-        $query = "INSERT INTO `assets` (`ID`, `path`, `created_at`, `modified_at`, `mime_type`, `size`) 
-            VALUES (:ID, :path, :created_at, :modified_at, :mime_type, :size)
+        $query = "INSERT INTO `assets` (`ID`, `path`, `mime_type`, `size`, `created_at`, `modified_at`) 
+            VALUES (:ID, :path, :mime_type, :size, :created_at, :modified_at)
             ON DUPLICATE KEY UPDATE `path` = :path, 
-                `modified_at` = :modified_at, 
                 `mime_type` = :mime_type, 
-                `size` = :size";
+                `size` = :size,
+                `modified_at` = :modified_at";
 
         $q = $this->sql->prepare($query);
 
         $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
         $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
-        $now = time();
-        $q->bindParam('created_at', $now, PDO::PARAM_INT);
-        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
-
         $mime = $this->getMimeType();
         $q->bindParam('mime_type', $mime, PDO::PARAM_STR);
 
         $size = $this->getSize();
         $q->bindParam('size', $size, PDO::PARAM_INT);
+
+        $now = time();
+        $q->bindParam('created_at', $now, PDO::PARAM_INT);
+        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
         $q->execute();
 
         if (null !== ($id = $this->sql->lastInsertId())) {

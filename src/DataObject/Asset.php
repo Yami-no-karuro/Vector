@@ -262,7 +262,7 @@ class Asset extends AbstractObject
      * @param ?int $time
      * @return void
      */
-    protected function setModifiedAt(?int $time): void
+    public function setModifiedAt(?int $time): void
     {
         $this->modifiedAt = $time;
     }
@@ -287,11 +287,11 @@ class Asset extends AbstractObject
         }
 
         $query = "INSERT INTO `assets` (`ID`, `path`, `mime_type`, `size`, `created_at`, `modified_at`) 
-            VALUES (:ID, :path, :mime_type, :size, :created_at, :modified_at)
+            VALUES (:ID, :path, :mimeType, :size, :createdAt, :modifiedAt)
             ON DUPLICATE KEY UPDATE `path` = :path, 
-                `mime_type` = :mime_type, 
+                `mime_type` = :mimeType, 
                 `size` = :size,
-                `modified_at` = :modified_at";
+                `modified_at` = :modifiedAt";
 
         $q = $this->sql->prepare($query);
 
@@ -299,14 +299,14 @@ class Asset extends AbstractObject
         $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
         $mime = $this->getMimeType();
-        $q->bindParam('mime_type', $mime, PDO::PARAM_STR);
+        $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
 
         $size = $this->getSize();
         $q->bindParam('size', $size, PDO::PARAM_INT);
 
         $now = time();
-        $q->bindParam('created_at', $now, PDO::PARAM_INT);
-        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
+        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
+        $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
         $q->execute();
 
         if (null !== ($id = $this->sql->lastInsertId())) {

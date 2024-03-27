@@ -58,6 +58,9 @@ class LoginController extends FrontendController
 
                 $password = $user->getPassword();
                 if (hash('sha256', trim($request->get('password', ''))) === $password) {
+                    $user->setLastLogin(time());
+                    $user->save();
+
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
                         'rsid' => $user->getId(),
                         'scope' => 'write',

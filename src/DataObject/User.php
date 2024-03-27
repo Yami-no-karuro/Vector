@@ -219,7 +219,7 @@ class User extends AbstractObject
      * @param ?int $time
      * @return void
      */
-    protected function setModifiedAt(?int $time): void
+    public function setModifiedAt(?int $time): void
     {
         $this->modifiedAt = $time;
     }
@@ -240,7 +240,7 @@ class User extends AbstractObject
      * @param ?int $time
      * @return void
      */
-    protected function setLastLogin(?int $time): void
+    public function setLastLogin(?int $time): void
     {
         $this->lastLogin = $time;
     }
@@ -254,12 +254,13 @@ class User extends AbstractObject
     {
         $query = "INSERT INTO `users` 
             (`ID`, `email`, `password`, `username`, `firstname`, `lastname`, `last_login`, `created_at`, `modified_at`) 
-            VALUES (:ID, :email, :password, :username, :firstname, :lastname, :last_login, :created_at, :modified_at)
+            VALUES (:ID, :email, :password, :username, :firstname, :lastname, :lastLogin, :createdAt, :modifiedAt)
             ON DUPLICATE KEY UPDATE `password` = :password,
                 `username` = :username, 
                 `firstname` = :firstname, 
                 `lastname` = :lastname,
-                `modified_at` = :modified_at";
+                `last_login` = :lastLogin,
+                `modified_at` = :modifiedAt";
 
         $q = $this->sql->prepare($query);
 
@@ -269,11 +270,11 @@ class User extends AbstractObject
         $q->bindParam('username', $this->username, PDO::PARAM_STR);
         $q->bindParam('firstname', $this->firstname, PDO::PARAM_STR);
         $q->bindParam('lastname', $this->lastname, PDO::PARAM_STR);
-        $q->bindParam('last_login', $this->lastLogin, PDO::PARAM_NULL);
+        $q->bindParam('lastLogin', $this->lastLogin, PDO::PARAM_INT);
 
         $now = time();
-        $q->bindParam('created_at', $now, PDO::PARAM_INT);
-        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
+        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
+        $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
         $q->execute();
 
         if (null !== ($id = $this->sql->lastInsertId())) {

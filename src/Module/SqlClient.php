@@ -36,6 +36,15 @@ class SqlClient
 
     /**
      * @package Vector
+     * __destruct()
+     */
+    public function __destruct()
+    {
+        $this->client = null;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\SqlClient::getInstance()
      * @return SqlClient
      */

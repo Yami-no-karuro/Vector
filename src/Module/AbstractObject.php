@@ -23,7 +23,7 @@ abstract class AbstractObject
         $this->sql = SqlClient::getInstance()
             ->getClient();
 
-        foreach (array_keys($data) as $key) {
+        foreach(array_keys($data) as $key) {
             $this->$key = $data[$key];
         }
     }

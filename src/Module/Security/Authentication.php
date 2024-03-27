@@ -14,16 +14,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Authentication 
 {
 
-    protected const REQUIRED_PAYLOAD_SCHEMA = [
-        'rsid', 
-        'scope', 
-        'time', 
-        'ip_address', 
-        'user_agent'
-    ];
+    protected const REQUIRED_PAYLOAD_SCHEMA = ['rsid', 'scope', 'time', 'ip_address', 'user_agent'];
 
     protected UserRepository $repository;
     protected User $user;
+
     protected ?string $scope = null;
     protected ?string $ipAddress = null;
     protected ?string $userAgent = null;
@@ -37,7 +32,7 @@ class Authentication
     {
         $this->repository = UserRepository::getInstance();
         if (false === ($this->verifyPayload($payload))) {
-            throw new UnauthorizedException('Unauthorized');
+            throw new UnauthorizedException('Invalid authentication payload');
         }
 
         $this->user = $this->repository->getById($payload['rsid']);

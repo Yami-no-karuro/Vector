@@ -3,7 +3,7 @@
 namespace Vector\Module;
 
 use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Symfony\Component\HttpFoundation\Response;
+use Vector\Module\ApplicationLogger\SqlLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -13,7 +13,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class ErrorHandler
 {
 
-    protected FileSystemLogger $logger;
+    protected FileSystemLogger $filesystemLogger;
+    protected SqlLogger $sqlLogger;
 
     /**
      * @package Vector
@@ -21,7 +22,8 @@ class ErrorHandler
      */
     public function __construct()
     {
-        $this->logger = new FileSystemLogger('core');
+        $this->filesystemLogger = new FileSystemLogger('core');
+        $this->sqlLogger = new SqlLogger('core');
     }
 
     /**
@@ -36,12 +38,15 @@ class ErrorHandler
     public function handleError(int $errno, string $errstr, string $errfile, int $errline): void
     {
         global $config;
-        $errorMessage = 'Error: "' . $errstr . '" in "' . $errfile . '" at line "' . $errline . '"';
-        if (true === $config->debug) {
-            $this->outputErrorBox($errorMessage);
+        $message = "Error: \"{$errstr}\" in {$errfile} at line {$errline}";
+
+        if ($config->debug_log) {
+            $this->filesystemLogger->write($message);
+            $this->sqlLogger->write($message);
         }
-        if (true === $config->debug_log) {
-            $this->logger->write($errorMessage);
+
+        if ($config->debug) {
+            echo $message;
         }
 
         die();
@@ -50,18 +55,21 @@ class ErrorHandler
     /**
      * @package Vector
      * Vector\Module\ErrorHandler->handleException()
-     * @param mixed $exception
+     * @param mixed $e
      * @return void
      */
-    public function handleException(mixed $exception): void
+    public function handleException(mixed $e): void
     {
         global $config;
-        $exceptionMessage = 'Exception: "' . $exception->getMessage() . '" in "' . $exception->getFile() . '" at line "' . $exception->getLine() . '"';
-        if (true === $config->debug) {
-            $this->outputErrorBox($exceptionMessage);
+        $message = "Exception: \"{$e->getMessage()}\" in {$e->getFile()} at line {$e->getLine()}";
+
+        if ($config->debug_log) {
+            $this->filesystemLogger->write($message);
+            $this->sqlLogger->write($message);
         }
-        if (true === $config->debug_log) {
-            $this->logger->write($exceptionMessage);
+
+        if ($config->debug) {
+            echo $message;
         }
 
         die();
@@ -75,39 +83,21 @@ class ErrorHandler
     public function handleShutdown(): void
     {
         global $config;
-        $lastError = error_get_last();
-        if ($lastError !== null && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-            $errorMessage = 'Fatal error: "' . $lastError['message'] . '" in "' . $lastError['file'] . '" at line "' . $lastError['line'] . '"';
-            if (true === $config->debug) {
-                $this->outputErrorBox($errorMessage);
-            }
-            if (true === $config->debug_log) {
-                $this->logger->write($errorMessage);
+        $error = error_get_last();
+        if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+            $message = "Fatal error: \"{$error['message']}\" in {$error['file']} at line {$error['line']}";
+
+            if ($config->debug_log) {
+                $this->filesystemLogger->write($message);
+                $this->sqlLogger->write($message);
             }
 
-            global $request;
-            $response = new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
-            $response->prepare($request);
-            $response->send();
-
+            if ($config->debug) {
+                echo $message;
+            }
         }
 
         die();
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\ErrorHandler->outputErrorBox()
-     * @param string $message
-     * @return void
-     */
-    protected function outputErrorBox(string $message): void
-    {
-        ob_start(); ?>
-            <div style="padding: 25px;margin: 5px auto;background-color: #fff;border: 2px solid #af0000;position: relative;z-index: 1000;">
-                <?php echo $message; ?>
-            </div>
-        <?php echo ob_get_clean();
     }
 
 }

@@ -34,8 +34,7 @@ class FileSystemLogger extends AbstractLogger
      */
     public function write(string $log): void
     {
-        $prefix = '[' . date('Y-m-d h:m:s') . ']';
-        $log = $prefix . ' ' . $log . ' ' . PHP_EOL;
+        $log = '[' . date('Y-m-d h:m:s') . '] - ' . $log . PHP_EOL;
         file_put_contents($this->path, $log, FILE_APPEND);
     }
 

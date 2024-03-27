@@ -68,7 +68,6 @@ class StorageController extends FrontendController
      */
     public function storageUploadAction(Request $request): RedirectResponse
     {
-
         $files = $request->files->get('files');
         if (!is_array($files) || empty($files)) {
             return new RedirectResponse(
@@ -84,6 +83,7 @@ class StorageController extends FrontendController
                 'size' => $file->getSize(),
                 'content' => $file->getContent()
             ]);
+
             $asset->save();
         }
 
@@ -97,20 +97,14 @@ class StorageController extends FrontendController
      * Route: '/admin/storage/delete'
      * Methods: POST 
      * @param Request $request
-     * @param array $params
      * @return RedirectResponse
      */
     public function storageDeleteAction(Request $request): RedirectResponse
     {
-
         if (null !== ($media = $request->request->get('media', null))) {
             $repository = AssetRepository::getInstance();
             if (null !== ($asset = $repository->getById($media))) {
                 $asset->delete();
-                return new RedirectResponse(
-                    '/admin/storage', 
-                    Response::HTTP_FOUND
-                );
             }
         }
 

@@ -97,6 +97,27 @@ class Asset extends AbstractObject
 
     /**
      * @package Vector
+     * Vector\DataObject\Asset->getModifiedAt()
+     * @return ?int
+     */
+    public function getModifiedAt(): ?int
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setModifiedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setModifiedAt(?int $time): void
+    {
+        $this->modifiedAt = $time;
+    }
+
+    /**
+     * @package Vector
      * Vector\DataObject\Asset->getMimeType()
      * @return ?string
      */

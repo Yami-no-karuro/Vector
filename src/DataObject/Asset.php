@@ -286,11 +286,11 @@ class Asset extends AbstractObject
             return;
         }
 
-        $query = "INSERT INTO `assets` (`ID`, `path`, `createdAt`, `modifiedAt`, `mimeType`, `size`) 
-            VALUES (:ID, :path, :createdAt, :modifiedAt, :mimeType, :size)
+        $query = "INSERT INTO `assets` (`ID`, `path`, `created_at`, `modified_at`, `mime_type`, `size`) 
+            VALUES (:ID, :path, :created_at, :modified_at, :mime_type, :size)
             ON DUPLICATE KEY UPDATE `path` = :path, 
-                `modifiedAt` = :modifiedAt, 
-                `mimeType` = :mimeType, 
+                `modified_at` = :modified_at, 
+                `mime_type` = :mime_type, 
                 `size` = :size";
 
         $q = $this->sql->prepare($query);
@@ -299,11 +299,11 @@ class Asset extends AbstractObject
         $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
         $now = time();
-        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
-        $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
+        $q->bindParam('created_at', $now, PDO::PARAM_INT);
+        $q->bindParam('modified_at', $now, PDO::PARAM_INT);
 
         $mime = $this->getMimeType();
-        $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
+        $q->bindParam('mime_type', $mime, PDO::PARAM_STR);
 
         $size = $this->getSize();
         $q->bindParam('size', $size, PDO::PARAM_INT);

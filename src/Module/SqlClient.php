@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlClient
 {
 
-    protected PDO $client;
+    protected ?PDO $client;
     private static mixed $instance = null;
 
     /**

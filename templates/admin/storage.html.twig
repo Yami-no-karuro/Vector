@@ -25,8 +25,9 @@
               <tr>
                 <th scope="col"> # </th>
                 <th scope="col"> File </th>
+                <th scope="col"> Created Date </th>
                 <th scope="col"> Modified Date </th>
-                <th scope="col"> Mime-Type </th>
+                <th scope="col"> MimeType </th>
                 <th scope="col"> Size (bytes) </th>
                 <th scope="col">  </th>
               </tr>
@@ -37,6 +38,7 @@
                   <tr>
                     <th scope="row"> {{ loop.index }} </th>
                     <td> <a href="{{ asset.getRoute() }}" target="_blank"> {{ asset.get('path') }} </a> </td>
+                    <td> {{ asset.get('createdAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('modifiedAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>
                     <td> {{ asset.get('size') }} </td>
@@ -55,6 +57,7 @@
                 <tr>
                   <th scope="row"></th>
                   <td> Still nothing to show </td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

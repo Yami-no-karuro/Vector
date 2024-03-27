@@ -30,6 +30,12 @@ class Asset extends AbstractObject
     protected string $path;
 
     /**
+     * @var ?int $createdAt
+     * Asset's creation date.
+     */
+    protected ?int $createdAt = null;
+
+    /**
      * @var ?int $modifiedAt
      * Asset's modification date.
      */
@@ -92,6 +98,27 @@ class Asset extends AbstractObject
     public function setPath(string $path): void
     {
         $this->path = trim($path);
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->getCreatedAt()
+     * @return ?int
+     */
+    public function getCreatedAt(): ?int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setCreatedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setCreatedAt(?int $time): void
+    {
+        $this->createdAt = $time;
     }
 
     /**
@@ -259,8 +286,8 @@ class Asset extends AbstractObject
             return;
         }
 
-        $query = "INSERT INTO `assets` (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) 
-            VALUES (:ID, :path, :modifiedAt, :mimeType, :size)
+        $query = "INSERT INTO `assets` (`ID`, `path`, `createdAt`, `modifiedAt`, `mimeType`, `size`) 
+            VALUES (:ID, :path, :createdAt, :modifiedAt, :mimeType, :size)
             ON DUPLICATE KEY UPDATE `path` = :path, 
                 `modifiedAt` = :modifiedAt, 
                 `mimeType` = :mimeType, 
@@ -272,6 +299,7 @@ class Asset extends AbstractObject
         $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
         $now = time();
+        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
         $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
 
         $mime = $this->getMimeType();

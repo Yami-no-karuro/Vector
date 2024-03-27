@@ -42,7 +42,6 @@ class StorageController extends RestController
             $page = intval($pageCount);
         }
 
-        $repository = AssetRepository::getInstance();
         $assets = $repository->getList([
             'limit' => self::ITEMS_PER_PAGE,
             'offset' => $page <= 1 ? 0 : ($page - 1) * self::ITEMS_PER_PAGE
@@ -59,6 +58,7 @@ class StorageController extends RestController
                         'ID' => $el->getId(),
                         'path' => $el->getPath(),
                         'route' => $el->getRoute(),
+                        'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
                         'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt()),
                         'mimeType' => $el->getMimeType(),
                         'size' => $el->getSize()
@@ -103,6 +103,7 @@ class StorageController extends RestController
                     'ID' => $el->getId(),
                     'path' => $el->getPath(),
                     'route' => $el->getRoute(),
+                    'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
                     'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt()),
                     'mimeType' => $el->getMimeType(),
                     'size' => $el->getSize()

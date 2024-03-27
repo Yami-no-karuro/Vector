@@ -2,7 +2,6 @@
 
 namespace Vector\Module\Console;
 
-use Vector\Kernel;
 use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Transient\SqlTransient;
 use Vector\Module\StopWatch;
@@ -38,6 +37,7 @@ class Application
         }
 
         $this->loadConfig();
+
         try {
             $this->transient = new SqlTransient('vct-command-{' . $this->command . '}');
         } catch (Exception) {
@@ -59,17 +59,20 @@ class Application
         $this->directRun();
 
         $registeredCommands = [];
-        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/Command');
+        $dir = new RecursiveDirectoryIterator(getProjectRoot() . 'src/Command');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
 
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
-                $class = Kernel::getClassNamespace($file->getPathname());
+
+                $class = getClassNamespace($file->getPathname());
                 if (class_exists($class)) {
+
                     $command = new $class($this->args);
                     $commandName = $command->getCommandName();
                     $registeredCommands[] = $commandName;
+
                     if ($commandName === $this->command) {
                         $this->transient->setData([
                             'command' => $this->command,
@@ -110,6 +113,7 @@ class Application
 
             $command = new $class($this->args);
             if ($command->getCommandName() === $cache['command']) {
+
                 $this->stopWatch->start();
                 $exitCode = $command->execute();
                 $this->stopWatch->stop();
@@ -129,7 +133,7 @@ class Application
     protected function loadConfig(): void
     {
         global $config;
-        $path = Kernel::getProjectRoot() . 'config/config.json';
+        $path = getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 
         $config = $data;
@@ -177,6 +181,7 @@ class Application
     {
         self::out($outMessage);
         $handle = fopen('php://stdin', 'r');
+
         return trim(fgets($handle));
     }
 

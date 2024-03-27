@@ -19,11 +19,11 @@ class SqlLogger extends AbstractLogger
     /**
      * @package Vector
      * __construct()
-     * @param string $type
+     * @param string $domain
      */
-    public function __construct(string $type)
+    public function __construct(string $domain)
     {
-        parent::__construct($type);
+        parent::__construct($domain);
         $this->sql = SqlClient::getInstance()
             ->getClient();
     }

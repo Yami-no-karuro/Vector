@@ -23,7 +23,7 @@ abstract class AbstractObject
         $this->sql = SqlClient::getInstance()
             ->getClient();
 
-        foreach (array_keys($data) as $key) {
+        foreach(array_keys($data) as $key) {
             $this->$key = $data[$key];
         }
     }
@@ -37,6 +37,20 @@ abstract class AbstractObject
     public function get(string $key): mixed
     {
         return isset($this->$key) ? $this->$key : null;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\AbstractObject->set()
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
+     */
+    public function set(string $key, mixed $value): void
+    {
+        if (isset($this->$key)) {
+            $this->$key = $value;
+        }
     }
 
     /**

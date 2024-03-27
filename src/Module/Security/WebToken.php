@@ -32,12 +32,9 @@ class WebToken
 
             $payload = self::generatePayload($payload);
             $signature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
-            $encodedSignature = str_replace(
-                ['+', '/', '='],
-                ['-', '_', ''],
-                base64_encode($signature)
-            );
-            return $headers . '.' . $payload . '.' . $encodedSignature;
+            $encodedSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+            return "{$headers}.{$payload}.{$encodedSignature}";
         }
 
         return null;
@@ -57,13 +54,10 @@ class WebToken
         if (null === ($parts = self::getTokenParts($token))) {
             return false;
         }
+
         list($headers, $payload, $signature) = $parts;
         $decodedPayload = json_decode(base64_decode(
-            str_replace(
-                ['-', '_'],
-                ['+', '/'],
-                $payload
-            )
+            str_replace(['-', '_'], ['+', '/'], $payload)
         ), true);
 
         if (false === $ignoreRequestInfo) {
@@ -79,11 +73,8 @@ class WebToken
 
         if (null !== ($secret = Settings::get('web_token_secret'))) {
             $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
-            $expectedSignature = str_replace(
-                ['+', '/', '='],
-                ['-', '_', ''],
-                base64_encode($calculatedSignature)
-            );
+            $expectedSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($calculatedSignature));
+
             return hash_equals($signature, $expectedSignature);
         }
 
@@ -101,13 +92,10 @@ class WebToken
         if (null === ($tokenParts = self::getTokenParts($token))) {
             return null;
         }
+
         $base64UrlPayload = $tokenParts[1];
         return json_decode(base64_decode(
-            str_replace(
-                ['-', '_'],
-                ['+', '/'],
-                $base64UrlPayload
-            )
+            str_replace(['-', '_'], ['+', '/'], $base64UrlPayload)
         ), true);
     }
 
@@ -119,11 +107,7 @@ class WebToken
     protected static function generateHeaders(): string
     {
         $headers = json_encode(['type' => 'WebToken', 'algo' => 'HS256']);
-        return str_replace(
-            ['+', '/', '='],
-            ['-', '_', ''],
-            base64_encode($headers)
-        );
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($headers));
     }
 
     /**
@@ -135,11 +119,7 @@ class WebToken
     protected static function generatePayload(array $payload): string
     {
         $payload = json_encode($payload);
-        return str_replace(
-            ['+', '/', '='],
-            ['-', '_', ''],
-            base64_encode($payload)
-        );
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
     }
 
     /**

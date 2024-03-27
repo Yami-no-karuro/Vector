@@ -4,7 +4,6 @@ namespace Vector\Controller\Admin;
 
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
-use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\Security\WebToken;
 use Vector\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,9 +73,6 @@ class LoginController extends FrontendController
                 }
             }
         }
-
-        $logger = new SqlLogger('auth');
-        $logger->write('Client: "' . $request->getClientIp() . '" attempted to login with incorrect credentials.');
 
         return new RedirectResponse(
             '/login?success=false',

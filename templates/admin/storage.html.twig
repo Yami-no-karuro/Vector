@@ -20,13 +20,14 @@
       </section>
       <section>
         <div class="container">
-          <table class="table">
+          <table id="media-table" class="table">
             <thead>
               <tr>
                 <th scope="col"> # </th>
                 <th scope="col"> File </th>
+                <th scope="col"> Created Date </th>
                 <th scope="col"> Modified Date </th>
-                <th scope="col"> Mime-Type </th>
+                <th scope="col"> MimeType </th>
                 <th scope="col"> Size (bytes) </th>
                 <th scope="col">  </th>
               </tr>
@@ -37,15 +38,16 @@
                   <tr>
                     <th scope="row"> {{ loop.index }} </th>
                     <td> <a href="{{ asset.getRoute() }}" target="_blank"> {{ asset.get('path') }} </a> </td>
+                    <td> {{ asset.get('createdAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('modifiedAt') | date("d/m/Y h:i:s") }}  </td>
                     <td> {{ asset.get('mimeType') }} </td>
                     <td> {{ asset.get('size') }} </td>
                     <td>  
                       <button type="button" 
                         data-media-id="{{ asset.get('ID') }}" 
-                        class="btn-close delete-modal-trigger"
+                        class="btn-close media-delete-modal-trigger"
                         data-bs-toggle="modal" 
-                        data-bs-target="#delete-modal" 
+                        data-bs-target="#media-delete-modal" 
                         aria-label="Close">
                       </button> 
                     </td>
@@ -59,10 +61,29 @@
                   <td></td>
                   <td></td>
                   <td></td>
+                  <td></td>
                 </tr>
               {% endif %}
             </tbody>
           </table>
+          <script type="text/javascript" defer>
+            (function() {
+              'use-strict'
+              document.addEventListener('DOMContentLoaded', () => {
+                const $ = jQuery.noConflict();
+                const mediaDeleteForm = $('form#media-delete-form');
+                const mediaDeleteFormValue = ('input#media-delete-form-value');
+                const mediaTable = $('table#media-table');
+                const mediaTableDeleteTriggers = $('table#media-table button.media-delete-modal-trigger');
+                $(mediaTableDeleteTriggers).each(function() {
+                  $(this).on('click', function() {
+                    const mediaId = $(this).attr('data-media-id');
+                    $(mediaDeleteFormValue).val(mediaId);
+                  });
+                });
+              });
+            })();
+          </script>
           {% if assets is not empty %}
           <nav aria-label="Page navigation example">
             <ul class="pagination pagination-sm mb-0">
@@ -82,16 +103,16 @@
             </ul>
           </nav>
           {% endif %}
-          <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
+          <div class="modal fade" id="media-delete-modal" tabindex="-1" aria-labelledby="media-delete-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content">
-                <form method="POST" action="/admin/storage/delete" id="media-delete">
+                <form method="POST" action="/admin/storage/delete" id="media-delete-form">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="delete-modal-label"> Are you sure? </h1>
+                    <h1 class="modal-title fs-5" id="media-delete-modal-label"> Are you sure? </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body"> 
-                    <input type="hidden" name="media">
+                    <input type="hidden" id="media-delete-form-value" name="media">
                     Are you sure you want to <b>delete</b> the selected media? 
                     </br> Please <b>confirm</b> using the button below.
                   </div>
@@ -102,22 +123,6 @@
               </div>
             </div>
           </div>
-          <script type="text/javascript" defer>
-            (function() {
-              'use-strict'
-              document.addEventListener('DOMContentLoaded', function() {
-                const $ = jQuery.noConflict();
-                const mediaDeleteField = $('form#media-delete input[name="media"]');
-                const deleteTriggers = $('button.delete-modal-trigger');
-                deleteTriggers.each(function() {
-                  this.addEventListener('click', function(event) {
-                    const media = this.getAttribute('data-media-id');
-                    mediaDeleteField.val(media);
-                  });
-                });
-              });
-            })();
-          </script>
         </div>
       </section>
     </main>

@@ -29,11 +29,11 @@ class ProcessRunner
             fclose($pipes[1]);
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
-            $returnValue = proc_close($process);
+            $code = proc_close($process);
             return [
                 'output' => $output,
                 'error' => $error,
-                'return_value' => $returnValue
+                'code' => $code
             ];
         }
 

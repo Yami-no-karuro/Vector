@@ -2,7 +2,6 @@
 
 namespace Vector\DataObject;
 
-use Vector\Kernel;
 use Vector\Module\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Exception;
@@ -29,6 +28,12 @@ class Asset extends AbstractObject
      * Asset's filepath, required.
      */
     protected string $path;
+
+    /**
+     * @var ?int $createdAt
+     * Asset's creation date.
+     */
+    protected ?int $createdAt = null;
 
     /**
      * @var ?int $modifiedAt
@@ -93,6 +98,48 @@ class Asset extends AbstractObject
     public function setPath(string $path): void
     {
         $this->path = trim($path);
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->getCreatedAt()
+     * @return ?int
+     */
+    public function getCreatedAt(): ?int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setCreatedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setCreatedAt(?int $time): void
+    {
+        $this->createdAt = $time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->getModifiedAt()
+     * @return ?int
+     */
+    public function getModifiedAt(): ?int
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @package Vector
+     * Vector\DataObject\Asset->setModifiedAt()
+     * @param ?int $time
+     * @return void
+     */
+    protected function setModifiedAt(?int $time): void
+    {
+        $this->modifiedAt = $time;
     }
 
     /**
@@ -212,7 +259,7 @@ class Asset extends AbstractObject
      */
     protected function getFullpath(): ?string
     {
-        $local = Kernel::getProjectRoot() . 'var/storage/' . $this->get('path');
+        $local = getProjectRoot() . 'var/storage/' . $this->get('path');
         if (file_exists($local)) {
             return $local;
         }
@@ -231,7 +278,7 @@ class Asset extends AbstractObject
 
         try {
             file_put_contents(
-                Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
+                getProjectRoot() . 'var/storage/' . $this->getPath(),
                 $this->getContent()
             );
         } catch (Exception $e) {
@@ -239,8 +286,8 @@ class Asset extends AbstractObject
             return;
         }
 
-        $query = "INSERT INTO `assets` (`ID`, `path`, `modifiedAt`, `mimeType`, `size`) 
-            VALUES (:ID, :path, :modifiedAt, :mimeType, :size)
+        $query = "INSERT INTO `assets` (`ID`, `path`, `createdAt`, `modifiedAt`, `mimeType`, `size`) 
+            VALUES (:ID, :path, :createdAt, :modifiedAt, :mimeType, :size)
             ON DUPLICATE KEY UPDATE `path` = :path, 
                 `modifiedAt` = :modifiedAt, 
                 `mimeType` = :mimeType, 
@@ -252,6 +299,7 @@ class Asset extends AbstractObject
         $q->bindParam('path', $this->path, PDO::PARAM_STR);
 
         $now = time();
+        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
         $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
 
         $mime = $this->getMimeType();
@@ -281,7 +329,7 @@ class Asset extends AbstractObject
         $q->execute();
 
         try {
-            unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
+            unlink(getProjectRoot() . 'var/storage/' . $this->getPath());
         } catch (Exception $e) {
             $this->logger->write($e);
         }

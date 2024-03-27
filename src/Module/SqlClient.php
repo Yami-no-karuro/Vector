@@ -12,7 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class SqlClient
 {
 
-    protected PDO $client;
+    protected ?PDO $client;
     private static mixed $instance = null;
 
     /**
@@ -36,6 +36,15 @@ class SqlClient
 
     /**
      * @package Vector
+     * __destruct()
+     */
+    public function __destruct()
+    {
+        $this->client = null;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\SqlClient::getInstance()
      * @return SqlClient
      */
@@ -44,6 +53,7 @@ class SqlClient
         if (self::$instance == null) {
             self::$instance = new SqlClient();
         }
+
         return self::$instance;
     }
 

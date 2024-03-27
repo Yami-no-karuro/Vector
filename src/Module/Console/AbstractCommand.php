@@ -37,6 +37,17 @@ abstract class AbstractCommand
 
     /**
      * @package Vector
+     * Vector\Module\Console\Command->setArgs()
+     * @param ?array $args
+     * @return void
+     */
+    protected function setArgs(?array $args): void
+    {
+        $this->args = $args;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\Console\Command->execute()
      * @return int
      */

@@ -5,7 +5,6 @@ namespace Vector;
 use Vector\Module\Security\Firewall;
 use Vector\Module\Security\SecurityException;
 use Vector\Module\Security\UnauthorizedException;
-use Vector\Module\Transient\FileSystemTransient;
 use Vector\Module\Transient\SqlTransient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\ApplicationLogger\SqlLogger;
@@ -26,7 +25,6 @@ class Kernel
 {
 
     protected Request $request;
-    protected FileSystemLogger $logger;
     protected SqlLogger $sqlLogger;
 
     /**
@@ -40,8 +38,8 @@ class Kernel
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
         $this->loadConfig();
-        $this->registerShutdownFunctions();
-        $this->logger = new FileSystemLogger('core');
+        $this->loadErrorHandlers();
+
         $this->sqlLogger = new SqlLogger('auth');
     }
 
@@ -136,14 +134,14 @@ class Kernel
      * Vector\Kernel->errorShutdown()
      * @return void
      */
-    protected function registerShutdownFunctions(): void
+    protected function loadErrorHandlers(): void
     {
-        $errorHandler = new ErrorHandler();
-        EventDispatcher::dispatch('KernelListener', 'onErrorHandler', [&$errorHandler]);
+        $handler = new ErrorHandler();
+        EventDispatcher::dispatch('KernelListener', 'onErrorHandler', [&$handler]);
 
-        set_error_handler([$errorHandler, 'handleError']);
-        set_exception_handler([$errorHandler, 'handleException']);
-        register_shutdown_function([$errorHandler, 'handleShutdown']);
+        set_error_handler([$handler, 'handleError']);
+        set_exception_handler([$handler, 'handleException']);
+        register_shutdown_function([$handler, 'handleShutdown']);
     }
 
     /**

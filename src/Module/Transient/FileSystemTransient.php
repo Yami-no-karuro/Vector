@@ -40,10 +40,10 @@ class FileSystemTransient extends AbstractTransient
      */
     public function isValid(): bool
     {
-        if (null === $this->content) { return false; }
-        if ($this->content['ttl'] === 0 ||
-            time() - $this->content['time'] < $this->content['ttl']) {
-            return true;
+        if (null !== $this->content &&
+            ($this->content['ttl'] === 0 ||
+            time() - $this->content['time'] < $this->content['ttl'])) {
+                return true;
         }
 
         return false;

@@ -41,6 +41,20 @@ abstract class AbstractObject
 
     /**
      * @package Vector
+     * Vector\Module\AbstractObject->set()
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
+     */
+    public function set(string $key, mixed $value): void
+    {
+        if (isset($this->$key)) {
+            $this->$key = $value;
+        }
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\AbstractObject->save()
      * @return void 
      */

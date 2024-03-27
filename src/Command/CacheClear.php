@@ -5,8 +5,6 @@ namespace Vector\Command;
 use Vector\Kernel;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;
-use Vector\Module\MongoClient;
-use Vector\Module\RedisClient;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Vector\Module\Console\Application;
 use FilesystemIterator;
@@ -24,8 +22,6 @@ class CacheClear extends AbstractCommand
 {
 
     protected PDO $sql;
-    protected ?MongoClient $mongo = null;
-    protected ?RedisClient $redis = null;
     protected FileSystemLogger $logger;
 
     /**
@@ -35,20 +31,11 @@ class CacheClear extends AbstractCommand
      */
     public function __construct(?array $args)
     {
-        global $config;
         parent::__construct($args);
 
         $this->logger = new FileSystemLogger('command');
         $this->sql = SqlClient::getInstance()
             ->getClient();
-
-        if ($config->mongodb->enabled === true) { 
-            $this->mongo = MongoClient::getInstance(); 
-        }
-
-        if ($config->redis->enabled === true) { 
-            $this->redis = RedisClient::getInstance(); 
-        }
     }
 
     /**
@@ -65,15 +52,6 @@ class CacheClear extends AbstractCommand
             Application::out($e);
             $this->logger->write($e);
             return self::EXIT_FAILURE;
-        }
-
-        if (null !== $this->mongo) {
-            $collection = $this->mongo->getCollection('transients');
-            $collection->drop();
-        }
-
-        if (null !== $this->redis) {
-            $this->redis->flush();
         }
 
         $dir = Kernel::getProjectRoot() . 'var/cache/';

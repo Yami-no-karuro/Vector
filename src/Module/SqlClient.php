@@ -44,6 +44,7 @@ class SqlClient
         if (self::$instance == null) {
             self::$instance = new SqlClient();
         }
+
         return self::$instance;
     }
 

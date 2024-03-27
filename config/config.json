@@ -15,6 +15,13 @@
             "query": true,
             "body": true
         },
+        "authentication_schema": [
+            "rsid", 
+            "scope", 
+            "time", 
+            "ip_address", 
+            "user_agent"
+        ],
         "authenticated_routes": [
             "/admin",
             "/api"

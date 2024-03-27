@@ -2,7 +2,7 @@
 
 namespace Vector\Module\Security;
 
-use Vector\Module\Security\UnauthorizedException;
+use Vector\Module\Security\SecurityException;
 use Vector\Repository\UserRepository;
 use Vector\DataObject\User;
 
@@ -11,14 +11,10 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Authentication 
+class Auth 
 {
 
-    protected const REQUIRED_PAYLOAD_SCHEMA = ['rsid', 'scope', 'time', 'ip_address', 'user_agent'];
-
-    protected UserRepository $repository;
     protected User $user;
-
     protected ?string $scope = null;
     protected ?string $ipAddress = null;
     protected ?string $userAgent = null;
@@ -30,12 +26,13 @@ class Authentication
      */
     public function __construct(array $payload)
     {
-        $this->repository = UserRepository::getInstance();
-        if (false === ($this->verifyPayload($payload))) {
-            throw new UnauthorizedException('Invalid authentication payload');
+        $repository = UserRepository::getInstance();
+        if (false === ($this->verifyPayload($payload)) || 
+            null === ($user = $repository->getById($payload['rsid']))) {
+                throw new SecurityException();
         }
 
-        $this->user = $this->repository->getById($payload['rsid']);
+        $this->user = $user;
         $this->scope = $payload['scope'];
         $this->ipAddress = $payload['ip_address'];
         $this->userAgent = $payload['user_agent'];
@@ -43,7 +40,7 @@ class Authentication
 
     /**
      * @package Vector
-     * Vector\Module\Security\Authentication->getUserId()
+     * Vector\Module\Security\Auth->getUserId()
      * @return ?User
      */
     public function getUser(): ?User
@@ -53,7 +50,7 @@ class Authentication
 
     /**
      * @package Vector
-     * Vector\Module\Security\Authentication->getScope()
+     * Vector\Module\Security\Auth->getScope()
      * @return ?string
      */
     public function getScope(): ?string
@@ -63,7 +60,7 @@ class Authentication
 
     /**
      * @package Vector
-     * Vector\Module\Security\Authentication->getIpAddress()
+     * Vector\Module\Security\Auth->getIpAddress()
      * @return ?string
      */
     public function getIpAddress(): ?string
@@ -73,7 +70,7 @@ class Authentication
 
     /**
      * @package Vector
-     * Vector\Module\Security\Authentication->getUserAgent()
+     * Vector\Module\Security\Auth->getUserAgent()
      * @return ?string
      */
     public function getUserAgent(): ?string
@@ -83,14 +80,16 @@ class Authentication
 
     /**
      * @package Vector
-     * Vector\Module\Security\Authentication->verifyPayload()
+     * Vector\Module\Security\Auth->verifyPayload()
      * @param array $payload
      * @return bool
      */
     protected function verifyPayload(array $payload): bool
     {
+        global $config;
+
         $schema = array_keys($payload);
-        if (count(array_intersect(self::REQUIRED_PAYLOAD_SCHEMA, $schema)) <= 0) {
+        if (count(array_intersect($config->security->authentication_schema, $schema)) <= 0) {
             return false;
         }
 

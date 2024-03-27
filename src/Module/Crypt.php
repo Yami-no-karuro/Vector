@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module\Security;
+namespace Vector\Module;
 
 use Vector\Module\Settings;
 

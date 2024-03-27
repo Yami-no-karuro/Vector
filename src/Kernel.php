@@ -3,11 +3,7 @@
 namespace Vector;
 
 use Vector\Module\Security\Firewall;
-use Vector\Module\Security\SecurityException;
-use Vector\Module\Security\UnauthorizedException;
 use Vector\Module\Transient\SqlTransient;
-use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Vector\Module\ApplicationLogger\SqlLogger;
 use Vector\Module\EventDispatcher;
 use Vector\Module\ErrorHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +21,6 @@ class Kernel
 {
 
     protected Request $request;
-    protected SqlLogger $sqlLogger;
 
     /**
      * @package Vector
@@ -34,13 +29,12 @@ class Kernel
     public function __construct()
     {
         global $request;
+
         $request = Request::createFromGlobals();
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
         $this->loadConfig();
         $this->loadErrorHandlers();
-
-        $this->sqlLogger = new SqlLogger('auth');
     }
 
     /**
@@ -63,6 +57,7 @@ class Kernel
     protected function handleCallback(): void
     {
         global $request;
+
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         if (!$transient->isValid()) {
             return;
@@ -73,6 +68,7 @@ class Kernel
 
         $matches = null;
         $params = [];
+
         if (!in_array($request->getMethod(), $httpMethods)) { return; }
         if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) { return; }
         if (!empty($matches)) {
@@ -85,6 +81,7 @@ class Kernel
 
         $controller = new $cacheData['controller'](true);
         $method = $cacheData['callback'];
+
         EventDispatcher::dispatch('KernelListener', 'onCallback', [&$request, $controller, $method, &$params]);
         $response = call_user_func_array([$controller, $method], [$request, $params]);
         EventDispatcher::dispatch('KernelListener', 'onResponse', [&$request, &$response]);
@@ -104,8 +101,10 @@ class Kernel
         $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/Controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
+
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
+
                 $controller = self::getClassNamespace($file->getPathname());
                 if (class_exists($controller)) {
                     new $controller();
@@ -122,6 +121,7 @@ class Kernel
     protected function loadConfig(): void
     {
         global $config;
+
         $path = self::getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 
@@ -152,18 +152,13 @@ class Kernel
     protected function verifyRequest(): void
     {
         global $request;
+
         $firewall = new Firewall();
         EventDispatcher::dispatch('KernelListener', 'onFirewall', [&$firewall]);
 
         try {
             $firewall->verifyRequest($request);
-        } catch (Exception $e) {
-            if ($e instanceof SecurityException) {
-                $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" request contained malicious content.');
-            } elseif ($e instanceof UnauthorizedException) {
-                $this->sqlLogger->write('Client: "' . $request->getClientIp() . '" attempted to reach a secure route without being authenticated.');
-            }
-
+        } catch (Exception) {
             $response = new Response(null, Response::HTTP_UNAUTHORIZED);
             $response->prepare($request);
             $response->send();

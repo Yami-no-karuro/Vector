@@ -5,7 +5,6 @@ namespace Vector\Module\Security;
 use Vector\Module\Security\Auth;
 use Vector\Module\Security\WebToken;
 use Vector\Module\Security\SecurityException;
-use Vector\Module\Transient\SqlTransient;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -16,22 +15,37 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Firewall
 {
 
-    protected array $firewallPatterns;
+    protected array $patterns;
 
     /**
      * @package Vector
      * __construct()
-     * "onPatterns" event is dispatched.
      */
     public function __construct()
     {
-        $transient = new SqlTransient('vct-firewall-patterns');
-        if (!$transient->isValid()) {
-            $patterns = $this->retrivePatterns();
-            $transient->setData($patterns);
-        }
-        
-        $this->firewallPatterns = $transient->getData();
+        $path = getProjectRoot() . 'var/source/firewall/patterns.json';
+        $data = json_decode(file_get_contents($path));
+        $this->patterns = $data->patterns;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Firewall->getPatterns()
+     * @return array
+     */
+    public function getPatterns(): array
+    {
+        return $this->patterns;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Firewall->setPatterns()
+     * @return void
+     */
+    protected function setPatterns(array $patterns): void
+    {
+        $this->patterns = $patterns;
     }
 
     /**
@@ -88,7 +102,7 @@ class Firewall
                 $value = implode(', ', $value); 
             }
 
-            foreach ($this->firewallPatterns as $pattern) {
+            foreach ($this->patterns as $pattern) {
                 if (preg_match($pattern, $value)) {
                     throw new SecurityException();
                 }
@@ -111,10 +125,7 @@ class Firewall
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
-
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
-                    $token : $request->headers->get('Auth-Token');
-
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
                 if (null !== $authToken && WebToken::isValid($authToken, $request)) {
                     $payload = WebToken::getPayload($authToken);
                     $auth = new Auth($payload);
@@ -124,19 +135,6 @@ class Firewall
                 throw new SecurityException();
             }
         }
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Security\Firewall->extractPatterns()
-     * @return array
-     */
-    protected function retrivePatterns(): array
-    {
-        $path = getProjectRoot() . '/var/source/firewall/patterns.txt';
-        $source = file_get_contents($path);
-
-        return array_filter(explode("\n", $source), 'trim');
     }
 
 }

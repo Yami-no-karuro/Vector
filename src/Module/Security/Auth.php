@@ -40,12 +40,22 @@ class Auth
 
     /**
      * @package Vector
-     * Vector\Module\Security\Auth->getUserId()
+     * Vector\Module\Security\Auth->getUser()
      * @return ?User
      */
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Auth->setUser()
+     * @return void
+     */
+    protected function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -60,6 +70,16 @@ class Auth
 
     /**
      * @package Vector
+     * Vector\Module\Security\Auth->setScope()
+     * @return void
+     */
+    protected function setScope(?string $scope): void
+    {
+        $this->scope = $scope;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\Security\Auth->getIpAddress()
      * @return ?string
      */
@@ -70,12 +90,32 @@ class Auth
 
     /**
      * @package Vector
+     * Vector\Module\Security\Auth->setIpAddress()
+     * @return void
+     */
+    protected function setIpAddress(?string $address): void
+    {
+        $this->ipAddress = $address;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\Security\Auth->getUserAgent()
      * @return ?string
      */
     public function getUserAgent(): ?string
     {
         return $this->userAgent;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Auth->setUserAgent()
+     * @return void
+     */
+    protected function setUserAgent(?string $agent): void
+    {
+        $this->userAgent = $agent;
     }
 
     /**

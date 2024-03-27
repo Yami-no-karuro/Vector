@@ -2,7 +2,6 @@
 
 namespace Vector\Module\Transient;
 
-use Vector\Kernel;
 use Vector\Module\Transient\AbstractTransient;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -26,10 +25,9 @@ class FileSystemTransient extends AbstractTransient
         parent::__construct($name);
 
         $this->path = getProjectRoot() . 'var/cache/transients/' . $this->name;
-        if (file_exists($this->path)) {
-            if (false !== ($data = file_get_contents($this->path, true))) {
+        if (file_exists($this->path) && 
+            false !== ($data = file_get_contents($this->path, true))) {
                 $this->content = unserialize($data);
-            }
         }
     }
 

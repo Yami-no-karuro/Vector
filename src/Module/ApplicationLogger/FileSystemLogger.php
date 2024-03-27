@@ -2,7 +2,6 @@
 
 namespace Vector\Module\ApplicationLogger;
 
-use Vector\Kernel;
 use Vector\Module\ApplicationLogger\AbstractLogger;
 
 if (!defined('NO_DIRECT_ACCESS')) {

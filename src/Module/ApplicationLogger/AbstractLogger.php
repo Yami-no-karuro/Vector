@@ -24,6 +24,27 @@ abstract class AbstractLogger
 
     /**
      * @package Vector
+     * Vector\Module\ApplicationLogger\AbstractLogger->getDomain()
+     * @return string
+     */
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\ApplicationLogger\AbstractLogger->setDomain()
+     * @param string $domain
+     * @return void
+     */
+    public function setDomain(string $domain): void
+    {
+        $this->domain = $domain;
+    }
+
+    /**
+     * @package Vector
      * Vector\Module\ApplicationLogger\AbstractLogger->write()
      * @param string $log
      * @return void

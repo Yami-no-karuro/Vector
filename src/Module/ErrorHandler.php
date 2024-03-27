@@ -22,8 +22,8 @@ class ErrorHandler
      */
     public function __construct()
     {
-        $this->filesystemLogger = new FileSystemLogger('core');
-        $this->sqlLogger = new SqlLogger('core');
+        $this->filesystemLogger = new FileSystemLogger('error');
+        $this->sqlLogger = new SqlLogger('error');
     }
 
     /**

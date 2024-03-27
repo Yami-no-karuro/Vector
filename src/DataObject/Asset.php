@@ -2,7 +2,6 @@
 
 namespace Vector\DataObject;
 
-use Vector\Kernel;
 use Vector\Module\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
 use Exception;

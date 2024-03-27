@@ -2,7 +2,6 @@
 
 namespace Vector\Command;
 
-use Vector\Kernel;
 use Vector\DataObject\User;
 use Vector\Module\Console\AbstractCommand;
 use Vector\Module\SqlClient;

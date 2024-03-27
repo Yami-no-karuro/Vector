@@ -86,12 +86,11 @@ class StorageController extends RestController
 
         $assets = [];
         foreach ($files as $file) {
-            $asset = new Asset([
-                'path' => $file->getClientOriginalName(),
-                'mimeType' => $file->getMimeType(),
-                'size' => $file->getSize(),
-                'content' => $file->getContent()
-            ]);
+            $asset = new Asset();
+            $asset->setPath($file->getClientOriginalName());
+            $asset->setMimeType($file->getMimeType());
+            $asset->setSize($file->getSize());
+            $asset->setContent($file->getContent());
 
             $asset->save();
             $asset[] = $asset;

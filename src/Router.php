@@ -27,6 +27,7 @@ class Router
 
         $matches = null;
         $params = [];
+
         $regex = '/' . str_replace('/', '\/', $route) . '/';
         if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
         if (!preg_match_all($regex, $request->getPathInfo(), $matches)) { return; }
@@ -40,6 +41,7 @@ class Router
 
         $controller = get_class($callback[0]);
         $method = $callback[1];
+
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         $transient->setData([
             'path' => $request->getPathInfo(),

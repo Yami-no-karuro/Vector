@@ -54,7 +54,7 @@ class CacheClear extends AbstractCommand
             return self::EXIT_FAILURE;
         }
 
-        $dir = Kernel::getProjectRoot() . 'var/cache/';
+        $dir = getProjectRoot() . 'var/cache/';
         if (file_exists($dir) && is_dir($dir)) {
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($cacheDir, RecursiveIteratorIterator::CHILD_FIRST);

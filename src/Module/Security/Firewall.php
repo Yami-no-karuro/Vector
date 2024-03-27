@@ -2,11 +2,10 @@
 
 namespace Vector\Module\Security;
 
-use Vector\Kernel;
-use Vector\Module\Transient\SqlTransient;
-use Vector\Module\Security\WebToken;
 use Vector\Module\Security\Auth;
+use Vector\Module\Security\WebToken;
 use Vector\Module\Security\SecurityException;
+use Vector\Module\Transient\SqlTransient;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -107,7 +106,7 @@ class Firewall
      */
     protected function verifyRouteAccess(array $routes, Request &$request): void
     {
-        global $authentication;
+        global $auth;
 
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
@@ -116,11 +115,10 @@ class Firewall
                 $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
                     $token : $request->headers->get('Auth-Token');
 
-                if (null !== $authToken && 
-                    WebToken::isValid($authToken, $request)) {
-                        $payload = WebToken::getPayload($authToken);
-                        $authentication = new Auth($payload);
-                        return;
+                if (null !== $authToken && WebToken::isValid($authToken, $request)) {
+                    $payload = WebToken::getPayload($authToken);
+                    $auth = new Auth($payload);
+                    return;
                 }
 
                 throw new SecurityException();
@@ -135,8 +133,9 @@ class Firewall
      */
     protected function retrivePatterns(): array
     {
-        $path = Kernel::getProjectRoot() . '/var/source/firewall/patterns.txt';
+        $path = getProjectRoot() . '/var/source/firewall/patterns.txt';
         $source = file_get_contents($path);
+
         return array_filter(explode("\n", $source), 'trim');
     }
 

@@ -233,7 +233,7 @@ class Asset extends AbstractObject
      */
     protected function getFullpath(): ?string
     {
-        $local = Kernel::getProjectRoot() . 'var/storage/' . $this->get('path');
+        $local = getProjectRoot() . 'var/storage/' . $this->get('path');
         if (file_exists($local)) {
             return $local;
         }
@@ -252,7 +252,7 @@ class Asset extends AbstractObject
 
         try {
             file_put_contents(
-                Kernel::getProjectRoot() . 'var/storage/' . $this->getPath(),
+                getProjectRoot() . 'var/storage/' . $this->getPath(),
                 $this->getContent()
             );
         } catch (Exception $e) {
@@ -302,7 +302,7 @@ class Asset extends AbstractObject
         $q->execute();
 
         try {
-            unlink(Kernel::getProjectRoot() . 'var/storage/' . $this->getPath());
+            unlink(getProjectRoot() . 'var/storage/' . $this->getPath());
         } catch (Exception $e) {
             $this->logger->write($e);
         }

@@ -26,7 +26,7 @@ abstract class FrontendController extends AbstractController
     {
         $filesystemLoader = new FilesystemLoader(__DIR__ . '/../../../templates');
         $this->template = new Environment($filesystemLoader, [
-            'cache' => Kernel::getProjectRoot() . '/var/cache/twig',
+            'cache' => getProjectRoot() . '/var/cache/twig',
             'auto_reload' => true
         ]);
 

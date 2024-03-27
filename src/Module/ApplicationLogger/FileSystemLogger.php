@@ -23,7 +23,7 @@ class FileSystemLogger extends AbstractLogger
     public function __construct(string $domain)
     {
         parent::__construct($domain);
-        $this->path = Kernel::getProjectRoot() . 'var/logs/' . $this->domain . '.log.txt';
+        $this->path = getProjectRoot() . 'var/logs/' . $this->domain . '.log.txt';
     }
 
     /**

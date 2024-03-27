@@ -59,13 +59,13 @@ class Application
         $this->directRun();
 
         $registeredCommands = [];
-        $dir = new RecursiveDirectoryIterator(Kernel::getProjectRoot() . 'src/Command');
+        $dir = new RecursiveDirectoryIterator(getProjectRoot() . 'src/Command');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
 
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
-                $class = Kernel::getClassNamespace($file->getPathname());
+                $class = getClassNamespace($file->getPathname());
                 if (class_exists($class)) {
                     $command = new $class($this->args);
                     $commandName = $command->getCommandName();
@@ -129,7 +129,7 @@ class Application
     protected function loadConfig(): void
     {
         global $config;
-        $path = Kernel::getProjectRoot() . 'config/config.json';
+        $path = getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 
         $config = $data;

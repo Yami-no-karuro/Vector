@@ -25,7 +25,7 @@ class FileSystemTransient extends AbstractTransient
     {
         parent::__construct($name);
 
-        $this->path = Kernel::getProjectRoot() . 'var/cache/transients/' . $this->name;
+        $this->path = getProjectRoot() . 'var/cache/transients/' . $this->name;
         if (file_exists($this->path)) {
             if (false !== ($data = file_get_contents($this->path, true))) {
                 $this->content = unserialize($data);

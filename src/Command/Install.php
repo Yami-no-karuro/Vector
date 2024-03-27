@@ -48,7 +48,7 @@ class Install extends AbstractCommand
     public function execute(): int
     {
 
-        $dir = Kernel::getProjectRoot() . 'var/sql/';
+        $dir = getProjectRoot() . 'var/sql/';
         if (file_exists($dir) && is_dir($dir)) {
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($sqlDir, RecursiveIteratorIterator::CHILD_FIRST);

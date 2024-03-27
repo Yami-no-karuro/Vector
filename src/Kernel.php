@@ -20,8 +20,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel
 {
 
-    protected Request $request;
-
     /**
      * @package Vector
      * __construct()
@@ -98,14 +96,14 @@ class Kernel
      */
     protected function routeRegister(): void
     {
-        $dir = new RecursiveDirectoryIterator(self::getProjectRoot() . 'src/Controller');
+        $dir = new RecursiveDirectoryIterator(getProjectRoot() . 'src/Controller');
         $iterator = new RecursiveIteratorIterator($dir);
         foreach ($iterator as $file) {
 
             $fname = $file->getFilename();
             if (preg_match("%\.php$%", $fname)) {
 
-                $controller = self::getClassNamespace($file->getPathname());
+                $controller = getClassNamespace($file->getPathname());
                 if (class_exists($controller)) {
                     new $controller();
                 }
@@ -122,7 +120,7 @@ class Kernel
     {
         global $config;
 
-        $path = self::getProjectRoot() . 'config/config.json';
+        $path = getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 
         EventDispatcher::dispatch('KernelListener', 'onConfiguration', [&$data]);
@@ -164,60 +162,6 @@ class Kernel
             $response->send();
             die();
         }
-    }
-
-    /**
-     * @package Vector
-     * Vector\Kernel::getNamespaceFromPath()
-     * @param string $filepath
-     * @param string $rootDirectory
-     * @return ?string
-     */
-    public static function getClassNamespace(string $filepath, string $root = 'src'): string
-    {
-        $filepath = trim($filepath, '\\');
-        if (!str_contains($filepath, $root)) {
-            return null;
-        }
-
-        $path = explode('/', $filepath);
-        $path[count($path) - 1] = pathinfo($path[count($path) - 1])['filename'];
-        $namespace = array_slice($path, (array_search($root, $path) + 1));
-        return implode('\\', ['\\Vector', ...$namespace]);
-    }
-
-    /**
-     * @package Vector
-     * Vector\Kernel::getProjectRoot()
-     * @return string
-     */
-    public static function getProjectRoot(): string
-    {
-        $workingDir = getcwd();
-        if (str_contains($workingDir, 'public')) {
-            return $workingDir . '/../';
-        }
-
-        return $workingDir . '/';
-    }
-
-    /**
-     * @package Vector
-     * Vector\Kernel::getRequestUrl()
-     * @param Request $request
-     * @return string
-     */
-    public static function getRequestUrl(Request &$request): string
-    {
-        global $config;
-        if (true === $config->dockerized) {
-            return 'http://php-apache:80' . $request->getRequestUri();
-        }
-
-        $host = $request->getHost();
-        $port = $request->getPort();
-        $scheme = $request->getScheme();
-        return $scheme . '://' . $host . ($port ? ':' . $port : '') . $request->getRequestUri();
     }
 
 }

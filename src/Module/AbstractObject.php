@@ -24,7 +24,8 @@ abstract class AbstractObject
             ->getClient();
 
         foreach(array_keys($data) as $key) {
-            $this->$key = $data[$key];
+            $prop = $this->formatAsProperty($key);
+            $this->$prop = $data[$key];
         }
     }
 
@@ -51,6 +52,23 @@ abstract class AbstractObject
         if (isset($this->$key)) {
             $this->$key = $value;
         }
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\AbstractObject->formatAsProperty()
+     * @param string $key
+     * @return string
+     */
+    protected function formatAsProperty(string $key): string 
+    {
+        $parts = preg_split('/[_]+/', $key);
+        $camelCase = array_shift($parts);
+        foreach ($parts as $part) {
+            $camelCase .= ucfirst($part);
+        }
+
+        return $camelCase;
     }
 
     /**

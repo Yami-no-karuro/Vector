@@ -27,7 +27,6 @@ class Kernel
     public function __construct()
     {
         global $request;
-
         $request = Request::createFromGlobals();
         EventDispatcher::dispatch('KernelListener', 'onRequest', [&$request]);
 
@@ -55,7 +54,6 @@ class Kernel
     protected function handleCallback(): void
     {
         global $request;
-
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
         if (!$transient->isValid()) {
             return;
@@ -119,11 +117,10 @@ class Kernel
     protected function loadConfig(): void
     {
         global $config;
-
         $path = getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 
-        EventDispatcher::dispatch('KernelListener', 'onConfiguration', [&$data]);
+        EventDispatcher::dispatch('KernelListener', 'onConfigLoaded', [&$data]);
         $config = $data;
     }
 
@@ -150,9 +147,8 @@ class Kernel
     protected function verifyRequest(): void
     {
         global $request;
-
         $firewall = new Firewall();
-        EventDispatcher::dispatch('KernelListener', 'onFirewall', [&$firewall]);
+        EventDispatcher::dispatch('KernelListener', 'onFirewallLoaded', [&$firewall]);
 
         try {
             $firewall->verifyRequest($request);

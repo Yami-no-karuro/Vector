@@ -38,18 +38,6 @@ class User extends AbstractObject
     protected ?string $username = null;
 
     /**
-     * @var ?string $firstname
-     * User's firstname.
-     */
-    protected ?string $firstname = null;
-
-    /**
-     * @var ?string $lastname
-     * User's lastname.
-     */
-    protected ?string $lastname = null;
-
-    /**
      * @var ?int $createdAt
      * User's creation date.
      */
@@ -142,48 +130,6 @@ class User extends AbstractObject
 
     /**
      * @package Vector
-     * Vector\DataObject\User->getFirstname()
-     * @return ?string
-     */
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->setFirstname()
-     * @param string $firstname
-     * @return void
-     */
-    public function setFirstname(string $firstname): void
-    {
-        $this->firstname = trim($firstname);
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->getLastname()
-     * @return ?string
-     */
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->setLastname()
-     * @param string $lastname
-     * @return void
-     */
-    public function setLastname(string $lastname): void
-    {
-        $this->lastname = trim($lastname);
-    }
-
-    /**
-     * @package Vector
      * Vector\DataObject\User->getCreatedAt()
      * @return ?int
      */
@@ -252,13 +198,11 @@ class User extends AbstractObject
      */
     public function save(): void
     {
-        $query = "INSERT INTO `users` 
-            (`ID`, `email`, `password`, `username`, `firstname`, `lastname`, `last_login`, `created_at`, `modified_at`) 
-            VALUES (:ID, :email, :password, :username, :firstname, :lastname, :lastLogin, :createdAt, :modifiedAt)
+        $query = "INSERT INTO `vct_users` 
+            (`ID`, `email`, `password`, `username`, `last_login`, `created_at`, `modified_at`) 
+            VALUES (:ID, :email, :password, :username, :lastLogin, :createdAt, :modifiedAt)
             ON DUPLICATE KEY UPDATE `password` = :password,
                 `username` = :username, 
-                `firstname` = :firstname, 
-                `lastname` = :lastname,
                 `last_login` = :lastLogin,
                 `modified_at` = :modifiedAt";
 
@@ -268,8 +212,6 @@ class User extends AbstractObject
         $q->bindParam('email', $this->email, PDO::PARAM_STR);
         $q->bindParam('password', $this->password, PDO::PARAM_STR);
         $q->bindParam('username', $this->username, PDO::PARAM_STR);
-        $q->bindParam('firstname', $this->firstname, PDO::PARAM_STR);
-        $q->bindParam('lastname', $this->lastname, PDO::PARAM_STR);
         $q->bindParam('lastLogin', $this->lastLogin, PDO::PARAM_INT);
 
         $now = time();
@@ -289,8 +231,11 @@ class User extends AbstractObject
      */
     public function delete(): void
     {
-        if (null === $this->getId()) { return; }
-        $query = "DELETE FROM `users` WHERE `ID` = :id";
+        if (null === $this->getId()) { 
+            return; 
+        }
+
+        $query = "DELETE FROM `vct_users` WHERE `ID` = :id";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('id', $this->ID, PDO::PARAM_INT);

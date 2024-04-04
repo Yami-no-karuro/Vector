@@ -46,7 +46,7 @@ class CacheClear extends AbstractCommand
     {
 
         try {
-            $this->sql->exec('DELETE FROM `transients`');
+            $this->sql->exec('DELETE FROM `vct_transients`');
         } catch (Exception $e) {
             Application::out($e);
             $this->logger->write($e);

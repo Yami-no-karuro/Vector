@@ -24,7 +24,6 @@ class Router
     public static function route(array $httpMethods, string $route, callable $callback): void
     {
         global $request;
-
         $matches = null;
         $params = [];
 

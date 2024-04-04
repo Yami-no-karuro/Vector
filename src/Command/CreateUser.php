@@ -26,7 +26,7 @@ class CreateUser extends AbstractCommand
     public function __construct(?array $args)
     {
         parent::__construct($args);
-        $this->repository = UserRepository::getInstance();
+        $this->repository = new UserRepository();
     }
 
     /**
@@ -51,12 +51,6 @@ class CreateUser extends AbstractCommand
         
         $username = Application::in('Username:');
         $user->setUsername($username);
-
-        $firstname = Application::in('Firstname:');
-        $user->setFirstname($firstname);
-
-        $lastname = Application::in('Lastname:');
-        $user->setLastname($lastname);
 
         if (null !== $this->repository->getBy('email', $email, PDO::PARAM_STR)) {
             Application::out('Command failed, user (email: "' . $email . '") already exists.');

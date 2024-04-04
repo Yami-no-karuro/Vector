@@ -40,7 +40,6 @@ class ErrorHandler
     {
         global $config;
         global $request;
-
         $message = "Error: \"{$errstr}\" in {$errfile} at line {$errline}";
 
         if ($config->debug_log) {
@@ -67,7 +66,6 @@ class ErrorHandler
     {
         global $config;
         global $request;
-
         $message = "Exception: \"{$e->getMessage()}\" in {$e->getFile()} at line {$e->getLine()}";
 
         if ($config->debug_log) {
@@ -93,7 +91,6 @@ class ErrorHandler
     {
         global $config;
         global $request;
-
         $error = error_get_last();
         if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
             $message = "Fatal error: \"{$error['message']}\" in {$error['file']} at line {$error['line']}";

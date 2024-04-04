@@ -68,6 +68,7 @@ class Install extends AbstractCommand
 
         Settings::set('installed', true);
         Settings::set('web_token_secret', bin2hex(random_bytes(32)));
+        Settings::set('web_token_ttl', 3600);
         Settings::set('crypt_key', bin2hex(random_bytes(32)));
         Settings::set('crypt_iv', bin2hex(random_bytes(8)));
 

@@ -69,6 +69,7 @@ class Application
                 $class = getClassNamespace($file->getPathname());
                 if (class_exists($class)) {
 
+                    /** @var Command */
                     $command = new $class($this->args);
                     $commandName = $command->getCommandName();
                     $registeredCommands[] = $commandName;

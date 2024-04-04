@@ -58,7 +58,6 @@ class Firewall
     public function verifyRequest(Request &$request): void
     {
         global $config;
-
         if (null !== ($routes = $config->security->authenticated_routes)) {
             $this->verifyRouteAccess($routes, $request);
         }
@@ -121,11 +120,12 @@ class Firewall
     protected function verifyRouteAccess(array $routes, Request &$request): void
     {
         global $auth;
-
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
+                    $token : $request->headers->get('Auth-Token');
+
                 if (null !== $authToken && WebToken::isValid($authToken, $request)) {
                     $payload = WebToken::getPayload($authToken);
                     $auth = new Auth($payload);

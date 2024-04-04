@@ -63,12 +63,12 @@ abstract class AbstractObject
     protected function formatAsProperty(string $key): string 
     {
         $parts = preg_split('/[_]+/', $key);
-        $camelCase = array_shift($parts);
+        $formatted = array_shift($parts);
         foreach ($parts as $part) {
-            $camelCase .= ucfirst($part);
+            $formatted .= ucfirst($part);
         }
 
-        return $camelCase;
+        return $formatted;
     }
 
     /**

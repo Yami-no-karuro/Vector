@@ -9,6 +9,7 @@ use Vector\Repository\AssetRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -35,7 +36,7 @@ class StorageController extends FrontendController
      */
     public function storageViewAction(Request $request): Response
     {
-        $repository = AssetRepository::getInstance();
+        $repository = new AssetRepository();
         $totalCount = $repository->getTotalCount();
         $page = intval((0 >= ($page = $request->get('page', 1))) ? 1 : (int) $page);
         if ($page > ($pageCount = ceil($totalCount / self::ITEMS_PER_PAGE))) {
@@ -100,8 +101,10 @@ class StorageController extends FrontendController
     public function storageDeleteAction(Request $request): RedirectResponse
     {
         if (null !== ($media = $request->request->get('media', null))) {
-            $repository = AssetRepository::getInstance();
-            if (null !== ($asset = $repository->getById($media))) {
+            $repository = new AssetRepository();
+
+            /** @var Asset */
+            if (null !== ($asset = $repository->getBy('ID', $media, PDO::PARAM_INT))) {
                 $asset->delete();
             }
         }

@@ -5,6 +5,7 @@ namespace Vector\Module\Security;
 use Vector\Module\Security\SecurityException;
 use Vector\Repository\UserRepository;
 use Vector\DataObject\User;
+use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -26,9 +27,9 @@ class Auth
      */
     public function __construct(array $payload)
     {
-        $repository = UserRepository::getInstance();
+        $repository = new UserRepository();
         if (false === ($this->verifyPayload($payload)) || 
-            null === ($user = $repository->getById($payload['rsid']))) {
+            null === ($user = $repository->getBy('ID', $payload['rsid'], PDO::PARAM_INT))) {
                 throw new SecurityException();
         }
 

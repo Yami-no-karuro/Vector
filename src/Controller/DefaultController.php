@@ -49,9 +49,10 @@ class DefaultController extends FrontendController
      */
     public function storageAction(Request $request, array $params): Response
     {
-        $repository = AssetRepository::getInstance();
-        if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
+        $repository = new AssetRepository();
 
+        /** @var Asset */
+        if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
             $stream = $asset->getStream();
             if (is_resource($stream)) {
                 return new StreamedResponse(function() use ($stream) {

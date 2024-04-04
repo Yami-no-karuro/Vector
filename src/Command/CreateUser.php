@@ -26,7 +26,7 @@ class CreateUser extends AbstractCommand
     public function __construct(?array $args)
     {
         parent::__construct($args);
-        $this->repository = UserRepository::getInstance();
+        $this->repository = new UserRepository();
     }
 
     /**

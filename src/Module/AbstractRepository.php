@@ -13,16 +13,15 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractRepository
 {
 
-    protected static string $class;
-    protected static string $tablename;
-    protected static mixed $instance = null;
+    protected string $class;
+    protected string $tablename;
     protected PDO $sql;
 
     /**
      * @package Vector
      * __construct()
      */
-    private function __construct()
+    public function __construct()
     {
         $this->sql = SqlClient::getInstance()
             ->getClient();
@@ -30,37 +29,22 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Module\AbstractRepository::getInstance()
-     * @return self
-     */
-    public static function getInstance(): self
-    {
-        if (self::$instance == null) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Repository\AssetRepository->getBy()
+     * Vector\Module\AbstractRepository->getBy()
      * @param string $field
      * @param mixed $value
      * @param int $type
-     * @return ?Asset
+     * @return null|static
      */
-    public function getBy(string $field, mixed $value, int $type): ?static
+    public function getBy(string $field, mixed $value, int $type): mixed
     {
-        $tablename = static::$tablename;
-        $query = "SELECT * FROM `{$tablename}` WHERE `{$field}` = :value LIMIT 1";
+        $query = "SELECT * FROM `{$this->tablename}` WHERE `{$field}` = :value LIMIT 1";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('value', $value, $type);
         $q->execute();
 
         if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
-            return new static::$class($results);
+            return new $this->class($results);
         }
 
         return null;
@@ -68,7 +52,7 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Repository\AssetRepository->getList()
+     * Vector\Module\AbstractRepository->getList()
      * @param array $params
      * @return ?array
      */
@@ -82,8 +66,7 @@ abstract class AbstractRepository
             'offset' => 0
         ], $params);
 
-        $tablename = static::$tablename;
-        $query = "SELECT * FROM `{$tablename}` WHERE {$params['condition']} 
+        $query = "SELECT * FROM `{$this->tablename}` WHERE {$params['condition']} 
             ORDER BY {$params['orderKey']} {$params['order']} 
             LIMIT :limit OFFSET :offset";
 
@@ -94,7 +77,7 @@ abstract class AbstractRepository
         $q->execute();
 
         if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {
-            return array_map(fn($el) => new static::$class($el), $results);
+            return array_map(fn($el) => new $this->class($el), $results);
         }
 
         return null;
@@ -102,13 +85,12 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Repository\AssetRepository->getTotalCount()
+     * Vector\Module\AbstractRepository->getTotalCount()
      * @return int 
      */
     public function getTotalCount(): int
     {
-        $tablename = static::$tablename;
-        $query = "SELECT COUNT(ID) AS `total` FROM `{$tablename}`";
+        $query = "SELECT COUNT(ID) AS `total` FROM `{$this->tablename}`";
         $q = $this->sql->prepare($query);
         $q->execute();
 

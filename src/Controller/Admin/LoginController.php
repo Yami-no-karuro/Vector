@@ -52,10 +52,11 @@ class LoginController extends FrontendController
      */
     public function loginSubmitAction(Request $request): RedirectResponse
     {
-        $repository = UserRepository::getInstance();
+        $repository = new UserRepository();
         if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            if (null !== ($user = $repository->getBy('email', $email, PDO::PARAM_STR))) {
 
+            /** @var User */
+            if (null !== ($user = $repository->getBy('email', $email, PDO::PARAM_STR))) {
                 $password = $user->getPassword();
                 if (hash('sha256', trim($request->get('password', ''))) === $password) {
                     $user->setLastLogin(time());
@@ -64,7 +65,7 @@ class LoginController extends FrontendController
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
                         'rsid' => $user->getId(),
                         'scope' => 'write',
-                        'time' => microtime()
+                        'time' => time()
                     ], $request));
 
                     $cookie->withHttpOnly(true);

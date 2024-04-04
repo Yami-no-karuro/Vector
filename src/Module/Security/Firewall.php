@@ -125,7 +125,9 @@ class Firewall
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? $token : $request->headers->get('Auth-Token');
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
+                    $token : $request->headers->get('Auth-Token');
+
                 if (null !== $authToken && WebToken::isValid($authToken, $request)) {
                     $payload = WebToken::getPayload($authToken);
                     $auth = new Auth($payload);

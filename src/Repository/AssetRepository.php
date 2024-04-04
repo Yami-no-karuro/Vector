@@ -14,8 +14,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class AssetRepository extends AbstractRepository
 {
 
-    protected static string $class = '\Vector\DataObject\Asset';
-    protected static string $tablename = 'assets';
+    protected string $class = '\Vector\DataObject\Asset';
+    protected string $tablename = 'assets';
 
     /**
      * @package Vector

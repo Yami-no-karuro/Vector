@@ -53,6 +53,7 @@ function getProjectRoot(): string
 function getRequestUrl(Request &$request): string
 {
     global $config;
+
     if (true === $config->dockerized) {
         return 'http://php-apache:80' . $request->getRequestUri();
     }

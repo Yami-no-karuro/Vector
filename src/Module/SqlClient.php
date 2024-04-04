@@ -22,6 +22,7 @@ class SqlClient
     private function __construct()
     {
         global $config;
+
         $this->client = new PDO(
             "mysql:host={$config->database->db_host};dbname={$config->database->db_name}", 
             $config->database->db_user, 

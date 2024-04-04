@@ -22,6 +22,7 @@ abstract class AbstractController
     public function __construct(bool $direct = false)
     {
         global $request;
+
         $this->request = $request;
 
         if (!$direct) {

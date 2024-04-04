@@ -28,7 +28,7 @@ class SqlTransient extends AbstractTransient
         $this->sql = SqlClient::getInstance()
             ->getClient();
 
-        $query = "SELECT `content` FROM `transients` WHERE `name` = :name LIMIT 1";
+        $query = "SELECT `content` FROM `vct_transients` WHERE `name` = :name LIMIT 1";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('name', $name, PDO::PARAM_STR);
@@ -86,7 +86,7 @@ class SqlTransient extends AbstractTransient
         $this->content = $content;
         $serialized = serialize($content);
 
-        $query = "INSERT INTO `transients` (`name`, `content`) VALUES (:name, :content) ON DUPLICATE KEY UPDATE `content` = :content";
+        $query = "INSERT INTO `vct_transients` (`name`, `content`) VALUES (:name, :content) ON DUPLICATE KEY UPDATE `content` = :content";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('name', $this->name, PDO::PARAM_STR);
@@ -101,7 +101,7 @@ class SqlTransient extends AbstractTransient
      */
     public function delete(): void
     {
-        $query = "DELETE FROM `transients` WHERE `name` = :name";
+        $query = "DELETE FROM `vct_transients` WHERE `name` = :name";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('name', $this->name, PDO::PARAM_STR);

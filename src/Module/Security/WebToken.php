@@ -25,6 +25,8 @@ class WebToken
     {
         if (null !== ($secret = Settings::get('web_token_secret'))) {
             $headers = self::generateHeaders();
+
+            $payload['time'] = time();
             if (false === $ignoreRequestInfo) {
                 $payload['ip_address'] = $request->getClientIp();
                 $payload['user_agent'] = $request->headers->get('User-Agent', 'unknown');
@@ -51,14 +53,9 @@ class WebToken
     public static function isValid(string $token, Request &$request, bool $ignoreRequestInfo = false): bool
     {
 
-        if (null === ($parts = self::getTokenParts($token))) {
-            return false;
-        }
-
+        if (null === ($parts = self::getTokenParts($token))) { return false; }
         list($headers, $payload, $signature) = $parts;
-        $decodedPayload = json_decode(base64_decode(
-            str_replace(['-', '_'], ['+', '/'], $payload)
-        ), true);
+        $decodedPayload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $payload)), true);
 
         if (false === $ignoreRequestInfo) {
             if (!array_key_exists('ip_address', $decodedPayload) || 
@@ -71,10 +68,16 @@ class WebToken
             }
         }
 
+        if (null !== ($ttl = Settings::get('web_token_ttl'))) {
+            $lifespan = time() - $ttl;
+            if ($decodedPayload['time'] < $lifespan) {
+                return false;
+            }
+        }
+
         if (null !== ($secret = Settings::get('web_token_secret'))) {
             $calculatedSignature = hash_hmac('sha256', $headers . '.' . $payload, $secret, true);
             $expectedSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($calculatedSignature));
-
             return hash_equals($signature, $expectedSignature);
         }
 

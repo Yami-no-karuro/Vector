@@ -15,6 +15,6 @@ class UserRepository extends AbstractRepository
 {
 
     protected string $class = '\Vector\DataObject\User';
-    protected string $tablename = 'users';
+    protected string $tablename = 'vct_users';
 
 }

@@ -36,7 +36,7 @@ class SqlLogger extends AbstractLogger
      */
     public function write(string $log): void
     {
-        $query = "INSERT INTO `logs` (`ID`, `domain`, `time`, `log`) VALUES (NULL, :domain, :time, :log)";
+        $query = "INSERT INTO `vct_logs` (`ID`, `domain`, `time`, `log`) VALUES (NULL, :domain, :time, :log)";
         $q = $this->sql->prepare($query);
 
         $time = time();

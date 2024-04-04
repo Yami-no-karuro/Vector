@@ -23,7 +23,7 @@ class Settings
         $sql = SqlClient::getInstance()
             ->getClient();
 
-        $query = "SELECT `value` FROM `settings` WHERE `key` = :key";
+        $query = "SELECT `value` FROM `vct_settings` WHERE `key` = :key";
         $q = $sql->prepare($query);
 
         $q->bindParam('key', $key, PDO::PARAM_STR);
@@ -48,7 +48,7 @@ class Settings
         $sql = SqlClient::getInstance()
             ->getClient();
 
-        $query = "INSERT INTO `settings` (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = :value";
+        $query = "INSERT INTO `vct_settings` (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = :value";
         $q = $sql->prepare($query);
 
         $q->bindParam('key', $key, PDO::PARAM_STR);
@@ -67,7 +67,7 @@ class Settings
         $sql = SqlClient::getInstance()
             ->getClient();
 
-        $query = "DELETE FROM `settings` WHERE `key` = :key";
+        $query = "DELETE FROM `vct_settings` WHERE `key` = :key";
         $q = $sql->prepare($query);
 
         $q->bindParam('key', $key, PDO::PARAM_STR);

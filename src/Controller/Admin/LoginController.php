@@ -63,9 +63,8 @@ class LoginController extends FrontendController
                     $user->save();
 
                     $cookie = new Cookie('Auth-Token', WebToken::generate([
-                        'rsid' => $user->getId(),
-                        'scope' => 'write',
-                        'time' => time()
+                        'resource' => $user->getId(),
+                        'scope' => 'write'
                     ], $request));
 
                     $cookie->withHttpOnly(true);

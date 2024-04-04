@@ -15,6 +15,6 @@ class AssetRepository extends AbstractRepository
 {
 
     protected string $class = '\Vector\DataObject\Asset';
-    protected string $tablename = 'assets';
+    protected string $tablename = 'vct_assets';
 
 }

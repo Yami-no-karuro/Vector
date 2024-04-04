@@ -52,12 +52,6 @@ class CreateUser extends AbstractCommand
         $username = Application::in('Username:');
         $user->setUsername($username);
 
-        $firstname = Application::in('Firstname:');
-        $user->setFirstname($firstname);
-
-        $lastname = Application::in('Lastname:');
-        $user->setLastname($lastname);
-
         if (null !== $this->repository->getBy('email', $email, PDO::PARAM_STR)) {
             Application::out('Command failed, user (email: "' . $email . '") already exists.');
             return self::EXIT_FAILURE;

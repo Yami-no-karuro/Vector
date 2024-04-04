@@ -288,7 +288,7 @@ class Asset extends AbstractObject
             return;
         }
 
-        $query = "INSERT INTO `assets` (`ID`, `path`, `mime_type`, `size`, `created_at`, `modified_at`) 
+        $query = "INSERT INTO `vct_assets` (`ID`, `path`, `mime_type`, `size`, `created_at`, `modified_at`) 
             VALUES (:ID, :path, :mimeType, :size, :createdAt, :modifiedAt)
             ON DUPLICATE KEY UPDATE `path` = :path, 
                 `mime_type` = :mimeType, 
@@ -326,7 +326,7 @@ class Asset extends AbstractObject
             return; 
         }
 
-        $query = "DELETE FROM `assets` WHERE `ID` = :id";
+        $query = "DELETE FROM `vct_assets` WHERE `ID` = :id";
         $q = $this->sql->prepare($query);
 
         $q->bindParam('id', $this->ID, PDO::PARAM_INT);

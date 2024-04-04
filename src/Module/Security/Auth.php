@@ -16,9 +16,10 @@ class Auth
 {
 
     protected User $user;
-    protected ?string $scope = null;
-    protected ?string $ipAddress = null;
-    protected ?string $userAgent = null;
+    protected string $scope;
+    protected string $time;
+    protected string $ipAddress;
+    protected string $userAgent;
 
     /**
      * @package Vector
@@ -28,13 +29,13 @@ class Auth
     public function __construct(array $payload)
     {
         $repository = new UserRepository();
-        if (false === ($this->verifyPayload($payload)) || 
-            null === ($user = $repository->getBy('ID', $payload['rsid'], PDO::PARAM_INT))) {
-                throw new SecurityException();
+        if (null === ($user = $repository->getBy('ID', $payload['resource'], PDO::PARAM_INT))) {
+            throw new SecurityException();
         }
 
         $this->user = $user;
         $this->scope = $payload['scope'];
+        $this->time = $payload['time'];
         $this->ipAddress = $payload['ip_address'];
         $this->userAgent = $payload['user_agent'];
     }
@@ -62,9 +63,9 @@ class Auth
     /**
      * @package Vector
      * Vector\Module\Security\Auth->getScope()
-     * @return ?string
+     * @return string
      */
-    public function getScope(): ?string
+    public function getScope(): string
     {
         return $this->scope;
     }
@@ -74,17 +75,37 @@ class Auth
      * Vector\Module\Security\Auth->setScope()
      * @return void
      */
-    protected function setScope(?string $scope): void
+    protected function setScope(string $scope): void
     {
         $this->scope = $scope;
     }
 
     /**
      * @package Vector
-     * Vector\Module\Security\Auth->getIpAddress()
-     * @return ?string
+     * Vector\Module\Security\Auth->getTime()
+     * @return int
      */
-    public function getIpAddress(): ?string
+    public function getTime(): int 
+    {
+        return $this->time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Auth->setTime()
+     * @return void
+     */
+    protected function setTime(int $time): void
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @package Vector
+     * Vector\Module\Security\Auth->getIpAddress()
+     * @return string
+     */
+    public function getIpAddress(): string
     {
         return $this->ipAddress;
     }
@@ -94,7 +115,7 @@ class Auth
      * Vector\Module\Security\Auth->setIpAddress()
      * @return void
      */
-    protected function setIpAddress(?string $address): void
+    protected function setIpAddress(string $address): void
     {
         $this->ipAddress = $address;
     }
@@ -102,9 +123,9 @@ class Auth
     /**
      * @package Vector
      * Vector\Module\Security\Auth->getUserAgent()
-     * @return ?string
+     * @return string
      */
-    public function getUserAgent(): ?string
+    public function getUserAgent(): string
     {
         return $this->userAgent;
     }
@@ -114,26 +135,9 @@ class Auth
      * Vector\Module\Security\Auth->setUserAgent()
      * @return void
      */
-    protected function setUserAgent(?string $agent): void
+    protected function setUserAgent(string $agent): void
     {
         $this->userAgent = $agent;
-    }
-
-    /**
-     * @package Vector
-     * Vector\Module\Security\Auth->verifyPayload()
-     * @param array $payload
-     * @return bool
-     */
-    protected function verifyPayload(array $payload): bool
-    {
-        global $config;
-        $schema = array_keys($payload);
-        if (count(array_intersect($config->security->authentication_schema, $schema)) <= 0) {
-            return false;
-        }
-
-        return true;
     }
 
 }

@@ -289,7 +289,10 @@ class User extends AbstractObject
      */
     public function delete(): void
     {
-        if (null === $this->getId()) { return; }
+        if (null === $this->getId()) { 
+            return; 
+        }
+
         $query = "DELETE FROM `users` WHERE `ID` = :id";
         $q = $this->sql->prepare($query);
 

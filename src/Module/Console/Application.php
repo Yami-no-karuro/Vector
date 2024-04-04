@@ -134,7 +134,6 @@ class Application
     protected function loadConfig(): void
     {
         global $config;
-
         $path = getProjectRoot() . 'config/config.json';
         $data = json_decode(file_get_contents($path));
 

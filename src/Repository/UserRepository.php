@@ -17,25 +17,4 @@ class UserRepository extends AbstractRepository
     protected string $class = '\Vector\DataObject\User';
     protected string $tablename = 'users';
 
-    /**
-     * @package Vector
-     * Vector\Repository\UserRepository->getById()
-     * @param int $id
-     * @return ?User
-     */
-    public function getById(int $id): ?User
-    {
-        $query = "SELECT * FROM `users` WHERE `ID` = :id LIMIT 1";
-        $q = $this->sql->prepare($query);
-
-        $q->bindParam('id', $id, PDO::PARAM_INT);
-        $q->execute();
-
-        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
-            return new User($results);
-        }
-
-        return null;
-    }
-
 }

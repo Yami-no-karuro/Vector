@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 global $request;
-
 $response = new RedirectResponse('/not-found', Response::HTTP_FOUND); 
 $response->prepare($request);
 $response->send();

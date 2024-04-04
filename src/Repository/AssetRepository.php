@@ -17,25 +17,4 @@ class AssetRepository extends AbstractRepository
     protected string $class = '\Vector\DataObject\Asset';
     protected string $tablename = 'assets';
 
-    /**
-     * @package Vector
-     * Vector\Repository\AssetRepository->getById()
-     * @param int $id
-     * @return ?Asset
-     */
-    public function getById(int $id): ?Asset
-    {
-        $query = "SELECT * FROM `assets` WHERE `ID` = :id LIMIT 1";
-        $q = $this->sql->prepare($query);
-
-        $q->bindParam('id', $id, PDO::PARAM_INT);
-        $q->execute();
-
-        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
-            return new Asset($results);
-        }
-
-        return null;
-    }
-
 }

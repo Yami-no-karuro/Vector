@@ -58,7 +58,6 @@ class Firewall
     public function verifyRequest(Request &$request): void
     {
         global $config;
-
         if (null !== ($routes = $config->security->authenticated_routes)) {
             $this->verifyRouteAccess($routes, $request);
         }
@@ -121,7 +120,6 @@ class Firewall
     protected function verifyRouteAccess(array $routes, Request &$request): void
     {
         global $auth;
-
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {

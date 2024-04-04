@@ -128,7 +128,6 @@ class Auth
     protected function verifyPayload(array $payload): bool
     {
         global $config;
-
         $schema = array_keys($payload);
         if (count(array_intersect($config->security->authentication_schema, $schema)) <= 0) {
             return false;

@@ -51,69 +51,8 @@ services:
     networks:
       - vector-network
 
-  mongodb:
-    image: mongo:latest
-    container_name: vector-mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - vector-mongodb:/data/db
-    networks:
-      - vector-network
-
-  mongodb-express:
-    image: mongo-express
-    container_name: vector-mongodb-gui
-    restart: unless-stopped
-    ports:
-      - "8082:8081"
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-      - ME_CONFIG_MONGODB_PORT=27017
-    networks:
-      - vector-network
-
-  redis:
-    image: redis:latest
-    container_name: vector-redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - vector-redis:/data
-    networks:
-      - vector-network
-
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: vector-redis-commander
-    restart: unless-stopped
-    environment:
-      - REDIS_HOSTS=redis
-    ports:
-      - "8081:8081"
-    networks:
-      - vector-network
-
-  minio:
-    image: quay.io/minio/minio
-    container_name: vector-minio
-    restart: unless-stopped
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    command: server /data --console-address ":9001"
-    volumes:
-      - vector-minio:/data
-    networks:
-      - vector-network
-
 networks:
   vector-network:
 
 volumes:
   vector-database:
-  vector-mongodb:
-  vector-redis:
-  vector-minio:

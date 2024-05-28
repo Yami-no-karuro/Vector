@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Controller\Admin\Api;
+namespace Vector\Controller\Api;
 
 use Vector\Router;
 use Vector\Module\Controller\RestController;
@@ -23,13 +23,13 @@ class StorageController extends RestController
 
     protected function register(): void
     {
-        Router::route(['GET'], '^/admin/api/storage/?$', [$this, 'storageListingAction']);
-        Router::route(['POST'], '^/admin/api/storage/?$', [$this, 'storageUploadAction']);
-        Router::route(['DELETE'], '^/admin/api/storage/(?<id>\d+)$', [$this, 'storageDeleteAction']);
+        Router::route(['GET'], '^/api/v1/storage/?$', [$this, 'storageListingAction']);
+        Router::route(['POST'], '^/api/v1/storage/?$', [$this, 'storageUploadAction']);
+        Router::route(['DELETE'], '^/api/v1/storage/(?<id>\d+)$', [$this, 'storageDeleteAction']);
     }
 
     /**
-     * Route: '/admin/api/storage'
+     * Route: '/api/v1/storage'
      * Methods: GET
      * @param Request $request
      * @return JsonResponse
@@ -72,7 +72,7 @@ class StorageController extends RestController
     }
 
     /**
-     * Route: '/admin/api/storage'
+     * Route: '/api/v1/storage'
      * Methods: POST
      * @param Request $request
      * @return JsonResponse
@@ -118,7 +118,7 @@ class StorageController extends RestController
     }
 
     /**
-     * Route: '/admin/api/storage/<id>'
+     * Route: '/api/v1/storage/<id>'
      * Methods: DELETE 
      * @param Request $request
      * @param array $params

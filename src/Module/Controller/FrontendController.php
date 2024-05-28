@@ -2,7 +2,6 @@
 
 namespace Vector\Module\Controller;
 
-use Vector\Kernel;
 use Vector\Module\Controller\AbstractController;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;

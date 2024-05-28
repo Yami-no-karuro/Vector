@@ -33,11 +33,11 @@ class Auth
             throw new SecurityException();
         }
 
-        $this->user = $user;
-        $this->scope = $payload['scope'];
-        $this->time = $payload['time'];
-        $this->ipAddress = $payload['ip_address'];
-        $this->userAgent = $payload['user_agent'];
+        $this->setUser($user);
+        $this->setScope($payload['scope']);
+        $this->setTime($payload['time']);
+        $this->setIpAddress($payload['ip_address']);
+        $this->setUserAgent($payload['user_agent']);
     }
 
     /**

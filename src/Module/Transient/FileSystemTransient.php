@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class FileSystemTransient extends AbstractTransient
 {
-
     protected string $path;
     protected ?array $content = null;
 
@@ -25,9 +24,9 @@ class FileSystemTransient extends AbstractTransient
         parent::__construct($name);
 
         $this->path = getProjectRoot() . 'var/cache/transients/' . $this->name;
-        if (file_exists($this->path) && 
+        if (file_exists($this->path) &&
             false !== ($data = file_get_contents($this->path, true))) {
-                $this->content = unserialize($data);
+            $this->content = unserialize($data);
         }
     }
 
@@ -41,7 +40,7 @@ class FileSystemTransient extends AbstractTransient
         if (null !== $this->content &&
             ($this->content['ttl'] === 0 ||
             time() - $this->content['time'] < $this->content['ttl'])) {
-                return true;
+            return true;
         }
 
         return false;

@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class FrontendController extends AbstractController
 {
-
     protected Environment $template;
 
     /**

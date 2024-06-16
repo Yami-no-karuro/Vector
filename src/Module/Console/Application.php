@@ -16,7 +16,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Application
 {
-
     protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
     protected string $console;
@@ -87,9 +86,9 @@ class Application
                         self::out('Exitcode: ' . $exitCode);
                         self::out('Executed for: ' . $this->stopWatch->getElapsed());
                         exit($exitCode);
-                    }   
+                    }
                 }
-                
+
             }
         }
 

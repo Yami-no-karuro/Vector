@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlTransient extends AbstractTransient
 {
-
     protected PDO $sql;
     protected ?array $content = null;
 
@@ -49,7 +48,7 @@ class SqlTransient extends AbstractTransient
         if (null !== $this->content &&
             ($this->content['ttl'] === 0 ||
             time() - $this->content['time'] < $this->content['ttl'])) {
-                return true;
+            return true;
         }
 
         return false;

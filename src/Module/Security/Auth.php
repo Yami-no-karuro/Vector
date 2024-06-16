@@ -12,9 +12,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class Auth 
+class Auth
 {
-
     protected User $user;
     protected string $scope;
     protected string $time;
@@ -85,7 +84,7 @@ class Auth
      * Vector\Module\Security\Auth->getTime()
      * @return int
      */
-    public function getTime(): int 
+    public function getTime(): int
     {
         return $this->time;
     }

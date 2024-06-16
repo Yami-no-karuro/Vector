@@ -1,15 +1,8 @@
 {
     "require": {
-        "twig/twig": "^3.5",
         "symfony/http-foundation": "^6.2",
-        "captainhook/captainhook": "^5.16",
-        "phpstan/phpstan": "^1.10",
-        "symfony/mime": "^7.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "captainhook/plugin-composer": true
-        }
+        "symfony/mime": "^7.0",
+        "twig/twig": "^3.5"
     },
     "require-dev": {
         "symfony/var-dumper": "^6.3"

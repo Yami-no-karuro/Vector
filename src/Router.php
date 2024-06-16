@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Router
 {
-
     /**
      * @package Vector
      * Vector\Router->route()
@@ -28,8 +27,12 @@ class Router
         $params = [];
 
         $regex = '/' . str_replace('/', '\/', $route) . '/';
-        if (!in_array($request->getMethod(), (array) $httpMethods)) { return; }
-        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) { return; }
+        if (!in_array($request->getMethod(), (array) $httpMethods)) {
+            return;
+        }
+        if (!preg_match_all($regex, $request->getPathInfo(), $matches)) {
+            return;
+        }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) {

@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class AssetRepository extends AbstractRepository
 {
-
     protected string $class = '\Vector\DataObject\Asset';
     protected string $tablename = 'vct_assets';
 

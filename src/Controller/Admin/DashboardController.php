@@ -13,7 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class DashboardController extends FrontendController
 {
-
     protected function register(): void
     {
         Router::route(['GET'], '^/admin/?$', [$this, 'dashboardViewAction']);

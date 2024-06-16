@@ -15,7 +15,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CreateUser extends AbstractCommand
 {
-
     protected UserRepository $repository;
 
     /**
@@ -48,7 +47,7 @@ class CreateUser extends AbstractCommand
 
         $password = Application::in('Password:');
         $user->setPassword($password);
-        
+
         $username = Application::in('Username:');
         $user->setUsername($username);
 

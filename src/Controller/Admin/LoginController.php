@@ -19,7 +19,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class LoginController extends FrontendController
 {
-
     protected function register(): void
     {
         Router::route(['GET'], '^/login/?$', [$this, 'loginViewAction']);

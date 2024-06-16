@@ -12,7 +12,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractRepository
 {
-
     protected string $class;
     protected string $tablename;
     protected PDO $sql;
@@ -77,7 +76,7 @@ abstract class AbstractRepository
         $q->execute();
 
         if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {
-            return array_map(fn($el) => new $this->class($el), $results);
+            return array_map(fn ($el) => new $this->class($el), $results);
         }
 
         return null;
@@ -86,7 +85,7 @@ abstract class AbstractRepository
     /**
      * @package Vector
      * Vector\Module\AbstractRepository->getTotalCount()
-     * @return int 
+     * @return int
      */
     public function getTotalCount(): int
     {

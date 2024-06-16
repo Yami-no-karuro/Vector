@@ -19,7 +19,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Kernel
 {
-
     /**
      * @package Vector
      * __construct()
@@ -65,8 +64,12 @@ class Kernel
         $matches = null;
         $params = [];
 
-        if (!in_array($request->getMethod(), $httpMethods)) { return; }
-        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) { return; }
+        if (!in_array($request->getMethod(), $httpMethods)) {
+            return;
+        }
+        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) {
+            return;
+        }
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
                 if (!is_numeric($key) && !isset($value[1])) {

@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class AbstractObject
 {
-
     protected PDO $sql;
 
     /**
@@ -60,7 +59,7 @@ abstract class AbstractObject
      * @param string $key
      * @return string
      */
-    protected function formatAsProperty(string $key): string 
+    protected function formatAsProperty(string $key): string
     {
         $parts = preg_split('/[_]+/', $key);
         $formatted = array_shift($parts);
@@ -74,14 +73,14 @@ abstract class AbstractObject
     /**
      * @package Vector
      * Vector\Module\AbstractObject->save()
-     * @return void 
+     * @return void
      */
     abstract public function save(): void;
 
     /**
      * @package Vector
      * Vector\Module\AbstractObject->delete()
-     * @return void 
+     * @return void
      */
     abstract public function delete(): void;
 

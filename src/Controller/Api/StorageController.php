@@ -18,7 +18,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class StorageController extends RestController
 {
-
     protected const ITEMS_PER_PAGE = 32;
 
     protected function register(): void
@@ -54,7 +53,7 @@ class StorageController extends RestController
                 'currentPage' => $page,
                 'prevPage' => ($page > 1) ? ($page - 1) : 1,
                 'nextPage' => ($page < $pageCount) ? ($page + 1) : $pageCount,
-                'list' => array_map(function($el) {
+                'list' => array_map(function ($el) {
                     return [
                         'ID' => $el->getId(),
                         'path' => $el->getPath(),
@@ -63,7 +62,7 @@ class StorageController extends RestController
                         'size' => $el->getSize(),
                         'system' => [
                             'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                            'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())                     
+                            'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
                         ]
                     ];
                 }, $assets)
@@ -83,7 +82,7 @@ class StorageController extends RestController
         if (!is_array($files) || empty($files)) {
             return new JsonResponse([
                 'success' => false,
-                'data' => null    
+                'data' => null
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -101,7 +100,7 @@ class StorageController extends RestController
 
         return new JsonResponse([
             'success' => true,
-            'data' => array_map(function($el) {
+            'data' => array_map(function ($el) {
                 return [
                     'ID' => $el->getId(),
                     'path' => $el->getPath(),
@@ -110,7 +109,7 @@ class StorageController extends RestController
                     'size' => $el->getSize(),
                     'system' => [
                         'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())                     
+                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
                     ]
                 ];
             }, $assets)
@@ -119,7 +118,7 @@ class StorageController extends RestController
 
     /**
      * Route: '/api/v1/storage/<id>'
-     * Methods: DELETE 
+     * Methods: DELETE
      * @param Request $request
      * @param array $params
      * @return JsonResponse
@@ -134,13 +133,13 @@ class StorageController extends RestController
 
             return new JsonResponse([
                 'success' => true,
-                'data' => null 
+                'data' => null
             ], Response::HTTP_OK);
         }
 
         return new JsonResponse([
             'success' => false,
-            'data' => null 
+            'data' => null
         ], Response::HTTP_NOT_FOUND);
     }
 }

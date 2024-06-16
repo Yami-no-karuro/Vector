@@ -17,7 +17,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class DefaultController extends FrontendController
 {
-
     protected function register(): void
     {
         Router::route(['GET'], '^/?$', [$this, 'defaultAction']);
@@ -55,7 +54,7 @@ class DefaultController extends FrontendController
         if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
             $stream = $asset->getStream();
             if (is_resource($stream)) {
-                return new StreamedResponse(function() use ($stream) {
+                return new StreamedResponse(function () use ($stream) {
                     fpassthru($stream);
                 }, Response::HTTP_OK, [
                     'Content-Type' => $asset->getMimeType(),

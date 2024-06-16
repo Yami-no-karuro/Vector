@@ -14,7 +14,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Asset extends AbstractObject
 {
-
     protected FileSystemLogger $logger;
 
     /**
@@ -107,11 +106,11 @@ class Asset extends AbstractObject
      */
     public function getMimeType(): ?string
     {
-        if (null === $this->mimeType && 
+        if (null === $this->mimeType &&
             null !== ($filepath = $this->getFullpath())) {
-                return false !== ($this->mimeType = mime_content_type($filepath)) ?
-                    $this->mimeType :
-                    null;
+            return false !== ($this->mimeType = mime_content_type($filepath)) ?
+                $this->mimeType :
+                null;
         }
 
         return $this->mimeType;
@@ -131,15 +130,15 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getSize()
-     * @return ?int 
+     * @return ?int
      */
     public function getSize(): ?int
     {
         if (null === $this->size &&
             null !== ($filepath = $this->getFullpath())) {
-                return false !== ($this->size = filesize($filepath)) ?
-                    $this->size :
-                    null;
+            return false !== ($this->size = filesize($filepath)) ?
+                $this->size :
+                null;
         }
 
         return $this->size;
@@ -159,17 +158,17 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getMediaContent()
-     * @return ?string 
+     * @return ?string
      */
     public function getContent(): ?string
     {
-        if (null === $this->content && 
-            null !== ($filepath = $this->getFullpath()) && 
+        if (null === $this->content &&
+            null !== ($filepath = $this->getFullpath()) &&
             false !== ($localHandle = fopen($filepath, 'r'))) {
-                $this->content = fread($localHandle, filesize($filepath));
-                return $this->content;
+            $this->content = fread($localHandle, filesize($filepath));
+            return $this->content;
         }
-        
+
         return $this->content;
     }
 
@@ -197,7 +196,7 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getStream()
-     * @return mixed 
+     * @return mixed
      */
     public function getStream(): mixed
     {
@@ -213,7 +212,7 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getFullpath()
-     * @return ?string 
+     * @return ?string
      */
     protected function getFullpath(): ?string
     {
@@ -270,12 +269,12 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->save()
-     * @return void 
+     * @return void
      */
     public function save(): void
     {
-        if (null === $this->getContent()) { 
-            return; 
+        if (null === $this->getContent()) {
+            return;
         }
 
         try {
@@ -318,12 +317,12 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->delete()
-     * @return void 
+     * @return void
      */
     public function delete(): void
     {
-        if (null === $this->getId()) { 
-            return; 
+        if (null === $this->getId()) {
+            return;
         }
 
         $query = "DELETE FROM `vct_assets` WHERE `ID` = :id";
@@ -340,4 +339,3 @@ class Asset extends AbstractObject
     }
 
 }
-

@@ -21,7 +21,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Install extends AbstractCommand
 {
-
     protected PDO $sql;
     protected FileSystemLogger $logger;
 

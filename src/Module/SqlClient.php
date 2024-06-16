@@ -11,7 +11,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class SqlClient
 {
-
     protected ?PDO $client;
     private static mixed $instance = null;
 
@@ -23,13 +22,13 @@ class SqlClient
     {
         global $config;
         $this->client = new PDO(
-            "mysql:host={$config->database->db_host};dbname={$config->database->db_name}", 
-            $config->database->db_user, 
+            "mysql:host={$config->database->db_host};dbname={$config->database->db_name}",
+            $config->database->db_user,
             $config->database->db_password
         );
 
         $this->client->setAttribute(
-            PDO::ATTR_ERRMODE, 
+            PDO::ATTR_ERRMODE,
             PDO::ERRMODE_EXCEPTION
         );
     }
@@ -60,7 +59,7 @@ class SqlClient
     /**
      * @package Vector
      * Vector\Module\SqlClient->getClient()
-     * @return PDO 
+     * @return PDO
      */
     public function getClient(): PDO
     {

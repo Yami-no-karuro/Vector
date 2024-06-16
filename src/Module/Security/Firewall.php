@@ -14,7 +14,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Firewall
 {
-
     protected array $patterns;
 
     /**
@@ -97,8 +96,8 @@ class Firewall
     protected function verifyPayload(mixed $data): void
     {
         foreach ($data as $value) {
-            if (is_array($value)) { 
-                $value = implode(', ', $value); 
+            if (is_array($value)) {
+                $value = implode(', ', $value);
             }
 
             foreach ($this->patterns as $pattern) {
@@ -123,7 +122,7 @@ class Firewall
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
-                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ? 
+                $authToken = null !== ($token = $request->cookies->get('Auth-Token')) ?
                     $token : $request->headers->get('Auth-Token');
 
                 if (null !== $authToken && WebToken::isValid($authToken, $request)) {

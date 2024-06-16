@@ -19,7 +19,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class CacheClear extends AbstractCommand
 {
-
     protected PDO $sql;
     protected FileSystemLogger $logger;
 

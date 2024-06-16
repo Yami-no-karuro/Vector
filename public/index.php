@@ -7,6 +7,8 @@
 * -----------------------------------
 */
 
+declare(strict_types = 1);
+
 error_reporting(0);
 define('NO_DIRECT_ACCESS', 'true');
 

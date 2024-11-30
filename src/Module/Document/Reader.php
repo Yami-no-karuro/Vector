@@ -1,48 +1,50 @@
 <?php
 
-namespace Vector\Module\Document;
+namespace App\Module\CSV;
 
-if (!defined('NO_DIRECT_ACCESS')) {
-    header('HTTP/1.1 403 Forbidden');
-    die();
-}
+use Generator;
 
 class Reader
 {
-    protected mixed $fileHandle;
+
+    protected mixed $handle;
     protected string $delimiter;
 
     /**
      * @package Vector
-     * __construct()
+     * @param mixed $file
+     * @param string $delimeter
      */
-    public function __construct(string $filename, string $delimiter = ',')
+    public function __construct(mixed $file, string $delimiter = ',')
     {
-        $this->fileHandle = fopen($filename, 'r');
+        $this->handle = $file;
+        if (!is_resource($file))
+            $this->handle = fopen($file, 'r');
+
         $this->delimiter = $delimiter;
     }
 
     /**
      * @package Vector
-     * __destruct()
+     * __construct()
      */
     public function __destruct()
     {
-        fclose($this->fileHandle);
+        if (is_resource($this->handle))
+            fclose($this->handle);
     }
 
-    /**
+    /** 
      * @package Vector
-     * Vector\Module\Document\Reader->getRow()
-     * @return false|array
+     * @return Generator 
      */
-    public function getRow(): false|array
+    public function getRows(): Generator
     {
-        if (!feof($this->fileHandle)) {
-            return fgetcsv($this->fileHandle, 0, $this->delimiter);
+        while (!feof($this->handle)) {
+            $row = fgetcsv($this->handle, 0, $this->delimiter);
+            if ($row !== false) {
+                yield $row;
+            }
         }
-
-        return false;
     }
-
 }

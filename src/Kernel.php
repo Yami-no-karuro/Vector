@@ -19,6 +19,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Kernel
 {
+
     /**
      * @package Vector
      * __construct()
@@ -54,9 +55,8 @@ class Kernel
     {
         global $request;
         $transient = new SqlTransient('vct-route-{' . $request->getPathInfo() . '}');
-        if (!$transient->isValid()) {
+        if (!$transient->isValid())
             return;
-        }
 
         $cacheData = $transient->getData();
         $httpMethods = unserialize($cacheData['methods']);
@@ -64,17 +64,16 @@ class Kernel
         $matches = null;
         $params = [];
 
-        if (!in_array($request->getMethod(), $httpMethods)) {
+        if (!in_array($request->getMethod(), $httpMethods))
             return;
-        }
-        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches)) {
+
+        if (!preg_match_all($cacheData['regex'], $request->getPathInfo(), $matches))
             return;
-        }
+
         if (!empty($matches)) {
             foreach ($matches as $key => $value) {
-                if (!is_numeric($key) && !isset($value[1])) {
+                if (!is_numeric($key) && !isset($value[1]))
                     $params[$key] = $value[0];
-                }
             }
         }
 
@@ -105,9 +104,8 @@ class Kernel
             if (preg_match("%\.php$%", $fname)) {
 
                 $controller = getClassNamespace($file->getPathname());
-                if (class_exists($controller)) {
+                if (class_exists($controller))
                     new $controller();
-                }
             }
         }
     }
@@ -162,5 +160,4 @@ class Kernel
             die();
         }
     }
-
 }

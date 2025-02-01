@@ -17,9 +17,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 function getClassNamespace(string $filepath, string $root = 'src'): string
 {
     $filepath = trim($filepath, '\\');
-    if (!str_contains($filepath, $root)) {
+    if (!str_contains($filepath, $root))
         return null;
-    }
 
     $path = explode('/', $filepath);
     $path[count($path) - 1] = pathinfo($path[count($path) - 1])['filename'];
@@ -36,9 +35,8 @@ function getClassNamespace(string $filepath, string $root = 'src'): string
 function getProjectRoot(): string
 {
     $workingDir = getcwd();
-    if (str_contains($workingDir, 'public')) {
+    if (str_contains($workingDir, 'public'))
         return $workingDir . '/../';
-    }
 
     return $workingDir . '/';
 }
@@ -53,9 +51,8 @@ function getProjectRoot(): string
 function getRequestUrl(Request &$request): string
 {
     global $config;
-    if (true === $config->dockerized) {
+    if (true === $config->dockerized)
         return 'http://php-apache:80' . $request->getRequestUri();
-    }
 
     $host = $request->getHost();
     $port = $request->getPort();

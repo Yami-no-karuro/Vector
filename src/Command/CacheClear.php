@@ -48,22 +48,25 @@ class CacheClear extends AbstractCommand
             $this->sql->exec('DELETE FROM `vct_transients`');
         } catch (Exception $e) {
             Application::out($e);
-            $this->logger->write($e);
+            $this->logger->write($e->getMessage());
             return self::EXIT_FAILURE;
         }
 
         $dir = getProjectRoot() . 'var/cache/';
         if (file_exists($dir) && is_dir($dir)) {
+
             $cacheDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($cacheDir, RecursiveIteratorIterator::CHILD_FIRST);
+
             foreach ($iterator as $file) {
                 $fname = $file->getFilename();
                 if (!preg_match("%\.gitkeep$%", $fname)) {
+
                     try {
                         $file->isDir() ? rmdir($file) : unlink($file);
                     } catch (Exception $e) {
                         Application::out($e);
-                        $this->logger->write($e);
+                        $this->logger->write($e->getMessage());
                         return self::EXIT_FAILURE;
                     }
                 }
@@ -83,5 +86,4 @@ class CacheClear extends AbstractCommand
     {
         return 'vector:cache-clear';
     }
-
 }

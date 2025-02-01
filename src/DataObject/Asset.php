@@ -106,8 +106,10 @@ class Asset extends AbstractObject
      */
     public function getMimeType(): ?string
     {
-        if (null === $this->mimeType &&
-            null !== ($filepath = $this->getFullpath())) {
+        if (
+            null === $this->mimeType &&
+            null !== ($filepath = $this->getFullpath())
+        ) {
             return false !== ($this->mimeType = mime_content_type($filepath)) ?
                 $this->mimeType :
                 null;
@@ -134,8 +136,10 @@ class Asset extends AbstractObject
      */
     public function getSize(): ?int
     {
-        if (null === $this->size &&
-            null !== ($filepath = $this->getFullpath())) {
+        if (
+            null === $this->size &&
+            null !== ($filepath = $this->getFullpath())
+        ) {
             return false !== ($this->size = filesize($filepath)) ?
                 $this->size :
                 null;
@@ -162,9 +166,11 @@ class Asset extends AbstractObject
      */
     public function getContent(): ?string
     {
-        if (null === $this->content &&
+        if (
+            null === $this->content &&
             null !== ($filepath = $this->getFullpath()) &&
-            false !== ($localHandle = fopen($filepath, 'r'))) {
+            false !== ($localHandle = fopen($filepath, 'r'))
+        ) {
             $this->content = fread($localHandle, filesize($filepath));
             return $this->content;
         }
@@ -283,7 +289,7 @@ class Asset extends AbstractObject
                 $this->getContent()
             );
         } catch (Exception $e) {
-            $this->logger->write($e);
+            $this->logger->write($e->getMessage());
             return;
         }
 
@@ -334,8 +340,7 @@ class Asset extends AbstractObject
         try {
             unlink(getProjectRoot() . 'var/storage/' . $this->getPath());
         } catch (Exception $e) {
-            $this->logger->write($e);
+            $this->logger->write($e->getMessage());
         }
     }
-
 }

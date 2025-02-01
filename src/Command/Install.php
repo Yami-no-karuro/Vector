@@ -45,11 +45,12 @@ class Install extends AbstractCommand
      */
     public function execute(): int
     {
-
         $dir = getProjectRoot() . 'var/sql/';
         if (file_exists($dir) && is_dir($dir)) {
+
             $sqlDir = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
             $iterator = new RecursiveIteratorIterator($sqlDir, RecursiveIteratorIterator::CHILD_FIRST);
+
             foreach ($iterator as $file) {
                 $fname = $file->getFilename();
                 if (preg_match("%\.sql$%", $fname)) {
@@ -90,5 +91,4 @@ class Install extends AbstractCommand
     {
         return 'vector:install';
     }
-
 }

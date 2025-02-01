@@ -49,5 +49,4 @@ abstract class AbstractLogger
      * @return void
      */
     abstract public function write(string $log): void;
-
 }

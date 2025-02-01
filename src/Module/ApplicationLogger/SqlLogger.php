@@ -44,5 +44,4 @@ class SqlLogger extends AbstractLogger
         $q->bindParam('log', $log, PDO::PARAM_STR);
         $q->execute();
     }
-
 }

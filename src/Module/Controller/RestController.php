@@ -11,6 +11,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 abstract class RestController extends AbstractController
 {
+
     /**
      * @package Vector
      * __construct()
@@ -20,5 +21,4 @@ abstract class RestController extends AbstractController
     {
         parent::__construct($direct);
     }
-
 }

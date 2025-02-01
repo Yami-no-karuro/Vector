@@ -21,6 +21,7 @@ class SqlClient
     private function __construct()
     {
         global $config;
+
         $this->client = new PDO(
             "mysql:host={$config->database->db_host};dbname={$config->database->db_name}",
             $config->database->db_user,
@@ -49,9 +50,8 @@ class SqlClient
      */
     public static function getInstance(): SqlClient
     {
-        if (self::$instance == null) {
+        if (self::$instance == null)
             self::$instance = new SqlClient();
-        }
 
         return self::$instance;
     }
@@ -65,5 +65,4 @@ class SqlClient
     {
         return $this->client;
     }
-
 }

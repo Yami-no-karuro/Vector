@@ -50,5 +50,4 @@ abstract class AbstractTransient
      * @return void
      */
     abstract public function delete(): void;
-
 }

@@ -28,9 +28,8 @@ class Settings
         $q->bindParam('key', $key, PDO::PARAM_STR);
         $q->execute();
 
-        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC)))
             return $results['value'];
-        }
 
         return null;
     }
@@ -72,5 +71,4 @@ class Settings
         $q->bindParam('key', $key, PDO::PARAM_STR);
         $q->execute();
     }
-
 }

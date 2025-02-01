@@ -22,7 +22,7 @@ abstract class AbstractObject
         $this->sql = SqlClient::getInstance()
             ->getClient();
 
-        foreach(array_keys($data) as $key) {
+        foreach (array_keys($data) as $key) {
             $prop = $this->formatAsProperty($key);
             $this->$prop = $data[$key];
         }
@@ -48,9 +48,8 @@ abstract class AbstractObject
      */
     public function set(string $key, mixed $value): void
     {
-        if (isset($this->$key)) {
+        if (isset($this->$key))
             $this->$key = $value;
-        }
     }
 
     /**
@@ -63,9 +62,8 @@ abstract class AbstractObject
     {
         $parts = preg_split('/[_]+/', $key);
         $formatted = array_shift($parts);
-        foreach ($parts as $part) {
+        foreach ($parts as $part)
             $formatted .= ucfirst($part);
-        }
 
         return $formatted;
     }
@@ -83,5 +81,4 @@ abstract class AbstractObject
      * @return void
      */
     abstract public function delete(): void;
-
 }

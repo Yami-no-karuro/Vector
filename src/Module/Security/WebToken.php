@@ -12,6 +12,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class WebToken
 {
+
     /**
      * @package Vector
      * Vector\Module\Security\WebToken::generate()
@@ -52,28 +53,32 @@ class WebToken
     public static function isValid(string $token, Request &$request, bool $ignoreRequestInfo = false): bool
     {
 
-        if (null === ($parts = self::getTokenParts($token))) {
+        if (null === ($parts = self::getTokenParts($token)))
             return false;
-        }
+
         list($headers, $payload, $signature) = $parts;
         $decodedPayload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $payload)), true);
 
         if (false === $ignoreRequestInfo) {
-            if (!array_key_exists('ip_address', $decodedPayload) ||
-                $decodedPayload['ip_address'] !== $request->getClientIp()) {
+            if (
+                !array_key_exists('ip_address', $decodedPayload) ||
+                $decodedPayload['ip_address'] !== $request->getClientIp()
+            ) {
                 return false;
             }
-            if (!array_key_exists('user_agent', $decodedPayload) ||
-                $decodedPayload['user_agent'] !== $request->headers->get('User-Agent')) {
+
+            if (
+                !array_key_exists('user_agent', $decodedPayload) ||
+                $decodedPayload['user_agent'] !== $request->headers->get('User-Agent')
+            ) {
                 return false;
             }
         }
 
         if (null !== ($ttl = Settings::get('web_token_ttl'))) {
             $lifespan = time() - $ttl;
-            if ($decodedPayload['time'] < $lifespan) {
+            if ($decodedPayload['time'] < $lifespan)
                 return false;
-            }
         }
 
         if (null !== ($secret = Settings::get('web_token_secret'))) {
@@ -93,9 +98,8 @@ class WebToken
      */
     public static function getPayload(string $token): ?array
     {
-        if (null === ($tokenParts = self::getTokenParts($token))) {
+        if (null === ($tokenParts = self::getTokenParts($token)))
             return null;
-        }
 
         $base64UrlPayload = $tokenParts[1];
         return json_decode(base64_decode(
@@ -137,5 +141,4 @@ class WebToken
         $parts = explode('.', $token);
         return is_array($parts) ? $parts : null;
     }
-
 }

@@ -9,6 +9,4 @@ if (!defined('NO_DIRECT_ACCESS')) {
     die();
 }
 
-class SecurityException extends Exception
-{
-}
+class SecurityException extends Exception {}

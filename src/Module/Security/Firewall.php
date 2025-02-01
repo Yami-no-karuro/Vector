@@ -57,33 +57,25 @@ class Firewall
     public function verifyRequest(Request &$request): void
     {
         global $config;
-        if (null !== ($routes = $config->security->authenticated_routes)) {
+
+        if (null !== ($routes = $config->security->authenticated_routes))
             $this->verifyRouteAccess($routes, $request);
-        }
 
-        if (true === $config->security->firewall->headers) {
-            if (null !== ($headers = $request->headers->all())) {
+        if (true === $config->security->firewall->headers)
+            if (null !== ($headers = $request->headers->all()))
                 $this->verifyPayload($headers);
-            }
-        }
 
-        if (true === $config->security->firewall->cookies) {
-            if (null !== ($cookies = $request->cookies->all())) {
+        if (true === $config->security->firewall->cookies)
+            if (null !== ($cookies = $request->cookies->all()))
                 $this->verifyPayload($cookies);
-            }
-        }
 
-        if (true === $config->security->firewall->query) {
-            if (null !== ($query = $request->query->all())) {
+        if (true === $config->security->firewall->query)
+            if (null !== ($query = $request->query->all()))
                 $this->verifyPayload($query);
-            }
-        }
 
-        if (true === $config->security->firewall->body) {
-            if (null !== ($body = $request->request->all())) {
+        if (true === $config->security->firewall->body)
+            if (null !== ($body = $request->request->all()))
                 $this->verifyPayload($body);
-            }
-        }
     }
 
     /**
@@ -96,14 +88,12 @@ class Firewall
     protected function verifyPayload(mixed $data): void
     {
         foreach ($data as $value) {
-            if (is_array($value)) {
+            if (is_array($value))
                 $value = implode(', ', $value);
-            }
 
             foreach ($this->patterns as $pattern) {
-                if (preg_match($pattern, $value)) {
+                if (preg_match($pattern, $value))
                     throw new SecurityException();
-                }
             }
         }
     }
@@ -119,6 +109,7 @@ class Firewall
     protected function verifyRouteAccess(array $routes, Request &$request): void
     {
         global $auth;
+
         foreach ($routes as $route) {
             $regex = '/' . str_replace('/', '\/', $route) . '/';
             if (0 !== preg_match($regex, $request->getPathInfo())) {
@@ -135,5 +126,4 @@ class Firewall
             }
         }
     }
-
 }

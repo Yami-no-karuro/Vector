@@ -42,9 +42,8 @@ class Reader
     {
         while (!feof($this->handle)) {
             $row = fgetcsv($this->handle, 0, $this->delimiter);
-            if ($row !== false) {
+            if ($row !== false)
                 yield $row;
-            }
         }
     }
 }

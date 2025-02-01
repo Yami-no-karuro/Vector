@@ -26,8 +26,10 @@ class ProcessRunner
         if (is_resource($process)) {
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
+
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
+
             $code = proc_close($process);
             return [
                 'output' => $output,
@@ -38,5 +40,4 @@ class ProcessRunner
 
         return null;
     }
-
 }

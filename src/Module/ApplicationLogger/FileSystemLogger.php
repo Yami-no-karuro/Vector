@@ -35,5 +35,4 @@ class FileSystemLogger extends AbstractLogger
         $log = '[' . date('Y-m-d h:m:s') . '] - ' . $log . PHP_EOL;
         file_put_contents($this->path, $log, FILE_APPEND);
     }
-
 }

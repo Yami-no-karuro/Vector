@@ -42,9 +42,8 @@ abstract class AbstractRepository
         $q->bindParam('value', $value, $type);
         $q->execute();
 
-        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC)))
             return new $this->class($results);
-        }
 
         return null;
     }
@@ -75,9 +74,8 @@ abstract class AbstractRepository
         $q->bindParam('offset', $params['offset'], PDO::PARAM_INT);
         $q->execute();
 
-        if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC))) {
-            return array_map(fn ($el) => new $this->class($el), $results);
-        }
+        if (false !== ($results = $q->fetchAll(PDO::FETCH_ASSOC)))
+            return array_map(fn($el) => new $this->class($el), $results);
 
         return null;
     }
@@ -93,11 +91,9 @@ abstract class AbstractRepository
         $q = $this->sql->prepare($query);
         $q->execute();
 
-        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC))) {
+        if (false !== ($results = $q->fetch(PDO::FETCH_ASSOC)))
             return $results['total'];
-        }
 
         return 0;
     }
-
 }

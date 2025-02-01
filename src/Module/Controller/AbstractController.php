@@ -34,5 +34,4 @@ abstract class AbstractController
      * @return void
      */
     abstract protected function register(): void;
-
 }

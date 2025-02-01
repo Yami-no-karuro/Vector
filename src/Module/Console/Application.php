@@ -18,6 +18,7 @@ class Application
 {
     protected SqlTransient|FileSystemTransient $transient;
     protected StopWatch $stopWatch;
+
     protected string $console;
     protected string $command;
     protected ?array $args;
@@ -31,9 +32,8 @@ class Application
     {
         $this->console = array_shift($argv);
         $this->command = '';
-        if (!empty($argv)) {
+        if (!empty($argv))
             $this->command = array_shift($argv);
-        }
 
         $this->loadConfig();
 
@@ -60,44 +60,44 @@ class Application
         $registeredCommands = [];
         $dir = new RecursiveDirectoryIterator(getProjectRoot() . 'src/Command');
         $iterator = new RecursiveIteratorIterator($dir);
+
         foreach ($iterator as $file) {
-
             $fname = $file->getFilename();
-            if (preg_match("%\.php$%", $fname)) {
+            if (!preg_match("%\.php$%", $fname))
+                continue;
 
-                $class = getClassNamespace($file->getPathname());
-                if (class_exists($class)) {
+            $class = getClassNamespace($file->getPathname());
+            if (!class_exists($class))
+                continue;
 
-                    /** @var Command */
-                    $command = new $class($this->args);
-                    $commandName = $command->getCommandName();
-                    $registeredCommands[] = $commandName;
+            $command = new $class($this->args);
+            $commandName = $command->getCommandName();
+            $registeredCommands[] = $commandName;
 
-                    if ($commandName === $this->command) {
-                        $this->transient->setData([
-                            'command' => $this->command,
-                            'handler' => $class
-                        ]);
+            if ($commandName !== $this->command)
+                continue;
 
-                        $this->stopWatch->start();
-                        $exitCode = $command->execute();
-                        $this->stopWatch->stop();
+            $this->transient->setData([
+                'command' => $this->command,
+                'handler' => $class
+            ]);
 
-                        self::out('Exitcode: ' . $exitCode);
-                        self::out('Executed for: ' . $this->stopWatch->getElapsed());
-                        exit($exitCode);
-                    }
-                }
+            $this->stopWatch->start();
+            $exitCode = $command->execute();
+            $this->stopWatch->stop();
 
-            }
+            self::out('Exitcode: ' . $exitCode);
+            self::out('Executed for: ' . $this->stopWatch->getElapsed());
+            exit($exitCode);
         }
 
         $this->vectorCliSignature();
+
         self::out('Unable to find command: "' . $this->command . '"');
         self::out('Available commands:');
-        foreach ($registeredCommands as $registeredCommand) {
+
+        foreach ($registeredCommands as $registeredCommand)
             self::out('"' . $registeredCommand . '"');
-        }
     }
 
     /**
@@ -107,22 +107,23 @@ class Application
      */
     protected function directRun(): void
     {
-        if ($this->transient->isValid(HOUR_IN_SECONDS)) {
-            $cache = $this->transient->getData();
-            $class = $cache['handler'];
+        if (!$this->transient->isValid(HOUR_IN_SECONDS))
+            return;
 
-            $command = new $class($this->args);
-            if ($command->getCommandName() === $cache['command']) {
+        $cache = $this->transient->getData();
+        $class = $cache['handler'];
 
-                $this->stopWatch->start();
-                $exitCode = $command->execute();
-                $this->stopWatch->stop();
+        $command = new $class($this->args);
+        if (!$command->getCommandName() === $cache['command'])
+            return;
 
-                self::out('Exitcode: ' . $exitCode);
-                self::out('Executed for: ' . $this->stopWatch->getElapsed());
-                exit($exitCode);
-            }
-        }
+        $this->stopWatch->start();
+        $exitCode = $command->execute();
+        $this->stopWatch->stop();
+
+        self::out('Exitcode: ' . $exitCode);
+        self::out('Executed for: ' . $this->stopWatch->getElapsed());
+        exit($exitCode);
     }
 
     /**
@@ -154,6 +155,7 @@ class Application
   \_/ \___|\___|\__\___/|_|   
                 By Yami-no-karuro          
         ');
+
         echo PHP_EOL;
         echo '---------------------------------';
         echo PHP_EOL . PHP_EOL;
@@ -184,5 +186,4 @@ class Application
 
         return trim(fgets($handle));
     }
-
 }

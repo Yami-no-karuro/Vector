@@ -49,8 +49,6 @@ class DefaultController extends FrontendController
     public function storageAction(Request $request, array $params): Response
     {
         $repository = new AssetRepository();
-
-        /** @var Asset */
         if (null !== ($asset = $repository->getBy('path', $params['path'], PDO::PARAM_STR))) {
             $stream = $asset->getStream();
             if (is_resource($stream)) {
@@ -81,5 +79,4 @@ class DefaultController extends FrontendController
 
         return new Response($html, Response::HTTP_OK);
     }
-
 }

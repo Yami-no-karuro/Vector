@@ -58,5 +58,4 @@ abstract class AbstractCommand
      * @return string
      */
     abstract public function getCommandName(): string;
-
 }

@@ -45,9 +45,11 @@ class SqlTransient extends AbstractTransient
      */
     public function isValid(): bool
     {
-        if (null !== $this->content &&
+        if (
+            null !== $this->content &&
             ($this->content['ttl'] === 0 ||
-            time() - $this->content['time'] < $this->content['ttl'])) {
+                time() - $this->content['time'] < $this->content['ttl'])
+        ) {
             return true;
         }
 
@@ -61,9 +63,8 @@ class SqlTransient extends AbstractTransient
      */
     public function getData(): mixed
     {
-        if (null !== $this->content) {
+        if (null !== $this->content)
             return $this->content['data'];
-        }
 
         return null;
     }
@@ -82,6 +83,7 @@ class SqlTransient extends AbstractTransient
             'ttl' => $ttl,
             'data' => $data
         ];
+
         $this->content = $content;
         $serialized = serialize($content);
 
@@ -106,5 +108,4 @@ class SqlTransient extends AbstractTransient
         $q->bindParam('name', $this->name, PDO::PARAM_STR);
         $q->execute();
     }
-
 }

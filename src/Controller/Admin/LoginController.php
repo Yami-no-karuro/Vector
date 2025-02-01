@@ -53,9 +53,8 @@ class LoginController extends FrontendController
     {
         $repository = new UserRepository();
         if (null !== ($email = $request->get('email')) && false !== filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            /** @var User */
             if (null !== ($user = $repository->getBy('email', $email, PDO::PARAM_STR))) {
+
                 $password = $user->getPassword();
                 if (hash('sha256', trim($request->get('password', ''))) === $password) {
                     $user->setLastLogin(time());

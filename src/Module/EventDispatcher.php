@@ -22,10 +22,8 @@ class EventDispatcher
         $eventClass = 'Vector\\Event\\' . $eventClass;
         if (class_exists($eventClass)) {
             $event = new $eventClass();
-            if (method_exists($event, $eventMethod)) {
+            if (method_exists($event, $eventMethod))
                 $event->$eventMethod(...$args);
-            }
         }
     }
-
 }

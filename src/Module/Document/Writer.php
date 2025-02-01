@@ -50,9 +50,7 @@ class Writer
      */
     public function writeRows($data): void
     {
-        foreach ($data as $row) {
+        foreach ($data as $row)
             fputcsv($this->fileHandle, $row, $this->delimiter);
-        }
     }
-
 }

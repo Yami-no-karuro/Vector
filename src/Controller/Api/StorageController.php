@@ -126,11 +126,8 @@ class StorageController extends RestController
     public function storageDeleteAction(Request $request, array $params): JsonResponse
     {
         $repository = new AssetRepository();
-
-        /** @var Asset */
         if (null !== ($asset = $repository->getBy('ID', $params['id'], PDO::PARAM_INT))) {
             $asset->delete();
-
             return new JsonResponse([
                 'success' => true,
                 'data' => null

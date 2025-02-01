@@ -30,5 +30,4 @@ abstract class FrontendController extends AbstractController
 
         parent::__construct($direct);
     }
-
 }

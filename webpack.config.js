@@ -11,6 +11,7 @@ Encore.setOutputPath('public/assets/build/')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSassLoader()
-    .enableTypeScriptLoader();
+    .enableTypeScriptLoader()
+    .enableReactPreset();
 
 module.exports = Encore.getWebpackConfig();

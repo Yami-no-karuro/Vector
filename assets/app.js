@@ -1,10 +1,12 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
 import './styles/app.scss';
 
 (() => {
   'use-strict';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('Welcome to Vector!');
-  });
+  const app = document.querySelector('div#app');
+  const root = createRoot(app);
 
 })();

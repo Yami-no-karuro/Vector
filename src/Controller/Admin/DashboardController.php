@@ -4,6 +4,7 @@ namespace Vector\Controller\Admin;
 
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
+use Vector\Module\SourceExplorer;
 use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -25,9 +26,12 @@ class DashboardController extends FrontendController
      */
     public function dashboardViewAction(): Response
     {
+        $sources = SourceExplorer::fetchSources();
         $html = $this->template->render('admin/admin.html.twig', [
             'title' => 'Vector - Dashboard',
-            'description' => ''
+            'description' => 'Vector administration Dashboard',
+            'jsFiles' => $sources['js'],
+            'cssFiles' => $sources['css']
         ]);
 
         return new Response($html, Response::HTTP_OK);

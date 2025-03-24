@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkvector=self.webpackChunkvector||[]).push([[143],{144:()=>{document.addEventListener("DOMContentLoaded",(function(){console.log("Welcome to Vector!")}))}},e=>{var o;o=144,e(e.s=o)}]);

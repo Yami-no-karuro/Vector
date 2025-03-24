@@ -29,7 +29,3 @@ To complete the setup follow the steps below:
 - Run `` npm run watch ``  to start the watcher on the `` assets `` folder.  
 - By default webpack compiles inside `` public/assets/build `` but you can customize the defaul configuration in `` webpack.config.js `` located in the project root.  
 - See `` package.json `` to explore available scripts.
-
-### React
-The [Webpack](https://webpack.js.org/) compiler is configured to handle [React](https://react.dev/) applications.  
-

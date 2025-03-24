@@ -1,0 +1,13 @@
+<head>
+  <meta name="description" content="{{ description }}" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="">
+  <title> {{ title }} </title>
+  {% for jsFile in jsFiles %}
+    <script src="{{ jsFile }}" defer></script>
+  {% endfor %}
+  {% for cssFile in cssFiles %}
+    <link rel="stylesheet" href="{{ cssFile }}">
+  {% endfor %} 
+</head>

@@ -33,7 +33,7 @@ class LoginController extends FrontendController
      */
     public function loginViewAction(): Response
     {
-        $html = $this->template->render('admin/login.html.twig', [
+        $html = $this->template->render('login.html.twig', [
             'title' => 'Vector',
             'description' => 'A simple HttpFoundation framework for PHP.',
             'formMethod' => 'POST',

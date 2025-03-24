@@ -5,11 +5,10 @@ const App = () => {
     <>
       <header></header>
       <main>
-        <div className="container">
-          <section className="py-5">
-            <h2> Welcome! </h2>
-          </section>
-        </div>
+        <section class="container pt-5 pb-3">
+          <h1> Vector (admin) </h1>
+          <h3> A simple HttpFoundation framework for PHP. </h3>
+        </section>
       </main>
       <footer></footer>
     </>

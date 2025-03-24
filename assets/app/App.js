@@ -5,7 +5,7 @@ const App = () => {
     <>
       <header></header>
       <main>
-        <section class="container pt-5 pb-3">
+        <section className="container pt-5 pb-3">
           <h1> Vector (admin) </h1>
           <h3> A simple HttpFoundation framework for PHP. </h3>
         </section>

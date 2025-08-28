@@ -2,10 +2,8 @@
 
 namespace Vector\DataObject;
 
-use Vector\Module\AbstractObject;
+use Vector\Module\DataObject\AbstractObject;
 use Vector\Module\ApplicationLogger\FileSystemLogger;
-use Exception;
-use PDO;
 
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
@@ -14,6 +12,9 @@ if (!defined('NO_DIRECT_ACCESS')) {
 
 class Asset extends AbstractObject
 {
+    protected string $tablename = 'vct_assets';
+    protected string $primary = 'ID';
+    
     protected FileSystemLogger $logger;
 
     /**
@@ -270,77 +271,5 @@ class Asset extends AbstractObject
     public function setModifiedAt(?int $time): void
     {
         $this->modifiedAt = $time;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->save()
-     * @return void
-     */
-    public function save(): void
-    {
-        if (null === $this->getContent()) {
-            return;
-        }
-
-        try {
-            file_put_contents(
-                getProjectRoot() . 'var/storage/' . $this->getPath(),
-                $this->getContent()
-            );
-        } catch (Exception $e) {
-            $this->logger->write($e->getMessage());
-            return;
-        }
-
-        $query = "INSERT INTO `vct_assets` (`ID`, `path`, `mime_type`, `size`, `created_at`, `modified_at`) 
-            VALUES (:ID, :path, :mimeType, :size, :createdAt, :modifiedAt)
-            ON DUPLICATE KEY UPDATE `path` = :path, 
-                `mime_type` = :mimeType, 
-                `size` = :size,
-                `modified_at` = :modifiedAt";
-
-        $q = $this->sql->prepare($query);
-
-        $q->bindParam('ID', $this->ID, PDO::PARAM_INT);
-        $q->bindParam('path', $this->path, PDO::PARAM_STR);
-
-        $mime = $this->getMimeType();
-        $size = $this->getSize();
-        $q->bindParam('mimeType', $mime, PDO::PARAM_STR);
-        $q->bindParam('size', $size, PDO::PARAM_INT);
-
-        $now = time();
-        $q->bindParam('createdAt', $now, PDO::PARAM_INT);
-        $q->bindParam('modifiedAt', $now, PDO::PARAM_INT);
-        $q->execute();
-
-        if (null !== ($id = $this->sql->lastInsertId())) {
-            $this->ID = $id;
-        }
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\Asset->delete()
-     * @return void
-     */
-    public function delete(): void
-    {
-        if (null === $this->getId()) {
-            return;
-        }
-
-        $query = "DELETE FROM `vct_assets` WHERE `ID` = :id";
-        $q = $this->sql->prepare($query);
-
-        $q->bindParam('id', $this->ID, PDO::PARAM_INT);
-        $q->execute();
-
-        try {
-            unlink(getProjectRoot() . 'var/storage/' . $this->getPath());
-        } catch (Exception $e) {
-            $this->logger->write($e->getMessage());
-        }
     }
 }

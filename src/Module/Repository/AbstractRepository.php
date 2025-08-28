@@ -1,6 +1,6 @@
 <?php
 
-namespace Vector\Module;
+namespace Vector\Module\Repository;
 
 use Vector\Module\SqlClient;
 use PDO;
@@ -28,7 +28,7 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Module\AbstractRepository->getBy()
+     * Vector\Module\Repository\AbstractRepository->getBy()
      * @param string $field
      * @param mixed $value
      * @param int $type
@@ -50,7 +50,7 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Module\AbstractRepository->getList()
+     * Vector\Module\Repository\AbstractRepository->getList()
      * @param array $params
      * @return ?array
      */
@@ -82,7 +82,7 @@ abstract class AbstractRepository
 
     /**
      * @package Vector
-     * Vector\Module\AbstractRepository->getTotalCount()
+     * Vector\Module\Repository\AbstractRepository->getTotalCount()
      * @return int
      */
     public function getTotalCount(): int

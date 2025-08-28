@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `vct_users` (
     `password` VARCHAR(64) NOT NULL , 
     `username` VARCHAR(45) , 
     `last_login` BIGINT DEFAULT NULL , 
-    `created_at` BIGINT NOT NULL , 
-    `modified_at` BIGINT NOT NULL , 
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `modified_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
     PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `vct_assets` (
     `path` VARCHAR(145) NOT NULL UNIQUE ,
     `mime_type` VARCHAR(85) ,
     `size` BIGINT , 
-    `created_at` BIGINT NOT NULL ,
-    `modified_at` BIGINT NOT NULL ,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `modified_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
     PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;

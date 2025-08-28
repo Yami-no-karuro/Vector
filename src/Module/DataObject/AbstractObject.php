@@ -2,6 +2,7 @@
 
 namespace Vector\Module\Dataobject;
 
+use Vector\Module\DataObject\Attribute\Property;
 use Vector\Module\SqlClient;
 use ReflectionObject;
 use ReflectionProperty;
@@ -80,30 +81,40 @@ abstract class AbstractObject
      */
     public function save(): void
     {
-        $reflection = new ReflectionObject($this);
-        $props = $reflection->getProperties(ReflectionProperty::IS_PROTECTED);
+        $table = $this->tablename;
+        $primaryKey = $this->primary;
         
         $fields = [];
         $values = [];
         $params = [];
     
+        $reflection = new ReflectionObject($this);
+        $props = $reflection->getProperties(ReflectionProperty::IS_PROTECTED);
+        
         foreach ($props as $prop) {
-            $name = $prop->getName();
-            if ($name === $this->primary && $this->$name === null) 
+            $attributes = $prop->getAttributes(Property::class);
+            if (empty($attributes))
                 continue;
-                
-            $fields[] = "`$name`";
-            $values[] = ":$name";
+
+            $decorator = $attributes[0];
+            $decoratorArgs = $decorator->getArguments();
+            
+            $name = $prop->getName();
+            if ($name === $primaryKey && $this->$name === null)
+                continue;
+                    
             $params[$name] = $this->$name;
+            $fields[] = "`{$decoratorArgs['Column']}`";
+            $values[] = ":{$name}";
         }
     
         $update = [];
         foreach ($fields as $field) {
-            if ($field !== "`$this->primary`")
-                $update[] = "$field = VALUES($field)";
+            if ($field !== "`{$primaryKey}`")
+                $update[] = "{$field} = VALUES({$field})";
         }
     
-        $sql = "INSERT INTO `$this->tablename` (" . implode(',', $fields) . ")
+        $sql = "INSERT INTO `$table` (" . implode(',', $fields) . ")
             VALUES (" . implode(',', $values) . ")
             ON DUPLICATE KEY UPDATE " . implode(', ', $update);
     
@@ -112,8 +123,8 @@ abstract class AbstractObject
             $stmt->bindValue(":$key", $val);
         
         $stmt->execute();
-        if (property_exists($this, $this->primary) && $this->$this->primary === null)
-            $this->$this->primary = $this->sql->lastInsertId();
+        if (property_exists($this, $primaryKey) && $this->$primaryKey === null)
+            $this->$primaryKey = $this->sql->lastInsertId();
     }
     
     /**
@@ -123,12 +134,14 @@ abstract class AbstractObject
      */
     public function delete(): void
     {
-        if ($this->$this->primary === null) 
+        $table = $this->tablename;
+        $primaryKey = $this->primary;
+        if ($this->$primaryKey === null) 
             return;
-    
-        $sql = "DELETE FROM `$this->tablename` WHERE `$this->primary` = :id";
+
+        $sql = "DELETE FROM `{$table}` WHERE `{$primaryKey}` = :id";
         $stmt = $this->sql->prepare($sql);
-        $stmt->bindValue(':id', $this->$this->primary);
+        $stmt->bindValue(':id', $this->$primaryKey);
         $stmt->execute();
     }
 }

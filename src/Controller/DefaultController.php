@@ -2,6 +2,7 @@
 
 namespace Vector\Controller;
 
+use Vector\DataObject\User;
 use Vector\Router;
 use Vector\Module\Controller\FrontendController;
 use Vector\Repository\AssetRepository;

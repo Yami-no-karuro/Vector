@@ -53,18 +53,18 @@ class Asset extends AbstractObject
     protected ?string $content = null;
 
     /**
-     * @var ?int $createdAt
+     * @var ?string $createdAt
      * Asset's creation date.
      */
     #[Property(Column: 'created_at')]
-    protected ?int $createdAt = null;
+    protected ?string $createdAt = null;
 
     /**
-     * @var ?int $modifiedAt
+     * @var ?string $modifiedAt
      * Asset's modification date.
      */
     #[Property(Column: 'modified_at')]
-    protected ?int $modifiedAt = null;
+    protected ?string $modifiedAt = null;
 
     /**
      * @package Vector
@@ -243,9 +243,9 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getCreatedAt()
-     * @return ?int
+     * @return ?string
      */
-    public function getCreatedAt(): ?int
+    public function getCreatedAt(): ?string
     {
         return $this->createdAt;
     }
@@ -253,10 +253,10 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->setCreatedAt()
-     * @param ?int $time
+     * @param ?string $time
      * @return void
      */
-    protected function setCreatedAt(?int $time): void
+    protected function setCreatedAt(?string $time): void
     {
         $this->createdAt = $time;
     }
@@ -264,9 +264,9 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getModifiedAt()
-     * @return ?int
+     * @return ?string
      */
-    public function getModifiedAt(): ?int
+    public function getModifiedAt(): ?string
     {
         return $this->modifiedAt;
     }
@@ -274,10 +274,10 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->setModifiedAt()
-     * @param ?int $time
+     * @param ?string $time
      * @return void
      */
-    public function setModifiedAt(?int $time): void
+    public function setModifiedAt(?string $time): void
     {
         $this->modifiedAt = $time;
     }

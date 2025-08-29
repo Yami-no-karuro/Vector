@@ -44,25 +44,25 @@ class User extends AbstractObject
     protected ?string $username = null;
 
     /**
-     * @var ?int $createdAt
+     * @var ?string $createdAt
      * User's creation date.
      */
     #[Property(Column: 'created_at')]
-    protected ?int $createdAt = null;
+    protected ?string $createdAt = null;
 
     /**
-     * @var ?int $modifiedAt
+     * @var ?string $modifiedAt
      * User's modification date.
      */
     #[Property(Column: 'modified_at')]
-    protected ?int $modifiedAt = null;
+    protected ?string $modifiedAt = null;
 
     /**
-     * @var ?int $lastLogin
+     * @var ?string $lastLogin
      * User's last login date or null.
      */
     #[Property(Column: 'last_login')]
-    protected ?int $lastLogin = null;
+    protected ?string $lastLogin = null;
 
     /**
      * @package Vector
@@ -140,9 +140,9 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->getCreatedAt()
-     * @return ?int
+     * @return ?string
      */
-    public function getCreatedAt(): ?int
+    public function getCreatedAt(): ?string
     {
         return $this->createdAt;
     }
@@ -150,10 +150,10 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->setCreatedAt()
-     * @param ?int $time
+     * @param ?string $time
      * @return void
      */
-    protected function setCreatedAt(?int $time): void
+    protected function setCreatedAt(?string $time): void
     {
         $this->createdAt = $time;
     }
@@ -161,9 +161,9 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->getModifiedAt()
-     * @return ?int
+     * @return ?string
      */
-    public function getModifiedAt(): ?int
+    public function getModifiedAt(): ?string
     {
         return $this->modifiedAt;
     }
@@ -171,10 +171,10 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->setModifiedAt()
-     * @param ?int $time
+     * @param ?string $time
      * @return void
      */
-    public function setModifiedAt(?int $time): void
+    public function setModifiedAt(?string $time): void
     {
         $this->modifiedAt = $time;
     }
@@ -182,9 +182,9 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->getLastLogin()
-     * @return ?int
+     * @return ?string
      */
-    public function getLastLogin(): ?int
+    public function getLastLogin(): ?string
     {
         return $this->lastLogin;
     }
@@ -192,10 +192,10 @@ class User extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\User->setLastLogin()
-     * @param ?int $time
+     * @param ?string $time
      * @return void
      */
-    public function setLastLogin(?int $time): void
+    public function setLastLogin(?string $time): void
     {
         $this->lastLogin = $time;
     }

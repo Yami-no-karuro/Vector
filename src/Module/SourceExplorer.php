@@ -2,6 +2,8 @@
 
 namespace Vector\Module;
 
+use Vector\Module\Transient\SqlTransient;
+
 if (!defined('NO_DIRECT_ACCESS')) {
     header('HTTP/1.1 403 Forbidden');
     die();
@@ -12,11 +14,15 @@ class SourceExplorer
 
     /**
      * @package Vector
-     * Vector\Module\SourceExplorer::fetchSources()
+     * Vector\Module\SourceExplorer::getWebpackBuildSources()
      * @return array 
      */
-    public static function fetchSources(): array
+    public static function getWebpackBuildSources(): array
     {
+        $transient = new SqlTransient('webpack-build-sources');
+        if ($transient->isValid())
+            return $transient->getData();
+            
         $buildPath = getProjectRoot() . 'public/assets/build';
         $publicPath = '/assets/build';
 
@@ -27,7 +33,7 @@ class SourceExplorer
                 $sources[$type][] = $publicPath . '/' . basename($file);
         }
 
+        $transient->setData($sources, 900);
         return $sources;
     }
-
 }

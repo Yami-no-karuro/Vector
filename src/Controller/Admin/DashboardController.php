@@ -26,7 +26,7 @@ class DashboardController extends FrontendController
      */
     public function dashboardViewAction(): Response
     {
-        $sources = SourceExplorer::fetchSources();
+        $sources = SourceExplorer::getWebpackBuildSources();
         $html = $this->template->render('admin/admin.html.twig', [
             'title' => 'Vector - Dashboard',
             'description' => 'Vector administration Dashboard',

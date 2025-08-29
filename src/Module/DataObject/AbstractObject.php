@@ -57,29 +57,13 @@ abstract class AbstractObject
         if (isset($this->$key))
             $this->$key = $value;
     }
-
-    /**
-     * @package Vector
-     * Vector\Module\DataObject\AbstractObject->formatAsProperty()
-     * @param string $key
-     * @return string
-     */
-    protected function formatAsProperty(string $key): string
-    {
-        $parts = preg_split('/[_]+/', $key);
-        $formatted = array_shift($parts);
-        foreach ($parts as $part)
-            $formatted .= ucfirst($part);
-
-        return $formatted;
-    }
     
     /**
      * @package Vector
      * Vector\Module\DataObject\AbstractObject->save()
-     * @return void
+     * @return AbstractObject
      */
-    public function save(): void
+    public function save(): AbstractObject
     {
         $table = $this->tablename;
         $primaryKey = $this->primary;
@@ -125,6 +109,8 @@ abstract class AbstractObject
         $stmt->execute();
         if (property_exists($this, $primaryKey) && $this->$primaryKey === null)
             $this->$primaryKey = $this->sql->lastInsertId();
+
+        return $this;
     }
     
     /**
@@ -143,5 +129,21 @@ abstract class AbstractObject
         $stmt = $this->sql->prepare($sql);
         $stmt->bindValue(':id', $this->$primaryKey);
         $stmt->execute();
+    }
+    
+    /**
+     * @package Vector
+     * Vector\Module\DataObject\AbstractObject->formatAsProperty()
+     * @param string $key
+     * @return string
+     */
+    protected function formatAsProperty(string $key): string
+    {
+        $parts = preg_split('/[_]+/', $key);
+        $formatted = array_shift($parts);
+        foreach ($parts as $part)
+            $formatted .= ucfirst($part);
+
+        return $formatted;
     }
 }

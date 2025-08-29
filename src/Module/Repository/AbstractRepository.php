@@ -32,7 +32,7 @@ abstract class AbstractRepository
      * @param string $field
      * @param mixed $value
      * @param int $type
-     * @return null|static
+     * @return mixed
      */
     public function getBy(string $field, mixed $value, int $type): mixed
     {

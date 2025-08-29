@@ -53,19 +53,17 @@ class StorageController extends RestController
                 'currentPage' => $page,
                 'prevPage' => ($page > 1) ? ($page - 1) : 1,
                 'nextPage' => ($page < $pageCount) ? ($page + 1) : $pageCount,
-                'list' => array_map(function ($el) {
-                    return [
-                        'ID' => $el->getId(),
-                        'path' => $el->getPath(),
-                        'route' => $el->getRoute(),
-                        'mimeType' => $el->getMimeType(),
-                        'size' => $el->getSize(),
-                        'system' => [
-                            'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                            'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
-                        ]
-                    ];
-                }, $assets)
+                'list' => array_map(fn($el) => [
+                    'ID' => $el->getId(),
+                    'path' => $el->getPath(),
+                    'route' => $el->getRoute(),
+                    'mimeType' => $el->getMimeType(),
+                    'size' => $el->getSize(),
+                    'system' => [
+                        'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
+                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
+                    ]
+                ], $assets)
             ]
         ], Response::HTTP_OK);
     }
@@ -95,24 +93,22 @@ class StorageController extends RestController
             $asset->setContent($file->getContent());
 
             $asset->save();
-            $asset[] = $asset;
+            $assets[] = $asset;
         }
 
         return new JsonResponse([
             'success' => true,
-            'data' => array_map(function ($el) {
-                return [
-                    'ID' => $el->getId(),
-                    'path' => $el->getPath(),
-                    'route' => $el->getRoute(),
-                    'mimeType' => $el->getMimeType(),
-                    'size' => $el->getSize(),
-                    'system' => [
-                        'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
-                        'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
-                    ]
-                ];
-            }, $assets)
+            'data' => array_map(fn($el) => [
+                'ID' => $el->getId(),
+                'path' => $el->getPath(),
+                'route' => $el->getRoute(),
+                'mimeType' => $el->getMimeType(),
+                'size' => $el->getSize(),
+                'system' => [
+                    'createdAt' => date("d-m-Y H:i:s", $el->getCreatedAt()),
+                    'modifiedAt' => date("d-m-Y H:i:s", $el->getModifiedAt())
+                ]
+            ], $assets)
         ], Response::HTTP_CREATED);
     }
 

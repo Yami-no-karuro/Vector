@@ -180,6 +180,7 @@ class Asset extends AbstractObject
             false !== ($localHandle = fopen($filepath, 'r'))
         ) {
             $this->content = fread($localHandle, filesize($filepath));
+            fclose($localHandle);
             return $this->content;
         }
 
@@ -210,6 +211,7 @@ class Asset extends AbstractObject
     /**
      * @package Vector
      * Vector\DataObject\Asset->getStream()
+     * The provided stream must be closed by the caller.
      * @return mixed
      */
     public function getStream(): mixed

@@ -2,6 +2,7 @@
 
 namespace Vector\Module\Controller;
 
+use Vector\Module\ApplicationLogger\SqlLogger;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('NO_DIRECT_ACCESS')) {
@@ -12,6 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 abstract class AbstractController
 {
     protected Request $request;
+    protected SqlLogger $logger;
 
     /**
      * @package Vector
@@ -22,10 +24,10 @@ abstract class AbstractController
     {
         global $request;
         $this->request = $request;
+        $this->logger = new SqlLogger('controller');
 
-        if (!$direct) {
+        if (!$direct)
             $this->register();
-        }
     }
 
     /**

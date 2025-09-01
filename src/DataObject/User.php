@@ -54,14 +54,12 @@ class User extends AbstractObject
      * @var ?string $modifiedAt
      * User's modification date.
      */
-    #[Property(Column: 'modified_at')]
     protected ?string $modifiedAt = null;
 
     /**
      * @var ?string $lastLogin
      * User's last login date or null.
      */
-    #[Property(Column: 'last_login')]
     protected ?string $lastLogin = null;
 
     /**
@@ -149,34 +147,12 @@ class User extends AbstractObject
 
     /**
      * @package Vector
-     * Vector\DataObject\User->setCreatedAt()
-     * @param ?string $time
-     * @return void
-     */
-    protected function setCreatedAt(?string $time): void
-    {
-        $this->createdAt = $time;
-    }
-
-    /**
-     * @package Vector
      * Vector\DataObject\User->getModifiedAt()
      * @return ?string
      */
     public function getModifiedAt(): ?string
     {
         return $this->modifiedAt;
-    }
-
-    /**
-     * @package Vector
-     * Vector\DataObject\User->setModifiedAt()
-     * @param ?string $time
-     * @return void
-     */
-    public function setModifiedAt(?string $time): void
-    {
-        $this->modifiedAt = $time;
     }
 
     /**

@@ -47,7 +47,6 @@ class User extends AbstractObject
      * @var ?string $createdAt
      * User's creation date.
      */
-    #[Property(Column: 'created_at')]
     protected ?string $createdAt = null;
 
     /**
@@ -60,6 +59,7 @@ class User extends AbstractObject
      * @var ?string $lastLogin
      * User's last login date or null.
      */
+     #[Property(Column: 'last_login')]
     protected ?string $lastLogin = null;
 
     /**
